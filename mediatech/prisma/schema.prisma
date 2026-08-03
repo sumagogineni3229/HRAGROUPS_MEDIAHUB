@@ -1,0 +1,466 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────────
+
+enum Role {
+  ADVERTISER
+  PUBLISHER
+  INFLUENCER
+  ADMIN
+}
+
+enum PlatformStatus {
+  PENDING
+  ACTIVE
+  PAUSED
+  REJECTED
+}
+
+enum SocialPlatform {
+  INSTAGRAM
+  YOUTUBE
+  TIKTOK
+  X
+  FACEBOOK
+  LINKEDIN
+  PODCAST
+}
+
+enum ProductType {
+  ARTICLE_POSTING
+  LINK_INSERTION
+  PRESS_RELEASE
+}
+
+enum InfluencerProductType {
+  STORY
+  REEL
+  POST
+  VIDEO
+  REVIEW
+  MENTION
+  THREAD
+}
+
+enum TaskStatus {
+  DRAFT
+  TASK_REVIEW
+  TASK_ACCEPTANCE
+  IN_PROGRESS
+  YOUR_APPROVAL
+  IMPROVEMENT
+  COMPLETED
+  REJECTED
+  ARCHIVED
+}
+
+enum TransactionType {
+  TOPUP
+  PAYMENT
+  EARNING
+  WITHDRAWAL
+  BONUS
+  REFUND
+  COMMISSION
+}
+
+enum WithdrawalStatus {
+  PENDING
+  PROCESSING
+  PAID
+  REJECTED
+}
+
+enum SellerType {
+  PUBLISHER
+  INFLUENCER
+}
+
+// ─────────────────────────────────────────────
+// USERS
+// ─────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  password      String?
+  name          String?
+  image         String?
+  avatar        String?
+  role          Role      @default(ADVERTISER)
+  isSuspended   Boolean   @default(false)
+  bio           String?
+  country       String?
+  phone         String?
+  // Wallet
+  balance       Float     @default(0)
+  reserved      Float     @default(0)
+  bonus         Float     @default(0)
+  earnings      Float     @default(0)
+  withdrawn     Float     @default(0)
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  accounts         Account[]
+  sessions         Session[]
+  platforms        Platform[]       @relation("PublisherPlatforms")
+  channels         Channel[]        @relation("InfluencerChannels")
+  advertiserTasks  Task[]           @relation("AdvertiserTasks")
+  sellerTasks      Task[]           @relation("SellerTasks")
+  projects         Project[]
+  transactions     Transaction[]
+  sentMessages     Message[]        @relation("SentMessages")
+  notifications    Notification[]
+  withdrawals      Withdrawal[]
+  savedPartners    SavedPartner[]
+  referrals        Referral[]       @relation("ReferrerUser")
+  referredBy       Referral?        @relation("ReferredUser")
+}
+
+// ─────────────────────────────────────────────
+// NEXTAUTH
+// ─────────────────────────────────────────────
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model PasswordResetToken {
+  id      String   @id @default(cuid())
+  email   String   @unique
+  token   String   @unique
+  expires DateTime
+  createdAt DateTime @default(now())
+}
+
+// ─────────────────────────────────────────────
+// PUBLISHER: WEBSITE PLATFORMS
+// ─────────────────────────────────────────────
+
+model Platform {
+  id          String         @id @default(cuid())
+  publisherId String
+  publisher   User           @relation("PublisherPlatforms", fields: [publisherId], references: [id])
+  // Site Details
+  url         String
+  name        String?
+  description String?
+  // Metrics
+  da          Int            @default(0)  // Domain Authority
+  dr          Int            @default(0)  // Domain Rating
+  traffic     Int            @default(0)  // Monthly traffic
+  // Classification
+  niche       String
+  language    String         @default("English")
+  country     String
+  // Status
+  status      PlatformStatus @default(PENDING)
+  isIndexed   Boolean        @default(true)
+  // Admin
+  adminNote   String?
+  // Timestamps
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  packages    Package[]
+  tasks       Task[]         @relation("PlatformTasks")
+
+  @@index([publisherId])
+  @@index([status])
+  @@index([niche])
+  @@index([country])
+  @@index([da])
+  @@index([traffic])
+  @@index([status, niche, country])
+}
+
+model Package {
+  id          String      @id @default(cuid())
+  platformId  String
+  platform    Platform    @relation(fields: [platformId], references: [id], onDelete: Cascade)
+  type        ProductType
+  price       Float
+  turnaround  Int         // days
+  description String?
+  wordCount   Int?        // for articles
+  isDoFollow  Boolean     @default(true)
+  isActive    Boolean     @default(true)
+
+  tasks       Task[]      @relation("PackageTasks")
+}
+
+// ─────────────────────────────────────────────
+// INFLUENCER: SOCIAL CHANNELS
+// ─────────────────────────────────────────────
+
+model Channel {
+  id            String              @id @default(cuid())
+  influencerId  String
+  influencer    User                @relation("InfluencerChannels", fields: [influencerId], references: [id])
+  // Channel Details
+  platform      SocialPlatform
+  handle        String
+  profileUrl    String?
+  name          String?
+  description   String?
+  // Metrics
+  followers     Int                 @default(0)
+  engagement    Float               @default(0)  // engagement rate %
+  avgViews      Int?
+  avgLikes      Int?
+  // Classification
+  niche         String
+  country       String
+  language      String              @default("English")
+  // Status
+  status        PlatformStatus      @default(PENDING)
+  adminNote     String?
+  // Timestamps
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  packages      ChannelPackage[]
+  tasks         Task[]              @relation("ChannelTasks")
+
+  @@index([influencerId])
+  @@index([platform])
+  @@index([status])
+  @@index([niche])
+  @@index([country])
+  @@index([followers])
+  @@index([engagement])
+  @@index([status, niche, platform])
+}
+
+model ChannelPackage {
+  id          String                @id @default(cuid())
+  channelId   String
+  channel     Channel               @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  type        InfluencerProductType
+  price       Float
+  turnaround  Int
+  description String?
+  isActive    Boolean               @default(true)
+
+  tasks       Task[]                @relation("ChannelPackageTasks")
+}
+
+// ─────────────────────────────────────────────
+// PROJECTS
+// ─────────────────────────────────────────────
+
+model Project {
+  id           String   @id @default(cuid())
+  advertiserId String
+  advertiser   User     @relation(fields: [advertiserId], references: [id])
+  name         String
+  description  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  tasks        Task[]
+}
+
+// ─────────────────────────────────────────────
+// TASKS / ORDERS
+// ─────────────────────────────────────────────
+
+model Task {
+  id             String     @id @default(cuid())
+  // Parties
+  advertiserId   String
+  advertiser     User       @relation("AdvertiserTasks", fields: [advertiserId], references: [id])
+  sellerId       String
+  seller         User       @relation("SellerTasks", fields: [sellerId], references: [id])
+  sellerType     SellerType
+  // References
+  platformId     String?
+  platform       Platform?  @relation("PlatformTasks", fields: [platformId], references: [id])
+  packageId      String?
+  package        Package?   @relation("PackageTasks", fields: [packageId], references: [id])
+  channelId      String?
+  channel        Channel?   @relation("ChannelTasks", fields: [channelId], references: [id])
+  channelPkgId   String?
+  channelPkg     ChannelPackage? @relation("ChannelPackageTasks", fields: [channelPkgId], references: [id])
+  projectId      String?
+  project        Project?   @relation(fields: [projectId], references: [id])
+  // Brief
+  brief          String     @db.Text
+  anchorText     String?
+  targetUrl      String?
+  contentNotes   String?    @db.Text
+  // Delivery
+  deliverableUrl String?
+  liveUrl        String?
+  // Financials
+  price          Float
+  platformFee    Float      @default(0)  // our commission
+  sellerEarning  Float      @default(0)
+  // Status
+  status         TaskStatus @default(DRAFT)
+  // Timestamps
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  acceptedAt     DateTime?
+  deliveredAt    DateTime?
+  completedAt    DateTime?
+  deadline       DateTime?
+
+  messages       Message[]
+  transactions   Transaction[]
+
+  @@index([advertiserId])
+  @@index([sellerId])
+  @@index([status])
+  @@index([projectId])
+  @@index([platformId])
+  @@index([channelId])
+  @@index([advertiserId, status])
+  @@index([sellerId, status])
+}
+
+// ─────────────────────────────────────────────
+// MESSAGING
+// ─────────────────────────────────────────────
+
+model Message {
+  id        String   @id @default(cuid())
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  senderId  String
+  sender    User     @relation("SentMessages", fields: [senderId], references: [id])
+  content   String   @db.Text
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([taskId])
+  @@index([senderId])
+}
+
+// ─────────────────────────────────────────────
+// NOTIFICATIONS
+// ─────────────────────────────────────────────
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   // TASK_UPDATE | PAYMENT | MESSAGE | SYSTEM
+  title     String
+  body      String
+  link      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([userId, isRead])
+}
+
+// ─────────────────────────────────────────────
+// WALLET & TRANSACTIONS
+// ─────────────────────────────────────────────
+
+model Transaction {
+  id        String          @id @default(cuid())
+  userId    String
+  user      User            @relation(fields: [userId], references: [id])
+  taskId    String?
+  task      Task?           @relation(fields: [taskId], references: [id])
+  type      TransactionType
+  amount    Float
+  note      String?
+  reference String?         // external payment reference (future use)
+  createdAt DateTime        @default(now())
+
+  @@index([userId])
+  @@index([taskId])
+  @@index([type])
+}
+
+model Withdrawal {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id])
+  amount    Float
+  method    String           // PAYPAL | BANK_TRANSFER
+  details   String           // JSON string of payout details
+  status    WithdrawalStatus @default(PENDING)
+  adminNote String?
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
+
+// ─────────────────────────────────────────────
+// SAVED PARTNERS
+// ─────────────────────────────────────────────
+
+model SavedPartner {
+  id           String   @id @default(cuid())
+  advertiserId String
+  advertiser   User     @relation(fields: [advertiserId], references: [id])
+  partnerId    String
+  partnerType  SellerType
+  createdAt    DateTime @default(now())
+
+  @@unique([advertiserId, partnerId])
+}
+
+// ─────────────────────────────────────────────
+// REFERRAL
+// ─────────────────────────────────────────────
+
+model Referral {
+  id          String   @id @default(cuid())
+  referrerId  String
+  referrer    User     @relation("ReferrerUser", fields: [referrerId], references: [id])
+  referredId  String   @unique
+  referred    User     @relation("ReferredUser", fields: [referredId], references: [id])
+  commission  Float    @default(0)
+  isPaid      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
