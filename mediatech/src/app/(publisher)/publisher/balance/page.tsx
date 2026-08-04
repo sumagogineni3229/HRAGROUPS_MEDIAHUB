@@ -34,8 +34,17 @@ export default async function PublisherBalancePage({
     select: { balance: true, reserved: true, earnings: true },
   });
 
+  const pendingTasks = await db.task.aggregate({
+    where: {
+      sellerId: session.user.id,
+      sellerType: "PUBLISHER",
+      status: { in: ["TASK_ACCEPTANCE", "TASK_REVIEW", "IN_PROGRESS", "YOUR_APPROVAL", "IMPROVEMENT"] },
+    },
+    _sum: { sellerEarning: true },
+  });
+
   const balance = publisher?.balance ?? 0;
-  const reserved = publisher?.reserved ?? 0;
+  const reserved = (pendingTasks._sum.sellerEarning ?? 0) + (publisher?.reserved ?? 0);
   const earnings = publisher?.earnings ?? 0;
 
   const transactions = await db.transaction.findMany({

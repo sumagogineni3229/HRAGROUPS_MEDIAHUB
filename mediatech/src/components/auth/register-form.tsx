@@ -76,6 +76,9 @@ export function RegisterForm() {
     setError("");
     try {
       document.cookie = `signup_role=${role}; path=/; max-age=300`;
+      if (refCode) {
+        document.cookie = `signup_ref=${refCode}; path=/; max-age=300`;
+      }
       const { signIn } = await import("next-auth/react");
       await signIn("google", { callbackUrl: `/auth/oauth-callback?role=${role}` });
     } catch {

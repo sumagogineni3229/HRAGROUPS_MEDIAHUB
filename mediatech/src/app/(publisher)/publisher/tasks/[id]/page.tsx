@@ -205,7 +205,7 @@ export default async function PublisherTaskDetailPage({
           </div>
 
           {/* Actions */}
-          {task.status === "TASK_ACCEPTANCE" && (
+          {(task.status === "TASK_ACCEPTANCE" || task.status === "TASK_REVIEW") && (
             <div className="card bg-card border-base rounded-xl p-6">
               <h2 className="font-space font-semibold text-dark text-lg mb-3">New Order — Your Decision</h2>
               <p className="text-sm text-muted font-inter mb-6">

@@ -218,7 +218,7 @@ export default async function InfluencerTaskDetailPage({
           </div>
 
           {/* Accept / Decline */}
-          {task.status === "TASK_ACCEPTANCE" && (
+          {(task.status === "TASK_ACCEPTANCE" || task.status === "TASK_REVIEW") && (
             <div className="card bg-card border-base rounded-xl p-6">
               <h2 className="font-space font-semibold text-dark text-lg mb-3">New Brand Deal — Accept?</h2>
               <p className="text-sm text-muted font-inter mb-6">

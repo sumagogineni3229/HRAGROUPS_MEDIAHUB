@@ -38,8 +38,8 @@ export default function RequestPayoutClient({
       alert("Insufficient balance available");
       return;
     }
-    if (withdrawAmount < 60) {
-      alert("Minimum payout amount is $60.00");
+    if (withdrawAmount < 5) {
+      alert("Minimum payout amount is $5.00");
       return;
     }
 
@@ -100,24 +100,25 @@ export default function RequestPayoutClient({
                   <input
                     type="number"
                     required
-                    min="60"
+                    min="5"
+                    step="0.01"
                     max={initialBalance}
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
-                    placeholder="60.00"
+                    placeholder="5.00"
                     className="input"
                     style={{ paddingLeft: "24px" }}
                   />
                 </div>
                 <p className="text-xs text-muted mt-1.5 font-inter">
-                  Minimum payout: $60.00
+                  Minimum payout: $5.00
                 </p>
               </div>
 
               {/* Preset amounts */}
-              {initialBalance >= 60 && (
+              {initialBalance >= 5 && (
                 <div className="flex gap-2 flex-wrap">
-                  {["60", "100", "250", "500"]
+                  {["5", "10", "25", "50", "100", "250", "500"]
                     .filter((p) => parseFloat(p) <= initialBalance)
                     .map((preset) => (
                       <button

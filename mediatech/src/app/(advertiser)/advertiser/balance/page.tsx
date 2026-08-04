@@ -60,8 +60,8 @@ export default async function AdvertiserBalancePage({
     const depositValue = amountValue;
     if (depositValue < 5) throw new Error("Minimum deposit is $5.00");
 
-    // If card payment, initialize Stripe Checkout Session
-    if (methodLabel === "Credit Card") {
+    // Initialize Stripe Checkout Session for payment
+    if (methodLabel === "Credit Card" || methodLabel === "PayPal" || methodLabel === "Stripe") {
       const { stripe } = await import("@/lib/stripe");
       try {
         const stripeSession = await stripe.checkout.sessions.create({

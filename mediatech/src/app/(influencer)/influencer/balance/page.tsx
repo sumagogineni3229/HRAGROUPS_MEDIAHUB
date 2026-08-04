@@ -34,8 +34,17 @@ export default async function InfluencerBalancePage({
     select: { balance: true, reserved: true, earnings: true },
   });
 
+  const pendingTasks = await db.task.aggregate({
+    where: {
+      sellerId: session.user.id,
+      sellerType: "INFLUENCER",
+      status: { in: ["TASK_ACCEPTANCE", "TASK_REVIEW", "IN_PROGRESS", "YOUR_APPROVAL", "IMPROVEMENT"] },
+    },
+    _sum: { sellerEarning: true },
+  });
+
   const balance = influencer?.balance ?? 0;
-  const reserved = influencer?.reserved ?? 0;
+  const reserved = (pendingTasks._sum.sellerEarning ?? 0) + (influencer?.reserved ?? 0);
   const earnings = influencer?.earnings ?? 0;
 
   const transactions = await db.transaction.findMany({

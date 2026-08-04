@@ -3,6 +3,12 @@ import { headers } from "next/headers";
 import { stripe } from "@/lib/stripe";
 import { db } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
+export async function GET() {
+  return NextResponse.json({ status: "ok", message: "Stripe Webhook endpoint is active. Use POST for webhook payloads." });
+}
+
 export async function POST(req: Request) {
   const body = await req.text();
   const headersList = await headers();

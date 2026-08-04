@@ -47,12 +47,27 @@ export async function GET(req: NextRequest) {
       }
     }
 
+    // Wire referral if signup_ref cookie is present
+    const refCookie = cookieStore.get("signup_ref")?.value;
+    if (refCookie && refCookie !== session.user.id) {
+      const referrer = await db.user.findUnique({ where: { id: refCookie }, select: { id: true } });
+      const existingRef = await db.referral.findUnique({ where: { referredId: session.user.id } });
+      if (referrer && !existingRef) {
+        await db.referral.create({
+          data: { referrerId: referrer.id, referredId: session.user.id, commission: 0 },
+        });
+      }
+    }
+
     const targetDashboard = ROLE_HOME[userRole] ?? "/";
     const response = NextResponse.redirect(new URL(targetDashboard, req.url));
 
-    // Clear role cookie if present
+    // Clear role & ref cookies if present
     if (roleCookie) {
       response.cookies.delete("signup_role");
+    }
+    if (refCookie) {
+      response.cookies.delete("signup_ref");
     }
 
     return response;

@@ -235,77 +235,100 @@ export default function TasksClient({
             This list is empty.
           </div>
         ) : (
-          <div className="tasks-list flex flex-col gap-6">
-            {tasks.map((task) => (
-              <div key={task.id} className="card bg-card border-base rounded-lg p-6 relative">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <span className="text-xs text-muted block mb-1">Website URL</span>
-                    <Link href={`/publisher/tasks/${task.id}`} className="font-space font-bold text-primary hover:underline">
-                      {task.platform?.url}
-                    </Link>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="badge badge-pending text-xs">{task.status}</span>
-                    <Link href={`/publisher/tasks/${task.id}`} className="text-xs text-primary hover:underline font-inter">View →</Link>
-                  </div>
-                </div>
+          <div className="tasks-list flex flex-col gap-4">
+            {tasks.map((task) => {
+              const statusMap: Record<string, { label: string; bg: string; color: string }> = {
+                TASK_REVIEW:     { label: "Task Review",        bg: "#eef2ff", color: "#4f46e5" },
+                TASK_ACCEPTANCE: { label: "Acceptance Required", bg: "#fffbe6", color: "#d97706" },
+                IN_PROGRESS:     { label: "In Progress",         bg: "#e0f2fe", color: "#0284c7" },
+                YOUR_APPROVAL:   { label: "Awaiting Approval",   bg: "#fef3c7", color: "#b45309" },
+                IMPROVEMENT:     { label: "Revisions Requested", bg: "#fff0f0", color: "#dc2626" },
+                COMPLETED:       { label: "Completed",           bg: "#e8fbee", color: "#16a34a" },
+                REJECTED:        { label: "Declined",            bg: "#fef2f2", color: "#991b1b" },
+              };
+              const statusCfg = statusMap[task.status] || { label: task.status, bg: "#f3f4f6", color: "#4b5563" };
 
-
-                <div className="grid grid-cols-2 gap-6 pt-4 border-t border-muted mb-4 text-sm font-inter">
-                  <div>
-                    <span className="text-xs text-muted block mb-1">Target Promoted URL</span>
-                    <a href={task.targetUrl || ""} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                      {task.targetUrl}
-                    </a>
+              return (
+                <div key={task.id} className="bg-card border border-border rounded-xl p-6 transition-all hover:shadow-sm">
+                  {/* Top Row: URL, Status, View Action */}
+                  <div className="flex justify-between items-center mb-4 gap-4">
+                    <div className="min-w-0 flex-1">
+                      <span className="text-xs text-muted block mb-1 font-inter font-medium">Website URL</span>
+                      <Link href={`/publisher/tasks/${task.id}`} className="font-space font-semibold text-primary hover:underline text-base truncate block max-w-xl">
+                        {task.platform?.url}
+                      </Link>
+                    </div>
+                    <div className="flex items-center gap-3 flex-shrink-0">
+                      <span
+                        className="px-3 py-1 rounded-full text-xs font-semibold font-inter"
+                        style={{ background: statusCfg.bg, color: statusCfg.color }}
+                      >
+                        {statusCfg.label}
+                      </span>
+                      <Link href={`/publisher/tasks/${task.id}`} className="text-xs text-primary font-semibold hover:underline font-inter flex items-center gap-1">
+                        View &rarr;
+                      </Link>
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-xs text-muted block mb-1">Anchor Text</span>
-                    <span className="text-dark font-medium">{task.anchorText}</span>
+
+                  {/* Specifications Grid Box */}
+                  <div className="bg-[#F8FAFC] border border-border rounded-lg p-4 mb-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-inter">
+                    <div className="min-w-0">
+                      <span className="text-muted block mb-1 font-medium">Target Promoted URL</span>
+                      <a href={task.targetUrl || ""} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium break-all block">
+                        {task.targetUrl}
+                      </a>
+                    </div>
+                    <div>
+                      <span className="text-muted block mb-1 font-medium">Anchor Text</span>
+                      <span className="text-dark font-semibold text-sm">{task.anchorText}</span>
+                    </div>
                   </div>
-                </div>
 
-                <div className="bg-app p-4 rounded-lg text-xs font-inter text-muted mb-4">
-                  <strong>Content Brief:</strong> {task.brief}
-                </div>
-
-                {/* Workflow Actions */}
-                <div className="flex justify-end pt-4 border-t border-muted gap-3">
-                  {task.status === "TASK_ACCEPTANCE" && (
-                    <div className="flex gap-2">
-                      <form action={onReject}>
-                        <input type="hidden" name="taskId" value={task.id} />
-                        <button type="submit" className="btn btn-outline flex items-center gap-1 btn-sm text-danger" style={{ borderColor: 'var(--color-danger)' }}>
-                          <XMarkIcon className="w-4 h-4" /> Reject Order
-                        </button>
-                      </form>
-                      <form action={onAccept}>
-                        <input type="hidden" name="taskId" value={task.id} />
-                        <button type="submit" className="btn btn-primary flex items-center gap-1 btn-sm">
-                          <CheckIcon className="w-4 h-4" /> Accept & Start
-                        </button>
-                      </form>
+                  {task.brief && (
+                    <div className="bg-app p-4 rounded-lg text-xs font-inter text-muted mb-4 leading-relaxed">
+                      <strong className="text-dark">Content Brief:</strong> {task.brief}
                     </div>
                   )}
 
-                  {task.status === "IN_PROGRESS" && (
-                    <form action={onSubmitDeliverable} className="flex gap-2 w-full">
-                      <input type="hidden" name="taskId" value={task.id} />
-                      <input 
-                        name="liveUrl" 
-                        type="url" 
-                        required 
-                        placeholder="Paste your live guest post URL here..." 
-                        className="input flex-1" 
-                      />
-                      <button type="submit" className="btn btn-primary flex items-center gap-1 btn-sm">
-                        <CheckIcon className="w-4 h-4" /> Submit Live URL
-                      </button>
-                    </form>
-                  )}
+                  {/* Workflow Actions */}
+                  <div className="flex justify-end pt-4 border-t border-border gap-3">
+                    {(task.status === "TASK_ACCEPTANCE" || task.status === "TASK_REVIEW") && (
+                      <div className="flex gap-2">
+                        <form action={onReject}>
+                          <input type="hidden" name="taskId" value={task.id} />
+                          <button type="submit" className="btn btn-outline flex items-center gap-1 btn-sm text-danger" style={{ borderColor: 'var(--color-danger)' }}>
+                            <XMarkIcon className="w-4 h-4" /> Reject Order
+                          </button>
+                        </form>
+                        <form action={onAccept}>
+                          <input type="hidden" name="taskId" value={task.id} />
+                          <button type="submit" className="btn btn-primary flex items-center gap-1 btn-sm">
+                            <CheckIcon className="w-4 h-4" /> Accept & Start
+                          </button>
+                        </form>
+                      </div>
+                    )}
+
+                    {task.status === "IN_PROGRESS" && (
+                      <form action={onSubmitDeliverable} className="flex gap-2 w-full">
+                        <input type="hidden" name="taskId" value={task.id} />
+                        <input 
+                          name="liveUrl" 
+                          type="url" 
+                          required 
+                          placeholder="Paste your live guest post URL here..." 
+                          className="input flex-1" 
+                        />
+                        <button type="submit" className="btn btn-primary flex items-center gap-1 btn-sm">
+                          <CheckIcon className="w-4 h-4" /> Submit Live URL
+                        </button>
+                      </form>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

@@ -43,7 +43,7 @@ export function BalanceClient({
 }: BalanceClientProps) {
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const [isTopUpOpen, setIsTopUpOpen] = useState(false);
-  const [selectedMethod, setSelectedMethod] = useState<"paypal" | "wire" | "card">("paypal");
+  const [selectedMethod, setSelectedMethod] = useState<"paypal" | "wire" | "card">("card");
   const [paypalEmail, setPaypalEmail] = useState("");
   const [bankName, setBankName] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
@@ -55,14 +55,14 @@ export function BalanceClient({
     activeBalanceType === "reserved"
       ? "Reserved balance"
       : activeBalanceType === "bonus"
-      ? "Bonus balance"
+      ? (basePath === "advertiser" ? "Bonus balance" : "Total earnings")
       : "Balance";
 
   const breadcrumbLabel =
     activeBalanceType === "reserved"
       ? "Reserved balance"
       : activeBalanceType === "bonus"
-      ? "Bonus balance"
+      ? (basePath === "advertiser" ? "Bonus balance" : "Total earnings")
       : "Main balance";
 
   function handleRequestWithdrawal(e: React.FormEvent) {
@@ -262,7 +262,10 @@ export function BalanceClient({
         </div>
         {basePath === "advertiser" ? (
           <button
-            onClick={() => setIsTopUpOpen(true)}
+            onClick={() => {
+              setSelectedMethod("card");
+              setIsTopUpOpen(true);
+            }}
             className="btn btn-primary font-semibold font-space"
             style={{ borderRadius: "8px", padding: "12px 24px" }}
           >
@@ -336,7 +339,9 @@ export function BalanceClient({
               ${initialEarnings.toFixed(2)}
             </span>
             <span className="text-xs text-muted font-inter">
-              Bonus balance: Extra funds that may be added for special activities
+              {basePath === "advertiser"
+                ? "Bonus balance: Extra funds that may be added for special activities"
+                : "Total earnings: Lifetime net earnings from completed orders"}
             </span>
           </div>
         </Link>
@@ -378,33 +383,33 @@ export function BalanceClient({
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse font-inter text-sm">
               <thead>
-                <tr className="border-b border-muted text-muted text-xs uppercase">
-                  <th className="pb-3 font-semibold">Date</th>
-                  <th className="pb-3 font-semibold">Transaction description</th>
-                  <th className="pb-3 font-semibold text-right">
+                <tr className="border-b border-border text-muted text-xs uppercase tracking-wider">
+                  <th className="py-3 px-4 font-semibold w-32">Date</th>
+                  <th className="py-3 px-4 font-semibold">Transaction description</th>
+                  <th className="py-3 px-4 font-semibold text-right w-48">
                     Transaction amount
                   </th>
-                  <th className="pb-3 font-semibold text-right">Balance</th>
+                  <th className="py-3 px-4 font-semibold text-right w-28">Balance</th>
                 </tr>
               </thead>
               <tbody>
                 {transactions.map((tx) => (
-                  <tr key={tx.id} className="border-b border-muted">
-                    <td className="py-4 text-muted">
+                  <tr key={tx.id} className="border-b border-border hover:bg-[#F8FAFC]">
+                    <td className="py-4 px-4 text-muted font-medium whitespace-nowrap" suppressHydrationWarning>
                       {new Date(tx.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="py-4 font-semibold text-dark">
+                    <td className="py-4 px-4 font-semibold text-dark max-w-xl break-words">
                       {tx.note || "Placement Earnings"}
                     </td>
                     <td
-                      className={`py-4 text-right font-bold ${
+                      className={`py-4 px-4 text-right font-bold whitespace-nowrap ${
                         tx.amount < 0 ? "text-danger" : "text-success"
                       }`}
                     >
                       {tx.amount < 0 ? "-" : "+"}$
                       {Math.abs(tx.amount).toFixed(2)}
                     </td>
-                    <td className="py-4 text-right text-muted">-</td>
+                    <td className="py-4 px-4 text-right text-muted font-medium whitespace-nowrap">—</td>
                   </tr>
                 ))}
               </tbody>
@@ -496,10 +501,11 @@ export function BalanceClient({
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   required
-                  min="50"
+                  min="5"
+                  step="0.01"
                   max={initialBalance}
                   className="input"
-                  placeholder="Minimum $50.00"
+                  placeholder="Minimum $5.00"
                 />
               </div>
 

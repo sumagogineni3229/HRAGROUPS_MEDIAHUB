@@ -65,6 +65,10 @@ export default async function AdminTasksPage({ searchParams }: { searchParams: P
       db.task.update({ where: { id: taskId }, data: { status: "COMPLETED", completedAt: new Date() } }),
       db.transaction.create({ data: { userId: task.sellerId, taskId, type: "EARNING", amount: earnings, note: "Force completed by admin" } }),
     ]);
+    // Process referral commission if seller was referred
+    const { processReferralCommission } = await import("@/lib/referrals");
+    await processReferralCommission(taskId, task.sellerId, task.platformFee || task.price * 0.1);
+
     await db.notification.create({ data: { userId: task.sellerId, type: "PAYMENT", title: "Payment released by admin", body: `$${earnings.toFixed(2)} has been credited to your balance. Task was force-completed by an administrator.`, link: task.sellerType === "INFLUENCER" ? `/influencer/tasks/${taskId}` : `/publisher/tasks/${taskId}` } });
     await db.notification.create({ data: { userId: task.advertiserId, type: "TASK_UPDATE", title: "Task force-completed", body: "Your task was force-completed by an administrator.", link: `/advertiser/tasks/${taskId}` } });
     redirect("/admin/tasks");

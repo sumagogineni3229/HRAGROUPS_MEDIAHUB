@@ -83,6 +83,10 @@ export default async function AdvertiserTaskDetailPage({
       db.transaction.create({ data: { userId: t.sellerId, taskId: id, type: "EARNING", amount: earnings, note: "Task approved — earnings released" } }),
     ]);
 
+    // Process referral commission if seller was referred
+    const { processReferralCommission } = await import("@/lib/referrals");
+    await processReferralCommission(id, t.sellerId, t.platformFee || t.price * 0.1);
+
     // Notify seller
     const { createNotification } = await import("@/lib/notifications");
     await createNotification({

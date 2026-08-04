@@ -92,6 +92,7 @@ export function MessageThread({
                 >
                   <p className="leading-relaxed">{msg.content}</p>
                   <p
+                    suppressHydrationWarning
                     className={`text-xs mt-1.5 ${
                       isOwn ? "text-blue-200" : "text-muted"
                     }`}

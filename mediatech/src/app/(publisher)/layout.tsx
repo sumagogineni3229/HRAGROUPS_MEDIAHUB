@@ -35,6 +35,16 @@ export default async function PublisherLayout({ children }: { children: React.Re
     select: { balance: true, reserved: true, bonus: true, earnings: true, name: true, avatar: true },
   });
 
+  const pendingTasks = await db.task.aggregate({
+    where: {
+      sellerId: session.user.id,
+      sellerType: "PUBLISHER",
+      status: { in: ["TASK_ACCEPTANCE", "TASK_REVIEW", "IN_PROGRESS", "YOUR_APPROVAL", "IMPROVEMENT"] },
+    },
+    _sum: { sellerEarning: true },
+  });
+  const reservedBalance = (pendingTasks._sum.sellerEarning ?? 0) + (user?.reserved ?? 0);
+
   const notificationCount = await db.notification.count({
     where: { userId: session.user.id!, isRead: false },
   });
@@ -52,7 +62,7 @@ export default async function PublisherLayout({ children }: { children: React.Re
         <TopHeader
           breadcrumbs={[{ label: "Home", href: "/publisher/platforms" }]}
           balance={user?.balance ?? 0}
-          reserved={user?.reserved ?? 0}
+          reserved={reservedBalance}
           bonus={user?.bonus ?? 0}
           userName={user?.name ?? session.user.name ?? ""}
           userRole="Publisher"
