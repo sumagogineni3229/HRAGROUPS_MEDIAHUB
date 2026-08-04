@@ -1466,10 +1466,12 @@ export default function Home() {
                 }
                 setCtaError("");
                 try {
+                  // Ensure signup_role cookie is cleared so this acts strictly as Sign In
+                  document.cookie = "signup_role=; path=/; max-age=0";
                   const { signIn } = await import("next-auth/react");
-                  await signIn("google", { callbackUrl: "/advertiser/sites" });
+                  await signIn("google", { callbackUrl: "/auth/oauth-callback" });
                 } catch {
-                  setCtaError("Failed to initiate Google Sign Up.");
+                  setCtaError("Failed to initiate Sign in with Google.");
                 }
               }}
               className="flex items-center justify-center gap-3 px-8 py-3.5 bg-white border border-[#dcdce5] hover:bg-slate-50 transition rounded-full font-bold text-[15px] text-[#112c3e] shadow-sm cursor-pointer group"
@@ -1492,7 +1494,7 @@ export default function Home() {
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                 />
               </svg>
-              <span>Google Sign Up</span>
+              <span>Sign in with Google</span>
             </button>
           </div>
         </div>
