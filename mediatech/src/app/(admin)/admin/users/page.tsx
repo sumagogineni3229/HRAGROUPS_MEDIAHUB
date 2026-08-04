@@ -98,6 +98,11 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
       redirect("/admin/users?error=cannot_delete_self");
     }
 
+    const targetUser = await db.user.findUnique({ where: { id: userId }, select: { id: true } });
+    if (!targetUser) {
+      redirect("/admin/users");
+    }
+
     await db.$transaction(async (tx: any) => {
       // 1. Delete user notifications
       await tx.notification.deleteMany({ where: { userId } });
@@ -150,8 +155,8 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
       await tx.session.deleteMany({ where: { userId } });
       await tx.account.deleteMany({ where: { userId } });
 
-      // 10. Delete user record
-      await tx.user.delete({ where: { id: userId } });
+      // 10. Delete user record safely with deleteMany
+      await tx.user.deleteMany({ where: { id: userId } });
     });
 
     redirect("/admin/users");

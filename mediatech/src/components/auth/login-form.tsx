@@ -18,7 +18,9 @@ export function LoginForm() {
   const [loading, setLoading] = useState(false);
   const oauthError = searchParams.get("error");
   const [error, setError] = useState(
-    oauthError === "OAuthSignin" || oauthError === "OAuthCallback"
+    oauthError === "NoAccountFound"
+      ? "No account found with this Google email. Please register first."
+      : oauthError === "OAuthSignin" || oauthError === "OAuthCallback"
       ? "Google sign in failed. Please try again."
       : oauthError === "CredentialsSignin"
       ? "Account not found or password incorrect."

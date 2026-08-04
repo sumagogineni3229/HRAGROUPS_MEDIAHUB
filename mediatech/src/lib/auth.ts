@@ -13,6 +13,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db),
   callbacks: {
     ...authConfig.callbacks,
+    async signIn({ user, account }) {
+      if (account?.provider === "google") {
+        if (!user.email) return false;
+
+        const existingUser = await db.user.findUnique({
+          where: { email: user.email },
+          select: { id: true },
+        });
+
+        // If user does not exist in DB and didn't initiate signup from /register, block login
+        const { cookies } = await import("next/headers");
+        const cookieStore = await cookies();
+        const signupRole = cookieStore.get("signup_role")?.value;
+
+        if (!existingUser && !signupRole) {
+          return "/login?error=NoAccountFound";
+        }
+      }
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
