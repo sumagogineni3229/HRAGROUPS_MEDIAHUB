@@ -33,14 +33,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return true;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session: sessionUpdate }) {
       if (user) {
         token.id = user.id;
+      }
+      // Support client-side session.update({ activeRole }) call
+      if (trigger === "update" && sessionUpdate?.activeRole) {
+        token.activeRole = sessionUpdate.activeRole;
       }
       if (token.id) {
         const dbUser = await db.user.findUnique({
           where: { id: token.id as string },
-          select: { role: true, isSuspended: true },
+          select: { role: true, isSuspended: true, enabledRoles: true },
         });
         if (dbUser) {
           if (dbUser.isSuspended) {
@@ -49,6 +53,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           } else {
             token.role = dbUser.role;
             token.isSuspended = false;
+            // Populate enabledRoles from DB (may be empty for old rows)
+            token.enabledRoles =
+              dbUser.enabledRoles && dbUser.enabledRoles.length > 0
+                ? dbUser.enabledRoles
+                : [dbUser.role];
+            // Only override activeRole from DB if not set in token yet
+            if (!token.activeRole) {
+              token.activeRole = dbUser.role;
+            }
           }
         }
       }

@@ -14,30 +14,14 @@ export function PublicHeader({ activePage = "other" }: PublicHeaderProps) {
 
   return (
     <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-[#EAF1F6]">
-      <div className="w-full px-6 sm:px-8 lg:px-12 h-20 flex items-center justify-between">
+      <div className="w-full px-6 sm:px-8 lg:px-12 h-18 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="36"
-            height="36"
-            viewBox="0 0 36 36"
-            fill="none"
-            className="transition-transform group-hover:scale-105"
-          >
-            <rect width="36" height="36" rx="18" fill="#3E4FEA" />
-            <path
-              d="M10 24V12L15.5 19.5L20.5 12V24"
-              stroke="white"
-              strokeWidth="2.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <circle cx="25.5" cy="22.5" r="2" fill="#8CF08A" />
-          </svg>
-          <span className="font-bold text-2xl text-[#112C3E] tracking-tight font-space">
-            Media<span className="text-[#3E4FEA]">Hub</span>
-          </span>
+        <Link href="/" className="flex items-center group py-1">
+          <img
+            src="/mediahub.png"
+            alt="Media Hub Logo"
+            className="h-7 sm:h-8 w-auto object-contain transition-transform group-hover:scale-105"
+          />
         </Link>
 
         {/* Desktop Nav */}
@@ -45,7 +29,7 @@ export function PublicHeader({ activePage = "other" }: PublicHeaderProps) {
           {/* Solutions Nav Link */}
           <Link
             href="/solutions"
-            className={`transition ${activePage === "solutions" ? "text-[#3E4FEA] font-semibold" : "hover:text-[#3E4FEA]"}`}
+            className={`transition ${activePage === "solutions" ? "text-[#F59E0B] font-semibold" : "hover:text-[#F59E0B]"}`}
           >
             Solutions
           </Link>
@@ -53,12 +37,11 @@ export function PublicHeader({ activePage = "other" }: PublicHeaderProps) {
           {/* Blog Nav item with dynamic "NEW" Badge */}
           <Link
             href="/blog"
-            className={`flex items-center gap-2 group transition ${
-              activePage === "blog" ? "text-[#3E4FEA] font-semibold" : "hover:text-[#3E4FEA]"
-            }`}
+            className={`flex items-center gap-2 group transition ${activePage === "blog" ? "text-[#F59E0B] font-semibold" : "hover:text-[#F59E0B]"
+              }`}
           >
             <span>Blog</span>
-            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-gradient-to-r from-[#3E4FEA] to-[#FF4B8B] text-white shadow-sm uppercase tracking-wider group-hover:scale-105 transition-transform animate-pulse">
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white shadow-sm uppercase tracking-wider group-hover:scale-105 transition-transform animate-pulse">
               NEW
             </span>
           </Link>
@@ -66,18 +49,18 @@ export function PublicHeader({ activePage = "other" }: PublicHeaderProps) {
           {/* FAQ */}
           <Link
             href="/faq"
-            className={`transition ${activePage === "faq" ? "text-[#3E4FEA] font-semibold" : "hover:text-[#3E4FEA]"}`}
+            className={`transition ${activePage === "faq" ? "text-[#F59E0B] font-semibold" : "hover:text-[#F59E0B]"}`}
           >
             FAQ
           </Link>
 
           {/* Podcasts Dropdown */}
           <div
-            className="relative group cursor-pointer flex items-center gap-1.5 hover:text-[#3E4FEA] transition"
+            className="relative group cursor-pointer flex items-center gap-1.5 hover:text-[#F59E0B] transition"
             onMouseEnter={() => setActiveDropdown("podcasts")}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <span className={activePage === "podcasts" ? "text-[#3E4FEA] font-semibold" : ""}>Podcasts</span>
+            <span className={activePage === "podcasts" ? "text-[#F59E0B] font-semibold" : ""}>Podcasts</span>
             <ChevronDownIcon className="w-3.5 h-3.5 text-[#677F9B]" />
 
             {activeDropdown === "podcasts" && (
@@ -95,7 +78,7 @@ export function PublicHeader({ activePage = "other" }: PublicHeaderProps) {
           {/* Contact Us */}
           <Link
             href="/contact"
-            className={`transition ${activePage === "contact" ? "text-[#3E4FEA] font-semibold" : "hover:text-[#3E4FEA]"}`}
+            className={`transition ${activePage === "contact" ? "text-[#F59E0B] font-semibold" : "hover:text-[#F59E0B]"}`}
           >
             Contact us
           </Link>
@@ -111,7 +94,7 @@ export function PublicHeader({ activePage = "other" }: PublicHeaderProps) {
           </Link>
           <Link
             href="/register"
-            className="px-6 py-2.5 rounded-full bg-[#112C3E] text-white font-semibold text-[15px] hover:bg-[#3E4FEA] transition shadow-sm"
+            className="px-6 py-2.5 rounded-full bg-[#F59E0B] text-white font-semibold text-[15px] hover:bg-[#D97706] transition shadow-sm"
           >
             Sign Up
           </Link>
@@ -136,7 +119,7 @@ export function PublicHeader({ activePage = "other" }: PublicHeaderProps) {
 
           <Link href="/blog" className="flex items-center justify-between text-lg font-medium text-[#112C3E]">
             <span>Blog</span>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-gradient-to-r from-[#3E4FEA] to-[#FF4B8B] text-white uppercase">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white uppercase">
               NEW
             </span>
           </Link>
@@ -146,10 +129,10 @@ export function PublicHeader({ activePage = "other" }: PublicHeaderProps) {
           </Link>
           <div className="space-y-2 pl-2 border-l-2 border-[#EAF1F6]">
             <span className="text-xs uppercase font-bold text-[#677F9B] tracking-wider">Podcasts</span>
-            <Link href="/media-kit" className="block text-base font-medium text-[#112C3E] hover:text-[#3E4FEA]">
+            <Link href="/media-kit" className="block text-base font-medium text-[#112C3E] hover:text-[#F59E0B]">
               Media Kit
             </Link>
-            <Link href="/podcasts/library" className="block text-base font-medium text-[#112C3E] hover:text-[#3E4FEA]">
+            <Link href="/podcasts/library" className="block text-base font-medium text-[#112C3E] hover:text-[#F59E0B]">
               Podcast Library
             </Link>
           </div>
@@ -161,7 +144,7 @@ export function PublicHeader({ activePage = "other" }: PublicHeaderProps) {
             <Link href="/login" className="w-full text-center py-3 rounded-full border border-[#112C3E] font-semibold text-[#112C3E]">
               Login
             </Link>
-            <Link href="/register" className="w-full text-center py-3 rounded-full bg-[#112C3E] text-white font-semibold hover:bg-[#3E4FEA]">
+            <Link href="/register" className="w-full text-center py-3 rounded-full bg-[#F59E0B] text-white font-semibold hover:bg-[#D97706] transition">
               Sign Up
             </Link>
           </div>

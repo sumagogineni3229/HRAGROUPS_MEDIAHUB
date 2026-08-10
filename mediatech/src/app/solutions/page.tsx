@@ -214,7 +214,7 @@ export default function SolutionsPage() {
   const currentData = SOLUTIONS_DATA[activeTab];
 
   return (
-    <div className="min-h-screen bg-[#F7FAFC] text-[#112C3E] font-sans antialiased selection:bg-[#3E4FEA] selection:text-white flex flex-col justify-between">
+    <div className="min-h-screen bg-[#F7FAFC] text-[#112C3E] font-sans antialiased selection:bg-[#F59E0B] selection:text-white flex flex-col justify-between">
       {/* Public Header */}
       <PublicHeader activePage="solutions" />
 
@@ -235,7 +235,7 @@ export default function SolutionsPage() {
                   onClick={() => setActiveTab(tabKey)}
                   className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all whitespace-nowrap ${
                     isActive
-                      ? "bg-[#3E4FEA] text-white shadow-md scale-105"
+                      ? "bg-[#F59E0B] text-white shadow-md scale-105"
                       : "text-[#677F9B] hover:text-[#112C3E] hover:bg-white/60"
                   }`}
                 >
@@ -250,35 +250,35 @@ export default function SolutionsPage() {
         </section>
 
         {/* ─────────────────────────────────────────────
-           2. DYNAMIC HERO SECTION
+           2. DYNAMIC HERO SECTION (Light Yellow)
            ───────────────────────────────────────────── */}
-        <section className="relative overflow-hidden rounded-[32px] sm:rounded-[40px] bg-gradient-to-br from-[#0F1E36] via-[#11254B] to-[#1E3A8A] text-white p-8 sm:p-12 lg:p-16 shadow-2xl border border-white/10 w-full transition-all duration-300">
+        <section className="relative overflow-hidden rounded-[32px] sm:rounded-[40px] bg-[#FEF3C7]/40 text-[#112C3E] p-8 sm:p-12 lg:p-16 shadow-2xl border border-[#F59E0B]/30 w-full transition-all duration-300">
           {/* Subtle Ambient Background Lighting */}
-          <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#3E4FEA]/25 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#8CF08A]/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#F59E0B]/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#FEF3C7]/30 rounded-full blur-3xl pointer-events-none" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
             {/* Hero Left Copy */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/15 px-4 py-2 rounded-full">
-                <SparklesIcon className="w-4 h-4 text-[#8CF08A]" />
-                <span className="text-xs font-bold text-white uppercase tracking-wider">
+              <div className="inline-flex items-center gap-2 bg-amber-100 border border-amber-300 px-4 py-2 rounded-full">
+                <SparklesIcon className="w-4 h-4 text-amber-800" />
+                <span className="text-xs font-bold text-amber-900 uppercase tracking-wider">
                   {currentData.badge}
                 </span>
               </div>
 
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight font-space">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight font-space text-[#112C3E]">
                 {currentData.heroHeadline}
               </h1>
 
-              <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl font-normal">
+              <p className="text-base sm:text-lg text-slate-700 leading-relaxed max-w-2xl font-medium">
                 {currentData.heroSubheadline}
               </p>
 
               <div className="pt-2 flex flex-wrap items-center gap-4">
                 <Link
                   href="/register"
-                  className="px-8 py-4 rounded-full bg-[#8CF08A] hover:bg-[#7be279] text-[#0C172C] font-extrabold text-base transition-all shadow-lg hover:shadow-xl hover:scale-105 flex items-center gap-2 group"
+                  className="px-8 py-4 rounded-full bg-[#F59E0B] hover:bg-[#D97706] text-white font-extrabold text-base transition-all shadow-lg hover:shadow-xl hover:scale-105 flex items-center gap-2 group"
                 >
                   <span>Get Started Now</span>
                   <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -286,51 +286,51 @@ export default function SolutionsPage() {
 
                 <Link
                   href="/contact"
-                  className="px-8 py-4 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-base transition"
+                  className="px-8 py-4 rounded-full bg-white hover:bg-amber-50 border border-amber-300 text-[#112C3E] font-bold text-base transition shadow-sm"
                 >
                   Book Demo Strategy
                 </Link>
               </div>
 
               {/* Guarantees Row */}
-              <div className="pt-4 flex flex-wrap items-center gap-6 text-xs font-medium text-slate-300 border-t border-white/10">
+              <div className="pt-4 flex flex-wrap items-center gap-6 text-xs font-semibold text-slate-700 border-t border-amber-300/60">
                 <span className="flex items-center gap-1.5">
-                  <CheckCircleIcon className="w-4 h-4 text-[#8CF08A]" /> No monthly subscriptions
+                  <CheckCircleIcon className="w-4 h-4 text-amber-700" /> No monthly subscriptions
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <CheckCircleIcon className="w-4 h-4 text-[#8CF08A]" /> 100% Escrow Protection
+                  <CheckCircleIcon className="w-4 h-4 text-amber-700" /> 100% Escrow Protection
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <CheckCircleIcon className="w-4 h-4 text-[#8CF08A]" /> Verified Metrics
+                  <CheckCircleIcon className="w-4 h-4 text-amber-700" /> Verified Metrics
                 </span>
               </div>
             </div>
 
             {/* Hero Right Visual Cards */}
             <div className="lg:col-span-5 relative">
-              <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
-                <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                  <span className="text-xs uppercase font-bold tracking-wider text-slate-300">Marketplace Overview</span>
-                  <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#8CF08A]/20 text-[#8CF08A] border border-[#8CF08A]/30">
+              <div className="bg-white border border-amber-200/80 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl text-[#112C3E]">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+                  <span className="text-xs uppercase font-bold tracking-wider text-slate-600">Marketplace Overview</span>
+                  <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
                     Live Platform Stats
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   {currentData.stats.map((stat, idx) => (
-                    <div key={idx} className="bg-white/5 border border-white/10 rounded-2xl p-4 text-center">
-                      <div className="text-2xl sm:text-3xl font-black text-white font-space">{stat.value}</div>
-                      <div className="text-xs text-slate-400 mt-1">{stat.label}</div>
+                    <div key={idx} className="bg-[#FEFCE8] border border-amber-200 rounded-2xl p-4 text-center">
+                      <div className="text-2xl sm:text-3xl font-black text-[#112C3E] font-space">{stat.value}</div>
+                      <div className="text-xs text-slate-600 mt-1">{stat.label}</div>
                     </div>
                   ))}
                 </div>
 
-                <div className="bg-[#0C172C]/60 rounded-2xl p-4 border border-white/10 flex items-center justify-between">
+                <div className="bg-[#FEF9C3] rounded-2xl p-4 border border-[#FDE047] flex items-center justify-between shadow-md">
                   <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 rounded-full bg-[#8CF08A] animate-ping" />
-                    <span className="text-xs font-semibold text-slate-200">Active Campaign Matcher</span>
+                    <div className="w-3 h-3 rounded-full bg-amber-500 animate-ping" />
+                    <span className="text-xs font-bold text-amber-950">Active Campaign Matcher</span>
                   </div>
-                  <span className="text-xs font-bold text-[#8CF08A]">Ready</span>
+                  <span className="text-xs font-bold text-amber-800 bg-amber-200/80 px-2 py-0.5 rounded-full">Ready</span>
                 </div>
               </div>
             </div>
@@ -359,13 +359,13 @@ export default function SolutionsPage() {
                   className="bg-white border border-[#EAF1F6] rounded-3xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between space-y-4"
                 >
                   <div className="space-y-4">
-                    <div className="w-12 h-12 rounded-2xl bg-[#F0F4FF] flex items-center justify-center text-[#3E4FEA]">
+                    <div className="w-12 h-12 rounded-2xl bg-[#FEF3C7] flex items-center justify-center text-[#D97706]">
                       <Icon className="w-6 h-6" />
                     </div>
                     <h3 className="text-lg font-bold text-[#112C3E] font-space">{feature.title}</h3>
                     <p className="text-xs sm:text-sm text-[#677F9B] leading-relaxed">{feature.desc}</p>
                   </div>
-                  <div className="pt-2 flex items-center gap-1 text-xs font-bold text-[#3E4FEA]">
+                  <div className="pt-2 flex items-center gap-1 text-xs font-bold text-[#F59E0B]">
                     <span>Learn pattern</span>
                     <ArrowRightIcon className="w-3.5 h-3.5" />
                   </div>
@@ -380,7 +380,7 @@ export default function SolutionsPage() {
            ───────────────────────────────────────────── */}
         <section className="bg-white border border-[#EAF1F6] rounded-[32px] p-8 sm:p-12 shadow-sm space-y-10">
           <div className="text-center space-y-2 max-w-xl mx-auto">
-            <span className="text-xs uppercase font-extrabold tracking-widest text-[#3E4FEA]">Step-by-Step</span>
+            <span className="text-xs uppercase font-extrabold tracking-widest text-[#F59E0B]">Step-by-Step</span>
             <h2 className="text-2xl sm:text-3xl font-bold text-[#112C3E] font-space">
               {currentData.workflowTitle}
             </h2>
@@ -400,53 +400,53 @@ export default function SolutionsPage() {
         </section>
 
         {/* ─────────────────────────────────────────────
-           5. COMPARISON / TRUST TABLE (Adsy Style Clarity)
+           5. COMPARISON / TRUST TABLE (Light Yellow Theme)
            ───────────────────────────────────────────── */}
-        <section className="bg-[#112C3E] text-white rounded-[32px] p-8 sm:p-12 shadow-xl space-y-8">
+        <section className="bg-[#FEF3C7]/40 text-[#112C3E] rounded-[32px] p-8 sm:p-12 shadow-xl space-y-8 border border-[#F59E0B]/30">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-5 space-y-4">
-              <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#3E4FEA] text-white uppercase tracking-wider">
+              <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-800 text-white uppercase tracking-wider shadow-sm">
                 The MediaHub Advantage
               </span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold font-space">
+              <h2 className="text-2xl sm:text-3xl font-extrabold font-space text-[#112C3E]">
                 Traditional Outreach vs. MediaHub Platform
               </h2>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
                 Say goodbye to endless email cold pitching, unverified metric claims, non-responsive webmasters, and payment fraud.
               </p>
             </div>
 
-            <div className="lg:col-span-7 bg-white/5 border border-white/10 rounded-2xl p-6 space-y-4">
-              <div className="grid grid-cols-2 text-xs uppercase font-bold text-slate-400 border-b border-white/10 pb-3">
-                <div>Manual Guest Posting</div>
-                <div className="text-[#8CF08A]">MediaHub Marketplace</div>
+            <div className="lg:col-span-7 bg-white/90 border border-amber-300/70 rounded-2xl p-6 space-y-4 shadow-md text-[#112C3E]">
+              <div className="grid grid-cols-2 text-xs uppercase font-bold border-b border-amber-200 pb-3">
+                <div className="text-slate-600">Manual Guest Posting</div>
+                <div className="text-amber-800 font-extrabold">MediaHub Marketplace</div>
               </div>
 
-              <div className="grid grid-cols-2 text-xs sm:text-sm py-2 border-b border-white/5">
-                <div className="text-slate-400">High agency markup fees</div>
-                <div className="font-semibold text-white flex items-center gap-1.5">
-                  <CheckIcon className="w-4 h-4 text-[#8CF08A]" /> Direct publisher pricing
+              <div className="grid grid-cols-2 text-xs sm:text-sm py-2 border-b border-amber-100">
+                <div className="text-slate-600">High agency markup fees</div>
+                <div className="font-bold text-[#112C3E] flex items-center gap-1.5">
+                  <CheckIcon className="w-4 h-4 text-amber-700" /> Direct publisher pricing
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 text-xs sm:text-sm py-2 border-b border-white/5">
-                <div className="text-slate-400">Uncertain payment risk</div>
-                <div className="font-semibold text-white flex items-center gap-1.5">
-                  <CheckIcon className="w-4 h-4 text-[#8CF08A]" /> 100% Escrow protected
+              <div className="grid grid-cols-2 text-xs sm:text-sm py-2 border-b border-amber-100">
+                <div className="text-slate-600">Uncertain payment risk</div>
+                <div className="font-bold text-[#112C3E] flex items-center gap-1.5">
+                  <CheckIcon className="w-4 h-4 text-amber-700" /> 100% Escrow protected
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 text-xs sm:text-sm py-2 border-b border-white/5">
-                <div className="text-slate-400">Manual metric checking</div>
-                <div className="font-semibold text-white flex items-center gap-1.5">
-                  <CheckIcon className="w-4 h-4 text-[#8CF08A]" /> Live Ahrefs & Moz metrics
+              <div className="grid grid-cols-2 text-xs sm:text-sm py-2 border-b border-amber-100">
+                <div className="text-slate-600">Manual metric checking</div>
+                <div className="font-bold text-[#112C3E] flex items-center gap-1.5">
+                  <CheckIcon className="w-4 h-4 text-amber-700" /> Live Ahrefs & Moz metrics
                 </div>
               </div>
 
               <div className="grid grid-cols-2 text-xs sm:text-sm py-2">
-                <div className="text-slate-400">Weeks of cold negotiation</div>
-                <div className="font-semibold text-white flex items-center gap-1.5">
-                  <CheckIcon className="w-4 h-4 text-[#8CF08A]" /> Instant ordering & 48h turnaround
+                <div className="text-slate-600">Weeks of cold negotiation</div>
+                <div className="font-bold text-[#112C3E] flex items-center gap-1.5">
+                  <CheckIcon className="w-4 h-4 text-amber-700" /> Instant ordering & 48h turnaround
                 </div>
               </div>
             </div>
@@ -454,26 +454,26 @@ export default function SolutionsPage() {
         </section>
 
         {/* ─────────────────────────────────────────────
-           6. BOTTOM CTA BANNER
+           6. BOTTOM CTA BANNER (Light Yellow Theme)
            ───────────────────────────────────────────── */}
-        <section className="rounded-[32px] bg-gradient-to-r from-[#3E4FEA] via-[#2D3ECE] to-[#1E2BB8] text-white p-8 sm:p-12 text-center space-y-6 shadow-xl relative overflow-hidden">
+        <section className="rounded-[32px] bg-[#FEF3C7]/40 text-[#112C3E] p-8 sm:p-12 text-center space-y-6 shadow-xl relative overflow-hidden border border-[#F59E0B]/30">
           <div className="max-w-2xl mx-auto space-y-4 relative z-10">
-            <h2 className="text-2xl sm:text-4xl font-black font-space">
+            <h2 className="text-2xl sm:text-4xl font-black font-space text-[#112C3E]">
               {currentData.ctaHeadline}
             </h2>
-            <p className="text-sm sm:text-base text-slate-200">
+            <p className="text-sm sm:text-base text-slate-700 font-medium">
               Join thousands of growth marketers, advertisers, brand strategists, and agencies scaling content distribution on MediaHub.
             </p>
             <div className="pt-2 flex flex-wrap justify-center items-center gap-4">
               <Link
                 href="/register"
-                className="px-8 py-3.5 rounded-full bg-[#8CF08A] hover:bg-[#7be279] text-[#0C172C] font-extrabold text-sm sm:text-base transition shadow-md hover:scale-105"
+                className="px-8 py-3.5 rounded-full bg-[#F59E0B] hover:bg-[#D97706] text-white font-extrabold text-sm sm:text-base transition shadow-md hover:scale-105"
               >
                 Create Free Account
               </Link>
               <Link
                 href="/contact"
-                className="px-8 py-3.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/25 text-white font-bold text-sm sm:text-base transition"
+                className="px-8 py-3.5 rounded-full bg-white hover:bg-amber-50 border border-amber-300 text-[#112C3E] font-bold text-sm sm:text-base transition shadow-sm"
               >
                 Contact Sales Team
               </Link>

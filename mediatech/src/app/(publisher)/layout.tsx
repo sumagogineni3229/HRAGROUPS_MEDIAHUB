@@ -26,7 +26,8 @@ export default async function PublisherLayout({ children }: { children: React.Re
   }
 
   const role = (session.user as any).role as string;
-  if (role !== "PUBLISHER" && role !== "ADMIN") {
+  const activeRole = ((session.user as any).activeRole ?? role) as string;
+  if (activeRole !== "PUBLISHER" && role !== "ADMIN") {
     redirect("/login");
   }
 
@@ -69,6 +70,8 @@ export default async function PublisherLayout({ children }: { children: React.Re
           userAvatar={user?.avatar ?? session.user.image ?? undefined}
           notificationCount={notificationCount}
           recentNotifications={recentNotifications as any}
+          activeRole={(session.user as any).activeRole ?? "PUBLISHER"}
+          enabledRoles={(session.user as any).enabledRoles ?? ["PUBLISHER"]}
         />
         <main className="page-body">
           {children}

@@ -31,6 +31,11 @@ export default auth((req) => {
   const pathname = nextUrl.pathname;
   const session = req.auth;
 
+  // Bypass static files / images
+  if (pathname.match(/\.(png|jpg|jpeg|gif|svg|ico|webp)$/i)) {
+    return NextResponse.next();
+  }
+
   const isAuthRoute   = AUTH_ROUTES.some((r) => pathname.startsWith(r));
   const isPublicRoute = pathname === "/" || PUBLIC_ROUTES.some((r) => r !== "/" && pathname.startsWith(r));
   const isApiRoute    = pathname.startsWith("/api/");
@@ -42,7 +47,7 @@ export default auth((req) => {
 
   // Logged-in user visiting auth page → redirect to dashboard
   if (isAuthRoute && session?.user) {
-    const role = (session.user as any).role as string;
+    const role = ((session.user as any).activeRole ?? (session.user as any).role) as string;
     console.log(`[MIDDLEWARE] Redirecting logged-in user to: ${ROLE_HOME[role]}`);
     return NextResponse.redirect(new URL(ROLE_HOME[role] ?? "/login", nextUrl));
   }
@@ -58,7 +63,7 @@ export default auth((req) => {
   }
 
   // Role-based access control
-  const role = (session.user as any).role as string;
+  const role = ((session.user as any).activeRole ?? (session.user as any).role) as string;
   const allowed = ROLE_ROUTES[role] ?? [];
   const isAllowed = allowed.some((r) => pathname.startsWith(r));
 
@@ -70,5 +75,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|images|icons).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|svg|ico|webp)$).*)"],
 };

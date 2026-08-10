@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import { ToastProvider } from "@/components/ui/toast";
+import { NextAuthProvider } from "@/components/auth-provider";
 import "./globals.css";
 
 // next/font: self-hosted, zero layout shift, no external requests
@@ -37,9 +38,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable}`} data-scroll-behavior="smooth">
       <body className="font-space bg-app antialiased" suppressHydrationWarning>
-        <ToastProvider>
-          {children}
-        </ToastProvider>
+        <NextAuthProvider>
+          <ToastProvider>
+            {children}
+          </ToastProvider>
+        </NextAuthProvider>
       </body>
     </html>
   );

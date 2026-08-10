@@ -35,7 +35,7 @@ export default function BlogPostDetailPage() {
           <p className="text-sm text-[#677F9B]">The blog article you are looking for does not exist or has been moved.</p>
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#3E4FEA] text-white font-bold text-xs"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#F59E0B] text-white font-bold text-xs"
           >
             <ArrowLeftIcon className="w-4 h-4" />
             Back to Blog Index
@@ -56,7 +56,7 @@ export default function BlogPostDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F7F9] text-[#112C3E] font-sans antialiased selection:bg-[#3E4FEA] selection:text-white">
+    <div className="min-h-screen bg-[#F4F7F9] text-[#112C3E] font-sans antialiased selection:bg-[#F59E0B] selection:text-white">
       {/* Header */}
       <PublicHeader activePage="blog" />
 
@@ -65,11 +65,11 @@ export default function BlogPostDetailPage() {
         <div className="w-full px-6 sm:px-8 lg:px-12 space-y-6">
           {/* Breadcrumb nav */}
           <nav className="flex items-center gap-2 text-xs font-semibold text-[#677F9B]">
-            <Link href="/" className="hover:text-[#3E4FEA] transition">
+            <Link href="/" className="hover:text-[#F59E0B] transition">
               Home
             </Link>
             <span>/</span>
-            <Link href="/blog" className="hover:text-[#3E4FEA] transition">
+            <Link href="/blog" className="hover:text-[#F59E0B] transition">
               Blog
             </Link>
             <span>/</span>
@@ -77,7 +77,7 @@ export default function BlogPostDetailPage() {
           </nav>
 
           {/* Category Pill */}
-          <div className="inline-block bg-[#3E4FEA]/10 text-[#3E4FEA] text-xs font-bold px-3.5 py-1 rounded-full uppercase tracking-wider">
+          <div className="inline-block bg-[#FEF3C7] text-[#D97706] text-xs font-bold px-3.5 py-1 rounded-full uppercase tracking-wider">
             {post.category}
           </div>
 
@@ -106,16 +106,16 @@ export default function BlogPostDetailPage() {
 
             <div className="flex items-center gap-4 text-xs text-[#677F9B]">
               <span className="flex items-center gap-1.5 bg-[#F5F8FA] px-3 py-1.5 rounded-full border border-[#EAF1F6]">
-                <CalendarIcon className="w-4 h-4 text-[#3E4FEA]" />
+                <CalendarIcon className="w-4 h-4 text-[#F59E0B]" />
                 {post.publishDate}
               </span>
               <span className="flex items-center gap-1.5 bg-[#F5F8FA] px-3 py-1.5 rounded-full border border-[#EAF1F6]">
-                <ClockIcon className="w-4 h-4 text-[#3E4FEA]" />
+                <ClockIcon className="w-4 h-4 text-[#F59E0B]" />
                 {post.readTime}
               </span>
               <button
                 onClick={handleCopyLink}
-                className="flex items-center gap-1.5 bg-[#3E4FEA]/10 hover:bg-[#3E4FEA]/20 text-[#3E4FEA] px-3 py-1.5 rounded-full font-bold transition"
+                className="flex items-center gap-1.5 bg-[#FEF3C7] hover:bg-[#FDE68A] text-[#D97706] px-3 py-1.5 rounded-full font-bold transition"
               >
                 {copied ? <CheckIcon className="w-4 h-4 text-green-600" /> : <ShareIcon className="w-4 h-4" />}
                 <span>{copied ? "Link Copied!" : "Share"}</span>
@@ -138,7 +138,7 @@ export default function BlogPostDetailPage() {
             {post.tableOfContents && post.tableOfContents.length > 0 && (
               <div className="bg-white rounded-2xl p-6 border border-[#EAF1F6] shadow-sm sticky top-28 space-y-4">
                 <h3 className="text-sm font-bold uppercase tracking-wider text-[#112C3E] font-space flex items-center gap-2">
-                  <BookmarkIcon className="w-4 h-4 text-[#3E4FEA]" />
+                  <BookmarkIcon className="w-4 h-4 text-[#F59E0B]" />
                   <span>Table of Contents</span>
                 </h3>
                 <ul className="space-y-2 text-xs font-medium text-[#677F9B]">
@@ -146,7 +146,7 @@ export default function BlogPostDetailPage() {
                     <li key={toc.id}>
                       <a
                         href={`#${toc.id}`}
-                        className="block hover:text-[#3E4FEA] transition py-1 hover:translate-x-1 duration-200"
+                        className="block hover:text-[#F59E0B] transition py-1 hover:translate-x-1 duration-200"
                       >
                         {toc.title}
                       </a>
@@ -156,8 +156,8 @@ export default function BlogPostDetailPage() {
 
                 {/* Mini Escrow Widget */}
                 <div className="pt-4 border-t border-[#EAF1F6] bg-[#F5F8FA] p-4 rounded-xl space-y-2 text-xs">
-                  <div className="flex items-center gap-1.5 text-[#3E4FEA] font-bold">
-                    <ShieldCheckIcon className="w-4 h-4" />
+                  <div className="flex items-center gap-1.5 text-[#D97706] font-bold">
+                    <ShieldCheckIcon className="w-4 h-4 text-[#F59E0B]" />
                     <span>MediaHub Escrow Protected</span>
                   </div>
                   <p className="text-[#677F9B]">
@@ -165,7 +165,7 @@ export default function BlogPostDetailPage() {
                   </p>
                   <Link
                     href="/register"
-                    className="block text-center mt-2 px-4 py-2 bg-[#3E4FEA] text-white font-extrabold rounded-lg hover:bg-[#112C3E] transition"
+                    className="block text-center mt-2 px-4 py-2 bg-[#F59E0B] text-white font-extrabold rounded-lg hover:bg-[#D97706] transition"
                   >
                     Join Marketplace
                   </Link>
@@ -178,15 +178,15 @@ export default function BlogPostDetailPage() {
           <article className="lg:col-span-9 space-y-8 bg-white p-8 sm:p-12 rounded-3xl border border-[#EAF1F6] shadow-sm">
             {/* Key Takeaways Callout Box */}
             {post.keyTakeaways && post.keyTakeaways.length > 0 && (
-              <div className="p-6 bg-gradient-to-r from-[#3E4FEA]/5 to-[#8CF08A]/10 border-l-4 border-[#3E4FEA] rounded-r-2xl space-y-3">
-                <div className="flex items-center gap-2 text-[#3E4FEA] font-bold font-space text-base">
-                  <SparklesIcon className="w-5 h-5" />
+              <div className="p-6 bg-amber-50/60 border-l-4 border-[#F59E0B] rounded-r-2xl space-y-3">
+                <div className="flex items-center gap-2 text-[#D97706] font-bold font-space text-base">
+                  <SparklesIcon className="w-5 h-5 text-[#F59E0B]" />
                   <span>Key Takeaways & Executive Summary</span>
                 </div>
                 <ul className="space-y-2 text-sm text-[#112C3E]">
                   {post.keyTakeaways.map((takeaway, idx) => (
                     <li key={idx} className="flex items-start gap-2.5">
-                      <span className="w-2 h-2 rounded-full bg-[#3E4FEA] mt-2 shrink-0" />
+                      <span className="w-2 h-2 rounded-full bg-[#F59E0B] mt-2 shrink-0" />
                       <span>{takeaway}</span>
                     </li>
                   ))}
@@ -215,7 +215,7 @@ export default function BlogPostDetailPage() {
               />
               <div className="space-y-1">
                 <h4 className="font-bold text-[#112C3E] font-space text-base">{post.author.name}</h4>
-                <p className="text-xs text-[#3E4FEA] font-semibold">{post.author.role}</p>
+                <p className="text-xs text-[#F59E0B] font-semibold">{post.author.role}</p>
                 <p className="text-xs text-[#677F9B] leading-relaxed">
                   Specializes in organic search growth, publisher relation management, and technical SEO architecture. Writes regular strategy guides for the MediaHub publication.
                 </p>
@@ -223,7 +223,7 @@ export default function BlogPostDetailPage() {
             </div>
 
             {/* CTA Banner */}
-            <div className="bg-gradient-to-r from-[#112C3E] to-[#3E4FEA] text-white p-8 rounded-2xl shadow-xl space-y-4 text-center">
+            <div className="bg-gradient-to-r from-[#112C3E] via-[#1E293B] to-[#0F172A] text-white p-8 rounded-2xl shadow-xl space-y-4 text-center border border-[#F59E0B]/20">
               <h3 className="text-2xl font-bold font-space">
                 Scale Your Organic Keyword Rankings Today
               </h3>
@@ -232,7 +232,7 @@ export default function BlogPostDetailPage() {
               </p>
               <Link
                 href="/register"
-                className="inline-block px-8 py-3.5 bg-[#8CF08A] text-[#112C3E] font-extrabold rounded-full hover:bg-white transition shadow-lg text-sm"
+                className="inline-block px-8 py-3.5 bg-[#F59E0B] text-white font-extrabold rounded-full hover:bg-[#D97706] transition shadow-lg text-sm"
               >
                 Start Guest Posting Campaign
               </Link>
@@ -246,7 +246,7 @@ export default function BlogPostDetailPage() {
         <section className="py-16 w-full px-6 sm:px-8 lg:px-12 border-t border-[#EAF1F6]">
           <div className="flex items-center justify-between mb-8">
             <h3 className="text-2xl font-bold text-[#112C3E] font-space">Related Articles</h3>
-            <Link href="/blog" className="text-xs font-bold text-[#3E4FEA] hover:underline flex items-center gap-1">
+            <Link href="/blog" className="text-xs font-bold text-[#F59E0B] hover:underline flex items-center gap-1">
               <span>View All Articles</span>
               <ArrowRightIcon className="w-3.5 h-3.5" />
             </Link>
@@ -261,10 +261,10 @@ export default function BlogPostDetailPage() {
                     alt={rel.title}
                     className="w-full h-40 object-cover rounded-xl mb-4"
                   />
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#3E4FEA] bg-[#3E4FEA]/10 px-2.5 py-0.5 rounded-full">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#D97706] bg-[#FEF3C7] px-2.5 py-0.5 rounded-full">
                     {rel.category}
                   </span>
-                  <h4 className="font-bold text-[#112C3E] mt-2 mb-1 text-sm font-space line-clamp-2 hover:text-[#3E4FEA]">
+                  <h4 className="font-bold text-[#112C3E] mt-2 mb-1 text-sm font-space line-clamp-2 hover:text-[#F59E0B]">
                     {rel.title}
                   </h4>
                   <p className="text-xs text-[#677F9B] line-clamp-2">{rel.excerpt}</p>

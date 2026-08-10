@@ -123,35 +123,43 @@ export function FloatingSupportWidget() {
         
         {/* 1. Phone Support Modal */}
         {callModalOpen && (
-          <div className="bg-white rounded-2xl shadow-2xl border border-[#EAF1F6] p-5 w-80 mb-2 animate-in fade-in slide-in-from-bottom-4 text-[#112C3E]">
-            <div className="flex items-center justify-between pb-3 border-b border-[#EAF1F6]">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-[#22c55e]/10 text-[#22c55e] flex items-center justify-center">
-                  <PhoneIcon className="w-4 h-4" />
+          <div className="bg-white rounded-2xl shadow-2xl border border-amber-200/60 p-5 w-80 mb-2 animate-in fade-in slide-in-from-bottom-4 text-[#112C3E] overflow-hidden">
+            {/* Header bar */}
+            <div className="bg-[#F59E0B] -mx-5 -mt-5 px-5 pt-5 pb-4 mb-4 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-full bg-white/30 border border-white/40 flex items-center justify-center">
+                  <PhoneIcon className="w-4 h-4 text-[#112C3E]" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm text-[#112C3E]">Phone Support</h4>
-                  <p className="text-[11px] text-[#677F9B]">Mon-Fri 24/7 Available</p>
+                  <h4 className="font-extrabold text-sm text-[#112C3E] leading-tight">Phone Support</h4>
+                  <p className="text-[11px] text-[#112C3E]/70 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e] inline-block" />
+                    Mon–Fri · 24/7 Available
+                  </p>
                 </div>
               </div>
-              <button onClick={() => setCallModalOpen(false)} className="text-gray-400 hover:text-gray-600 p-1">
+              <button onClick={() => setCallModalOpen(false)} className="text-[#112C3E]/60 hover:text-[#112C3E] p-1 transition">
                 <XMarkIcon className="w-4 h-4" />
               </button>
             </div>
-            <div className="py-4 text-center space-y-3">
-              <p className="text-xs text-[#677F9B]">Speak directly with a MediaHub campaign strategist:</p>
+
+            {/* Body */}
+            <div className="text-center space-y-4">
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Speak directly with a <span className="font-semibold text-[#112C3E]">MediaHub campaign strategist</span>
+              </p>
               <a
                 href="tel:+919490056002"
-                className="block text-xl font-extrabold text-[#3E4FEA] hover:underline tracking-wide font-inter"
+                className="block text-2xl font-black text-[#F59E0B] hover:text-[#D97706] tracking-wide transition"
               >
                 +91 9490056002
               </a>
               <a
                 href="tel:+919490056002"
-                className="flex items-center justify-center gap-2 w-full py-2.5 bg-[#22c55e] hover:bg-[#16a34a] text-white font-bold text-xs rounded-xl transition shadow-sm"
+                className="flex items-center justify-center gap-2 w-full py-3 bg-[#112C3E] hover:bg-[#1E3A5F] text-white font-bold text-xs rounded-xl transition shadow-md"
               >
                 <PhoneIcon className="w-4 h-4" />
-                Call Now (+91 9490056002)
+                Call Now · +91 9490056002
               </a>
             </div>
           </div>
@@ -161,26 +169,26 @@ export function FloatingSupportWidget() {
         {chatOpen && (
           <div className="bg-white rounded-2xl shadow-2xl border border-slate-200/80 w-80 sm:w-96 h-[480px] flex flex-col mb-2 overflow-hidden animate-in fade-in slide-in-from-bottom-4 text-[#112C3E]">
             {/* Header */}
-            <div className="bg-gradient-to-r from-[#3E4FEA] via-[#2D3ECE] to-[#1E2DB8] text-white p-4 flex items-center justify-between shadow-md">
+            <div className="bg-[#F59E0B] text-[#112C3E] p-4 flex items-center justify-between shadow-md">
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/30 shadow-inner">
-                    <SparklesIcon className="w-5 h-5 text-amber-300 animate-pulse" />
+                  <div className="w-10 h-10 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center text-[#112C3E] border border-white/40 shadow-inner">
+                    <SparklesIcon className="w-5 h-5 text-[#112C3E] animate-pulse" />
                   </div>
-                  <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#8CF08A] rounded-full border-2 border-[#3E4FEA]" />
+                  <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#22c55e] rounded-full border-2 border-[#F59E0B]" />
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">
                     <h4 className="font-extrabold text-sm leading-tight tracking-wide">MediaHub AI</h4>
-                    <span className="text-[10px] bg-amber-300/20 border border-amber-300/40 text-amber-200 font-semibold px-1.5 py-0.2 rounded-full">Bot</span>
+                    <span className="text-[10px] bg-white/30 border border-white/40 text-[#112C3E] font-semibold px-1.5 py-0.5 rounded-full">Bot</span>
                   </div>
-                  <span className="text-[11px] text-white/80 flex items-center gap-1 mt-0.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#8CF08A]" />
+                  <span className="text-[11px] text-[#112C3E]/80 flex items-center gap-1 mt-0.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
                     Online • Instant Answers
                   </span>
                 </div>
               </div>
-              <button onClick={() => setChatOpen(false)} className="text-white/80 hover:text-white p-1 transition">
+              <button onClick={() => setChatOpen(false)} className="text-[#112C3E]/70 hover:text-[#112C3E] p-1 transition">
                 <XMarkIcon className="w-5 h-5" />
               </button>
             </div>
@@ -309,13 +317,13 @@ export function FloatingSupportWidget() {
           <a
             href="tel:+919490056002"
             onClick={handleCallClick}
-            className="w-14 h-14 rounded-full bg-[#88F385] hover:bg-[#7ae877] text-[#0D2735] flex items-center justify-center shadow-xl transition-transform hover:scale-105"
+            className="w-14 h-14 rounded-full bg-[#F59E0B] hover:bg-[#D97706] text-white flex items-center justify-center shadow-xl transition-transform hover:scale-105"
             title="Call +91 9490056002"
             aria-label="Call +91 9490056002"
           >
             <svg width="44" height="44" viewBox="0 0 52 52" fill="none">
-              <path d="M26 6C14.9543 6 6 14.9543 6 26C6 30.8298 7.71261 35.2599 10.5739 38.7185L7 46L14.7725 42.6682C18.006 44.778 21.8601 46 26 46C37.0457 46 46 37.0457 46 26C46 14.9543 37.0457 6 26 6Z" fill="#88F385"/>
-              <path d="M33.01 27.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-2.2 2.2a15.053 15.053 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.23-1.01c-.36-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99h-3.36c-.54 0-1.22.24-1.22.99 0 9.29 7.73 17 17.01 17 .71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z" fill="#0D2735"/>
+              <path d="M26 6C14.9543 6 6 14.9543 6 26C6 30.8298 7.71261 35.2599 10.5739 38.7185L7 46L14.7725 42.6682C18.006 44.778 21.8601 46 26 46C37.0457 46 46 37.0457 46 26C46 14.9543 37.0457 6 26 6Z" fill="#F59E0B"/>
+              <path d="M33.01 27.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-2.2 2.2a15.053 15.053 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.23-1.01c-.36-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99h-3.36c-.54 0-1.22.24-1.22.99 0 9.29 7.73 17 17.01 17 .71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z" fill="white"/>
             </svg>
           </a>
 
@@ -325,18 +333,18 @@ export function FloatingSupportWidget() {
               setChatOpen(!chatOpen);
               setCallModalOpen(false);
             }}
-            className="w-14 h-14 rounded-[22px] bg-[#88F385] hover:bg-[#7ae877] text-[#0D2735] flex items-center justify-center shadow-xl transition-transform hover:scale-105 relative"
+            className="w-14 h-14 rounded-[22px] bg-[#F59E0B] hover:bg-[#D97706] text-white flex items-center justify-center shadow-xl transition-transform hover:scale-105 relative"
             title="MediaHub AI Chat"
             aria-label="MediaHub AI Chat"
           >
             {/* Chat Bubble Icon with Tail */}
             <svg width="30" height="26" viewBox="0 0 34 30" fill="none">
-              <rect width="32" height="20" rx="10" fill="#1A3828" />
-              <path d="M24 18L26.5 25L20 19.5H24Z" fill="#1A3828" />
+              <rect width="32" height="20" rx="10" fill="white" />
+              <path d="M24 18L26.5 25L20 19.5H24Z" fill="white" />
             </svg>
             <span className="absolute -top-1 -right-1 flex h-4 w-4">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-4 w-4 bg-amber-500 text-[9px] font-bold text-white items-center justify-center">AI</span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-4 w-4 bg-[#112C3E] text-[9px] font-bold text-white items-center justify-center">AI</span>
             </span>
           </button>
         </div>

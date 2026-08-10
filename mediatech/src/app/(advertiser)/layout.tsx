@@ -42,7 +42,8 @@ export default async function AdvertiserLayout({ children }: { children: React.R
   }
 
   const role = (session.user as any).role as string;
-  if (role !== "ADVERTISER" && role !== "ADMIN") {
+  const activeRole = ((session.user as any).activeRole ?? role) as string;
+  if (activeRole !== "ADVERTISER" && role !== "ADMIN") {
     redirect("/login");
   }
 
@@ -76,6 +77,8 @@ export default async function AdvertiserLayout({ children }: { children: React.R
           userAvatar={user?.avatar ?? session.user.image ?? undefined}
           notificationCount={notificationCount}
           recentNotifications={recentNotifications as any}
+          activeRole={(session.user as any).activeRole ?? "ADVERTISER"}
+          enabledRoles={(session.user as any).enabledRoles ?? ["ADVERTISER"]}
         />
         <main className="page-body">
           {children}

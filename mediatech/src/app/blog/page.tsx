@@ -52,7 +52,7 @@ export default function BlogIndexPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7FAFC] text-[#112C3E] font-sans antialiased selection:bg-[#3E4FEA] selection:text-white">
+    <div className="min-h-screen bg-[#F7FAFC] text-[#112C3E] font-sans antialiased selection:bg-[#F59E0B] selection:text-white">
       {/* Public Header with NEW Badge on Blog */}
       <PublicHeader activePage="blog" />
 
@@ -72,7 +72,7 @@ export default function BlogIndexPage() {
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-5 pr-12 py-3 bg-[#E9F0F5] rounded-full text-sm text-[#112C3E] placeholder-[#677F9B] border border-[#D5E1EA] focus:outline-none focus:ring-2 focus:ring-[#3E4FEA] transition shadow-inner"
+                className="w-full pl-5 pr-12 py-3 bg-[#E9F0F5] rounded-full text-sm text-[#112C3E] placeholder-[#677F9B] border border-[#D5E1EA] focus:outline-none focus:ring-2 focus:ring-[#F59E0B] transition shadow-inner"
               />
               <MagnifyingGlassIcon className="w-5 h-5 text-[#677F9B] absolute right-4 top-1/2 -translate-y-1/2" />
             </div>
@@ -93,7 +93,7 @@ export default function BlogIndexPage() {
                       onClick={() => setSelectedCategory(category)}
                       className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 ${
                         isActive
-                          ? "bg-[#DDE7EE] text-[#112C3E] border border-[#B0C4D3] font-bold shadow-sm"
+                          ? "bg-[#FEF3C7] text-[#D97706] border border-[#F59E0B]/40 font-bold shadow-sm"
                           : "bg-white text-[#475569] border border-[#E2E8F0] hover:bg-[#F0F4F8] hover:text-[#112C3E]"
                       }`}
                     >
@@ -112,7 +112,7 @@ export default function BlogIndexPage() {
               <div className="space-y-1">
                 <h4 className="text-xl font-extrabold font-space leading-tight">
                   Grow your <br />
-                  <span className="text-[#38D479]">SERP Rankings</span>
+                  <span className="text-[#F59E0B]">SERP Rankings</span>
                 </h4>
                 <p className="text-xs text-[#94A3B8] leading-relaxed">
                   Place content on DA40+ guest posting sites
@@ -121,7 +121,7 @@ export default function BlogIndexPage() {
 
               <Link
                 href="/register"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#38D479] text-[#0B1E2E] font-extrabold text-xs hover:bg-white transition-all shadow-md group-hover:scale-105"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#F59E0B] text-[#0B1E2E] font-extrabold text-xs hover:bg-white transition-all shadow-md group-hover:scale-105"
               >
                 <span>Sign Up for Free</span>
                 <ArrowUpRightIcon className="w-4 h-4" />
@@ -136,7 +136,7 @@ export default function BlogIndexPage() {
                   <Link
                     key={article.slug}
                     href={`/blog/${article.slug}`}
-                    className="block text-xs font-semibold text-[#475569] hover:text-[#3E4FEA] leading-relaxed transition hover:underline"
+                    className="block text-xs font-semibold text-[#475569] hover:text-[#F59E0B] leading-relaxed transition hover:underline"
                   >
                     {article.title}
                   </Link>
@@ -179,7 +179,7 @@ export default function BlogIndexPage() {
                   </span>
 
                   <Link href={`/blog/${featuredPost.slug}`}>
-                    <h2 className="text-xl md:text-2xl lg:text-3xl font-extrabold text-[#112C3E] font-space group-hover:text-[#3E4FEA] transition-colors leading-snug">
+                    <h2 className="text-xl md:text-2xl lg:text-3xl font-extrabold text-[#112C3E] font-space group-hover:text-[#F59E0B] transition-colors leading-snug">
                       {featuredPost.title}
                     </h2>
                   </Link>
@@ -221,7 +221,7 @@ export default function BlogIndexPage() {
                     </button>
                     <button
                       onClick={handleNextRecommended}
-                      className="w-9 h-9 rounded-full border border-[#D9E2EC] bg-white flex items-center justify-center text-[#112C3E] hover:bg-[#EAF1F6] transition shadow-sm"
+                      className="w-9 h-9 rounded-full border border-[#D9E2EC] bg-[#112C3E] flex items-center justify-center text-white hover:bg-[#F59E0B] transition shadow-sm"
                       aria-label="Next Recommended Article"
                     >
                       <ChevronRightIcon className="w-4 h-4" />
@@ -256,7 +256,7 @@ export default function BlogIndexPage() {
                           </span>
 
                           <Link href={`/blog/${post.slug}`}>
-                            <h3 className="text-base font-bold text-[#112C3E] font-space group-hover:text-[#3E4FEA] transition-colors leading-snug line-clamp-2">
+                            <h3 className="text-base font-bold text-[#112C3E] font-space group-hover:text-[#F59E0B] transition-colors leading-snug line-clamp-2">
                               {post.title}
                             </h3>
                           </Link>
@@ -290,7 +290,7 @@ export default function BlogIndexPage() {
                   <h2 className="text-2xl sm:text-3xl font-extrabold text-[#112C3E] font-space">
                     {selectedCategory === "View all" ? "All Articles" : selectedCategory}
                   </h2>
-                  <span className="px-3 py-1 bg-[#3E4FEA]/10 text-[#3E4FEA] text-xs font-bold rounded-full">
+                  <span className="px-3 py-1 bg-[#FEF3C7] text-[#D97706] text-xs font-bold rounded-full">
                     {filteredPosts.length} {filteredPosts.length === 1 ? "Article" : "Articles"}
                   </span>
                 </div>
@@ -307,7 +307,7 @@ export default function BlogIndexPage() {
                       setSelectedCategory("View all");
                       setSearchQuery("");
                     }}
-                    className="px-4 py-2 rounded-full bg-[#3E4FEA] text-white text-xs font-bold"
+                    className="px-4 py-2 rounded-full bg-[#F59E0B] text-white text-xs font-bold"
                   >
                     Reset Search
                   </button>
@@ -334,7 +334,7 @@ export default function BlogIndexPage() {
                         <div className="p-5 space-y-2">
                           <span className="text-[11px] font-semibold text-[#677F9B]">{post.publishDate}</span>
                           <Link href={`/blog/${post.slug}`}>
-                            <h3 className="text-base font-bold text-[#112C3E] font-space group-hover:text-[#3E4FEA] transition-colors leading-snug line-clamp-2">
+                            <h3 className="text-base font-bold text-[#112C3E] font-space group-hover:text-[#F59E0B] transition-colors leading-snug line-clamp-2">
                               {post.title}
                             </h3>
                           </Link>

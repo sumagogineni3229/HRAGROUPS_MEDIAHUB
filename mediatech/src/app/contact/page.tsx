@@ -58,7 +58,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7FAFC] text-[#112C3E] font-sans antialiased selection:bg-[#3E4FEA] selection:text-white">
+    <div className="min-h-screen bg-[#F7FAFC] text-[#112C3E] font-sans antialiased selection:bg-[#F59E0B] selection:text-white">
       {/* Header */}
       <PublicHeader activePage="contact" />
 
@@ -97,12 +97,12 @@ export default function ContactPage() {
               </p>
 
               {/* User Email & Phone Pill Badge */}
-              <div className="bg-[#E9F0F5] border border-[#D5E1EA] text-[#112C3E] font-bold text-sm sm:text-base px-6 py-3.5 rounded-2xl inline-block shadow-inner">
-                <a href="mailto:contact@thecconnects.com" className="hover:text-[#3E4FEA] transition">
+              <div className="bg-[#FEF3C7]/40 border border-[#F59E0B]/30 text-[#112C3E] font-bold text-sm sm:text-base px-6 py-3.5 rounded-2xl inline-block shadow-sm">
+                <a href="mailto:contact@thecconnects.com" className="hover:text-[#F59E0B] transition">
                   contact@thecconnects.com
                 </a>{" "}
                 /{" "}
-                <a href="tel:+919490056002" className="hover:text-[#3E4FEA] transition">
+                <a href="tel:+919490056002" className="hover:text-[#F59E0B] transition">
                   +91 9490056002
                 </a>
               </div>
@@ -186,7 +186,7 @@ export default function ContactPage() {
 
             {submitted ? (
               <div className="bg-white rounded-2xl p-8 text-center space-y-3 shadow-md">
-                <CheckCircleIcon className="w-12 h-12 text-[#3E4FEA] mx-auto" />
+                <CheckCircleIcon className="w-12 h-12 text-[#F59E0B] mx-auto" />
                 <h4 className="text-xl font-bold font-space">Message Received!</h4>
                 <p className="text-sm text-[#677F9B]">
                   Thank you for contacting MediaHub. Our campaign specialists will get back to you at {formData.email} within 2 hours.
@@ -328,7 +328,7 @@ export default function ContactPage() {
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-[#112C3E] text-white font-extrabold text-sm hover:bg-[#3E4FEA] transition shadow-xl disabled:opacity-50 cursor-pointer"
+                      className="inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-[#112C3E] text-white font-extrabold text-sm hover:bg-[#F59E0B] transition shadow-xl disabled:opacity-50 cursor-pointer"
                     >
                       <span>{submitting ? "Submitting..." : "Submit"}</span>
                       <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
@@ -354,12 +354,12 @@ export default function ContactPage() {
          3. DARK NAVY AGENCY OR BRAND BANNER
          ───────────────────────────────────────────── */}
       <section className="px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto my-12">
-        <div className="bg-[#0B1E2E] rounded-3xl p-8 sm:p-14 text-white shadow-2xl space-y-10 border border-[#1E3A52] text-center w-full">
+        <div className="bg-[#FEF3C7]/40 rounded-3xl p-8 sm:p-14 text-[#112C3E] shadow-xl space-y-10 border border-[#F59E0B]/30 text-center w-full">
           <div className="space-y-3 max-w-2xl mx-auto">
-            <h3 className="text-3xl sm:text-4xl font-extrabold font-space">
-              Are you representing an <span className="text-[#38D479]">Agency</span> or a <span className="text-[#38D479]">Brand?</span>
+            <h3 className="text-3xl sm:text-4xl font-extrabold font-space text-[#112C3E]">
+              Are you representing an <span className="text-amber-700">Agency</span> or a <span className="text-amber-700">Brand?</span>
             </h3>
-            <p className="text-sm text-slate-300 leading-relaxed">
+            <p className="text-sm text-slate-700 leading-relaxed">
               Learn more about services and features MediaHub can offer for Agencies and Brands for better blog posting
             </p>
           </div>
@@ -367,7 +367,7 @@ export default function ContactPage() {
           {/* 2 White Sub-Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left text-[#112C3E]">
             {/* For Agencies */}
-            <div className="bg-white rounded-3xl p-8 space-y-6 shadow-lg flex flex-col justify-between">
+            <div className="bg-white rounded-3xl p-8 space-y-6 shadow-lg flex flex-col justify-between border border-amber-200/60">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h4 className="text-xl font-bold font-space">For Agencies</h4>
@@ -381,19 +381,19 @@ export default function ContactPage() {
                 </div>
 
                 <ul className="space-y-2.5 text-xs text-[#475569] font-medium">
-                  <li className="flex items-start gap-2"><span className="text-[#112C3E] font-bold">✓</span> 20+ filters</li>
-                  <li className="flex items-start gap-2"><span className="text-[#112C3E] font-bold">✓</span> priority & friendly support from the MediaHub team</li>
-                  <li className="flex items-start gap-2"><span className="text-[#112C3E] font-bold">✓</span> multiple sites' metrics</li>
-                  <li className="flex items-start gap-2"><span className="text-[#112C3E] font-bold">✓</span> personalized platform walkthrough with the MediaHub manager</li>
-                  <li className="flex items-start gap-2"><span className="text-[#112C3E] font-bold">✓</span> CSV task reports</li>
-                  <li className="flex items-start gap-2"><span className="text-[#112C3E] font-bold">✓</span> custom lists creation</li>
-                  <li className="flex items-start gap-2"><span className="text-[#112C3E] font-bold">✓</span> real-time answers to your questions to help you grow (during demo call)</li>
+                  <li className="flex items-start gap-2"><span className="text-amber-700 font-bold">✓</span> 20+ filters</li>
+                  <li className="flex items-start gap-2"><span className="text-amber-700 font-bold">✓</span> priority & friendly support from the MediaHub team</li>
+                  <li className="flex items-start gap-2"><span className="text-amber-700 font-bold">✓</span> multiple sites' metrics</li>
+                  <li className="flex items-start gap-2"><span className="text-amber-700 font-bold">✓</span> personalized platform walkthrough with the MediaHub manager</li>
+                  <li className="flex items-start gap-2"><span className="text-amber-700 font-bold">✓</span> CSV task reports</li>
+                  <li className="flex items-start gap-2"><span className="text-amber-700 font-bold">✓</span> custom lists creation</li>
+                  <li className="flex items-start gap-2"><span className="text-amber-700 font-bold">✓</span> real-time answers to your questions to help you grow (during demo call)</li>
                 </ul>
               </div>
             </div>
 
             {/* For Brands */}
-            <div className="bg-white rounded-3xl p-8 space-y-6 shadow-lg flex flex-col justify-between">
+            <div className="bg-white rounded-3xl p-8 space-y-6 shadow-lg flex flex-col justify-between border border-amber-200/60">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h4 className="text-xl font-bold font-space">For Brands</h4>
@@ -407,13 +407,13 @@ export default function ContactPage() {
                 </div>
 
                 <ul className="space-y-2.5 text-xs text-[#475569] font-medium">
-                  <li className="flex items-start gap-2"><span className="text-[#112C3E] font-bold">✓</span> 20+ filters</li>
-                  <li className="flex items-start gap-2"><span className="text-[#112C3E] font-bold">✓</span> priority & friendly support from the MediaHub team</li>
-                  <li className="flex items-start gap-2"><span className="text-[#112C3E] font-bold">✓</span> multiple sites' metrics</li>
-                  <li className="flex items-start gap-2"><span className="text-[#112C3E] font-bold">✓</span> personalized platform walkthrough with the MediaHub manager</li>
-                  <li className="flex items-start gap-2"><span className="text-[#112C3E] font-bold">✓</span> clear and precise task tracking</li>
-                  <li className="flex items-start gap-2"><span className="text-[#112C3E] font-bold">✓</span> sites from 50+ niches</li>
-                  <li className="flex items-start gap-2"><span className="text-[#112C3E] font-bold">✓</span> real-time answers to your questions to help you grow (during demo call)</li>
+                  <li className="flex items-start gap-2"><span className="text-amber-700 font-bold">✓</span> 20+ filters</li>
+                  <li className="flex items-start gap-2"><span className="text-amber-700 font-bold">✓</span> priority & friendly support from the MediaHub team</li>
+                  <li className="flex items-start gap-2"><span className="text-amber-700 font-bold">✓</span> multiple sites' metrics</li>
+                  <li className="flex items-start gap-2"><span className="text-amber-700 font-bold">✓</span> personalized platform walkthrough with the MediaHub manager</li>
+                  <li className="flex items-start gap-2"><span className="text-amber-700 font-bold">✓</span> clear and precise task tracking</li>
+                  <li className="flex items-start gap-2"><span className="text-amber-700 font-bold">✓</span> sites from 50+ niches</li>
+                  <li className="flex items-start gap-2"><span className="text-amber-700 font-bold">✓</span> real-time answers to your questions to help you grow (during demo call)</li>
                 </ul>
               </div>
             </div>

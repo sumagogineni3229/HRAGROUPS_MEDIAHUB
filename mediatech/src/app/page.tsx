@@ -265,7 +265,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F4F7F9] text-[#112C3E] font-sans antialiased selection:bg-[#3E4FEA] selection:text-white">
+    <div className="min-h-screen bg-[#F4F7F9] text-[#112C3E] font-sans antialiased selection:bg-[#F59E0B] selection:text-white">
       {/* ─────────────────────────────────────────────
          1. DYNAMIC HEADER
          ───────────────────────────────────────────── */}
@@ -280,19 +280,19 @@ export default function Home() {
             {/* Left Main Hero Copy */}
             <div className="lg:col-span-7 space-y-8 text-center lg:text-left">
               <h1 className="text-4xl sm:text-5xl lg:text-[76px] font-extrabold leading-[1.03] tracking-tight text-[#112C3E] font-space">
-                <span className="text-[#3E4FEA]">Digital PR</span> &<br />
+                <span className="text-[#F59E0B]">Digital PR</span> &<br />
                 Blog & Guest Posting Service
               </h1>
 
               <div className="space-y-3.5 text-lg sm:text-xl text-[#677F9B]">
                 <div className="flex items-center gap-3 justify-center lg:justify-start">
-                  <div className="w-6 h-6 rounded-full bg-[#8CF08A] flex items-center justify-center text-[#112C3E] font-bold text-sm">
+                  <div className="w-6 h-6 rounded-full bg-[#FEF3C7] flex items-center justify-center text-[#D97706] font-bold text-sm">
                     ✓
                   </div>
                   <span className="font-semibold text-[#112C3E]">SEO, PR Distribution & Blog Posting</span>
                 </div>
                 <div className="flex items-center gap-3 justify-center lg:justify-start">
-                  <div className="w-6 h-6 rounded-full bg-[#8CF08A] flex items-center justify-center text-[#112C3E] font-bold text-sm">
+                  <div className="w-6 h-6 rounded-full bg-[#FEF3C7] flex items-center justify-center text-[#D97706] font-bold text-sm">
                     ✓
                   </div>
                   <span className="font-semibold text-[#112C3E]">Turn your content into revenue!</span>
@@ -302,11 +302,11 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
                 <Link
                   href="/register"
-                  className="w-full sm:w-auto px-9 py-4 rounded-full bg-[#112C3E] text-white font-bold text-lg flex items-center justify-center gap-3 hover:bg-[#3E4FEA] transition shadow-xl group"
+                  className="w-full sm:w-auto px-9 py-4 rounded-full bg-[#112C3E] text-white font-bold text-lg flex items-center justify-center gap-3 hover:bg-[#F59E0B] transition shadow-xl group"
                 >
                   <span>Sign Up for Free</span>
-                  <div className="w-9 h-9 rounded-full bg-[#8CF08A] flex items-center justify-center group-hover:rotate-45 transition-transform">
-                    <ArrowUpRightIcon className="w-5 h-5 text-[#112C3E]" />
+                  <div className="w-9 h-9 rounded-full bg-[#F59E0B] flex items-center justify-center group-hover:rotate-45 transition-transform text-white">
+                    <ArrowUpRightIcon className="w-5 h-5 text-white" />
                   </div>
                 </Link>
               </div>
@@ -324,7 +324,7 @@ export default function Home() {
               <div className="bg-white rounded-[32px] p-8 sm:p-10 shadow-2xl border border-[#EAF1F6] relative space-y-8">
                 {/* Metric 1 */}
                 <div className="space-y-3">
-                  <span className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#8CF08A] text-[#112C3E] rounded-full text-xs font-bold">
+                  <span className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#FEF3C7] text-[#D97706] rounded-full text-xs font-bold">
                     <span>+500</span> added monthly
                   </span>
                   <div className="flex items-baseline gap-3">
@@ -337,7 +337,7 @@ export default function Home() {
 
                 {/* Metric 2 */}
                 <div className="space-y-3">
-                  <span className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#E2E6F8] text-[#3E4FEA] rounded-full text-xs font-bold">
+                  <span className="inline-flex items-center gap-2 px-3.5 py-1 bg-[#FEF3C7] text-[#D97706] rounded-full text-xs font-bold">
                     <span>99%</span> Satisfaction
                   </span>
                   <div className="flex items-baseline gap-3">
@@ -355,7 +355,7 @@ export default function Home() {
           <div className="mt-16 pt-8 border-t border-[#EAF1F6] flex flex-col sm:flex-row items-center justify-between gap-6 bg-white rounded-3xl p-6 sm:px-10 border border-[#EAF1F6] shadow-sm">
             <div className="space-y-1 text-center sm:text-left">
               <p className="text-base sm:text-lg font-semibold text-[#112C3E]">We'll help you get started with MediaHub.</p>
-              <p className="text-sm font-bold text-[#3E4FEA]">Schedule a demo call with our experts.</p>
+              <p className="text-sm font-bold text-[#F59E0B]">Schedule a demo call with our experts.</p>
             </div>
             <button
               onClick={() => {
@@ -386,7 +386,7 @@ export default function Home() {
             {!demoCallSuccess ? (
               <>
                 <div className="space-y-2">
-                  <div className="w-12 h-12 rounded-2xl bg-[#3E4FEA]/10 text-[#3E4FEA] flex items-center justify-center font-bold text-xl mb-1">
+                  <div className="w-12 h-12 rounded-2xl bg-[#FEF3C7] text-[#D97706] flex items-center justify-center font-bold text-xl mb-1">
                     📞
                   </div>
                   <h3 className="text-2xl font-extrabold font-space">
@@ -409,7 +409,7 @@ export default function Home() {
                       placeholder="+91 9490056002"
                       value={demoCallForm.phone}
                       onChange={(e) => setDemoCallForm({ ...demoCallForm, phone: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#3E4FEA] text-sm"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] text-sm"
                     />
                   </div>
 
@@ -424,7 +424,7 @@ export default function Home() {
                       placeholder="your.email@gmail.com"
                       value={demoCallForm.email}
                       onChange={(e) => setDemoCallForm({ ...demoCallForm, email: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#3E4FEA] text-sm"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] text-sm"
                     />
                   </div>
 
@@ -439,7 +439,7 @@ export default function Home() {
                       placeholder="e.g. Interested in guest posting inventory for tech blogs..."
                       value={demoCallForm.reason}
                       onChange={(e) => setDemoCallForm({ ...demoCallForm, reason: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#3E4FEA] text-sm"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] text-sm"
                     />
                   </div>
 
@@ -452,7 +452,7 @@ export default function Home() {
                   <button
                     type="submit"
                     disabled={demoCallSubmitting}
-                    className="w-full py-3.5 rounded-full bg-[#112C3E] text-white font-bold text-sm hover:bg-[#3E4FEA] transition shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                    className="w-full py-3.5 rounded-full bg-[#112C3E] text-white font-bold text-sm hover:bg-[#F59E0B] transition shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                   >
                     <span>{demoCallSubmitting ? "Submitting..." : "Confirm & Book Call"}</span>
                     <span>→</span>
@@ -461,7 +461,7 @@ export default function Home() {
               </>
             ) : (
               <div className="text-center py-6 space-y-4">
-                <div className="w-16 h-16 bg-[#DCFCE7] text-[#166534] rounded-full flex items-center justify-center mx-auto text-2xl">
+                <div className="w-16 h-16 bg-[#FEF3C7] text-[#D97706] rounded-full flex items-center justify-center mx-auto text-2xl font-bold">
                   ✓
                 </div>
                 <h3 className="text-2xl font-extrabold font-space">
@@ -472,7 +472,7 @@ export default function Home() {
                 </p>
                 <button
                   onClick={() => setDemoCallModalOpen(false)}
-                  className="px-6 py-2.5 rounded-full bg-[#112C3E] text-white font-semibold text-sm hover:bg-[#3E4FEA] transition cursor-pointer"
+                  className="px-6 py-2.5 rounded-full bg-[#112C3E] text-white font-semibold text-sm hover:bg-[#F59E0B] transition cursor-pointer"
                 >
                   Close Window
                 </button>
@@ -521,7 +521,7 @@ export default function Home() {
                 <div className="absolute right-16 top-24 w-[58px] h-[58px] rounded-full bg-white shadow-md border border-[#eaf1f6] flex items-center justify-center text-red-500 font-bold text-lg">
                   🔥
                 </div>
-                <div className="absolute left-28 bottom-6 w-[72px] h-[72px] rounded-full bg-white shadow-md border border-[#eaf1f6] flex items-center justify-center text-[#3e4fea] font-bold text-sm tracking-tight">
+                <div className="absolute left-28 bottom-6 w-[72px] h-[72px] rounded-full bg-white shadow-md border border-[#eaf1f6] flex items-center justify-center text-[#F59E0B] font-bold text-sm tracking-tight">
                   MOZ
                 </div>
                 <div className="absolute right-8 bottom-12 w-[56px] h-[56px] rounded-full bg-white shadow-md border border-[#eaf1f6] flex items-center justify-center text-amber-500 font-bold text-lg">
@@ -564,11 +564,11 @@ export default function Home() {
                 <div className="space-y-2.5">
                   {[1, 2, 3].map((i) => (
                     <div key={i} className="bg-white p-3.5 rounded-xl border border-[#eaf1f6] flex items-center justify-between shadow-sm">
-                      <span className="text-xs font-bold text-[#3e4fea]">https://</span>
-                      <div className="w-[120px] sm:w-[160px] h-2 bg-[#3e4fea] rounded-full mx-2"></div>
+                      <span className="text-xs font-bold text-[#F59E0B]">https://</span>
+                      <div className="w-[120px] sm:w-[160px] h-2 bg-[#F59E0B] rounded-full mx-2"></div>
                       <div className="flex items-center gap-2">
-                        <span className="w-5 h-5 rounded-full bg-[#d9ddff] inline-block"></span>
-                        <span className="w-5 h-5 rounded-full bg-[#8cf08a] inline-block"></span>
+                        <span className="w-5 h-5 rounded-full bg-[#FEF3C7] inline-block"></span>
+                        <span className="w-5 h-5 rounded-full bg-[#FEF3C7] inline-block"></span>
                         <span className="text-amber-400 text-sm">★</span>
                       </div>
                     </div>
@@ -590,28 +590,28 @@ export default function Home() {
               <div className="flex justify-between text-xs text-[#677f9b] font-semibold mb-6 px-2">
                 <span>1 Jan</span>
                 <span>10 Jan</span>
-                <span className="relative z-10 px-2.5 py-1 bg-[#3e4fea] text-white rounded-full text-[10px] font-bold">15 Jan</span>
+                <span className="relative z-10 px-2.5 py-1 bg-[#F59E0B] text-white rounded-full text-[10px] font-bold">15 Jan</span>
                 <span>20 Jan</span>
               </div>
 
               <div className="space-y-4 relative z-10">
                 <div className="flex">
-                  <div className="bg-[#8cf08a] text-[#112c3e] font-bold text-xs py-2 px-4 rounded-full flex items-center gap-1.5 shadow-sm ml-2">
+                  <div className="bg-[#FEF3C7] text-[#D97706] font-bold text-xs py-2 px-4 rounded-full flex items-center gap-1.5 shadow-sm ml-2">
                     <span>✓</span> Post checked
                   </div>
                 </div>
                 <div className="flex justify-center pr-12">
-                  <div className="bg-[#e2e6f8] text-[#3e4fea] font-bold text-xs py-2 px-4 rounded-full shadow-sm">
+                  <div className="bg-[#FEF3C7] text-[#D97706] font-bold text-xs py-2 px-4 rounded-full shadow-sm">
                     Google Index Control
                   </div>
                 </div>
                 <div className="flex justify-end pr-16">
-                  <div className="bg-[#8cf08a] text-[#112c3e] font-bold text-xs py-2 px-4 rounded-full shadow-sm">
+                  <div className="bg-[#FEF3C7] text-[#D97706] font-bold text-xs py-2 px-4 rounded-full shadow-sm">
                     Post check
                   </div>
                 </div>
                 <div className="flex justify-end">
-                  <div className="bg-[#e2e6f8] text-[#3e4fea] font-bold text-xs py-2 px-4 rounded-full shadow-sm mr-8">
+                  <div className="bg-[#FEF3C7] text-[#D97706] font-bold text-xs py-2 px-4 rounded-full shadow-sm mr-8">
                     Google Index Control
                   </div>
                 </div>
@@ -622,7 +622,7 @@ export default function Home() {
           <div className="flex justify-center mt-12">
             <Link
               href="/register"
-              className="inline-flex items-center justify-between gap-6 pl-8 pr-4 py-4 rounded-full bg-[#112c3e] text-white font-bold text-[16px] hover:bg-[#3e4fea] transition group shadow-lg"
+              className="inline-flex items-center justify-between gap-6 pl-8 pr-4 py-4 rounded-full bg-[#112c3e] text-white font-bold text-[16px] hover:bg-[#F59E0B] transition group shadow-lg"
             >
               <span>Place Guest Posts Securely</span>
               <div className="w-10 h-10 rounded-full bg-[#8cf08a] flex items-center justify-center text-[#112c3e] group-hover:rotate-45 transition-transform">
@@ -864,7 +864,7 @@ export default function Home() {
 
           <div className="max-w-[900px] mx-auto space-y-8">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <span className="px-6 py-3 rounded-full bg-[#3e4fea] text-white font-bold text-base tracking-wide shadow-md">
+              <span className="px-6 py-3 rounded-full bg-[#F59E0B] text-white font-bold text-base tracking-wide shadow-md">
                 {metricDomains[activeMetricDomain].url}
               </span>
               <div className="flex items-center gap-4">
@@ -905,14 +905,14 @@ export default function Home() {
               <div className="bg-white rounded-3xl p-7 border border-[#eaf1f6] text-center shadow-sm flex flex-col justify-center min-h-[140px]">
                 <span className="text-4xl font-extrabold text-[#112c3e] tracking-tight font-space">{metricDomains[activeMetricDomain].similarwebTraffic}</span>
                 <span className="text-xs font-bold text-[#677f9b] mt-1 flex items-center justify-center gap-1.5 uppercase tracking-wide">
-                  <span className="text-blue-500">◑</span> Similarweb Traffic
+                  <span className="text-[#F59E0B]">◑</span> Similarweb Traffic
                 </span>
               </div>
 
               <div className="bg-white rounded-3xl p-7 border border-[#eaf1f6] text-center shadow-sm flex flex-col justify-center min-h-[140px]">
                 <span className="text-4xl font-extrabold text-[#112c3e] tracking-tight font-space">{metricDomains[activeMetricDomain].mozDa}</span>
                 <span className="text-xs font-bold text-[#677f9b] mt-1 flex items-center justify-center gap-1.5 uppercase tracking-wide">
-                  <span className="text-[#3e4fea] font-bold">M</span> Moz Domain Authority
+                  <span className="text-[#F59E0B] font-bold">M</span> Moz Domain Authority
                 </span>
               </div>
 
@@ -958,11 +958,11 @@ export default function Home() {
             <div className="flex justify-center mt-6">
               <Link
                 href="/register"
-                className="inline-flex items-center gap-6 pl-8 pr-4 py-3.5 rounded-full bg-[#112c3e] text-white font-bold text-[15px] hover:bg-[#3e4fea] transition group shadow-md"
+                className="inline-flex items-center gap-6 pl-8 pr-4 py-3.5 rounded-full bg-[#112c3e] text-white font-bold text-[15px] hover:bg-[#F59E0B] transition group shadow-md"
               >
                 <span>Get started</span>
-                <div className="w-9 h-9 rounded-full bg-[#8cf08a] flex items-center justify-center text-[#112c3e] group-hover:rotate-45 transition-transform">
-                  <ArrowUpRightIcon className="w-4 h-4 text-[#112c3e]" />
+                <div className="w-9 h-9 rounded-full bg-[#F59E0B] flex items-center justify-center text-white group-hover:rotate-45 transition-transform">
+                  <ArrowUpRightIcon className="w-4 h-4 text-white" />
                 </div>
               </Link>
             </div>
@@ -987,7 +987,7 @@ export default function Home() {
               <div>
                 <div className="flex items-center justify-between gap-2">
                   <h3 className="font-bold text-[#112c3e] text-lg font-space">United States</h3>
-                  <span className="text-[10px] font-bold bg-[#8cf08a] text-[#112c3e] px-2 py-0.5 rounded-full">+10k last month</span>
+                  <span className="text-[10px] font-bold bg-[#FEF3C7] text-[#D97706] px-2 py-0.5 rounded-full">+10k last month</span>
                 </div>
                 <p className="font-bold text-[#112c3e] text-lg font-space">Canada</p>
                 <p className="text-xs font-bold text-[#677f9b] uppercase tracking-wider mt-2">North America</p>
@@ -1024,14 +1024,14 @@ export default function Home() {
             <div className="lg:col-span-6 space-y-6 text-center lg:text-left">
               <h2 className="text-3xl sm:text-5xl font-extrabold font-space">
                 We have <br />
-                <span className="text-[#8CF08A]">a Free Gift for you</span>
+                <span className="text-[#F59E0B]">a Free Gift for you</span>
               </h2>
               <p className="text-lg text-slate-300">
                 Sign up to receive our in-depth SEO & Content Placement Checklist.
               </p>
               <Link
                 href="/register"
-                className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#3E4FEA] hover:bg-blue-600 font-bold text-white transition shadow-lg"
+                className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#F59E0B] hover:bg-[#D97706] font-bold text-white transition shadow-lg"
               >
                 <span>Sign Up & Get the Guide</span>
                 <ArrowUpRightIcon className="w-5 h-5 text-white" />
@@ -1040,15 +1040,15 @@ export default function Home() {
 
             <div className="lg:col-span-6 space-y-4">
               <div className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/10 space-y-1">
-                <div className="text-lg font-bold text-[#8CF08A]">Technical SEO:</div>
+                <div className="text-lg font-bold text-[#F59E0B]">Technical SEO:</div>
                 <div className="text-sm text-slate-200">To make sure your site is properly indexed and crawled.</div>
               </div>
               <div className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/10 space-y-1">
-                <div className="text-lg font-bold text-[#8CF08A]">On-page SEO:</div>
+                <div className="text-lg font-bold text-[#F59E0B]">On-page SEO:</div>
                 <div className="text-sm text-slate-200">To drive highly relevant organic traffic to your key pages.</div>
               </div>
               <div className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/10 space-y-1">
-                <div className="text-lg font-bold text-[#8CF08A]">Off-page SEO:</div>
+                <div className="text-lg font-bold text-[#F59E0B]">Off-page SEO:</div>
                 <div className="text-sm text-slate-200">To prove your website's authority to search engine algorithms.</div>
               </div>
             </div>
@@ -1082,7 +1082,7 @@ export default function Home() {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[#3E4FEA] text-white font-bold flex items-center justify-center text-sm">
+                      <div className="w-10 h-10 rounded-full bg-[#F59E0B] text-white font-bold flex items-center justify-center text-sm">
                         {rev.initials}
                       </div>
                       <div>
@@ -1110,19 +1110,19 @@ export default function Home() {
           {/* Rating Badges Row */}
           <div className="pt-8 border-t border-[#EAF1F6] flex flex-wrap justify-center items-center gap-6 text-xs font-bold text-[#112C3E]">
             <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-[#EAF1F6] shadow-sm">
-              <span className="text-[#369F17]">★ 4.5/5</span>
+              <span className="text-[#D97706]">★ 4.5/5</span>
               <span>G2 Review</span>
             </div>
             <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-[#EAF1F6] shadow-sm">
-              <span className="text-[#369F17]">★ 5.0/5</span>
+              <span className="text-[#D97706]">★ 5.0/5</span>
               <span>SourceForge</span>
             </div>
             <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-[#EAF1F6] shadow-sm">
-              <span className="text-[#369F17]">★ 5.0/5</span>
+              <span className="text-[#D97706]">★ 5.0/5</span>
               <span>Slashdot</span>
             </div>
             <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-[#EAF1F6] shadow-sm">
-              <span className="text-[#369F17]">★ 4.5/5</span>
+              <span className="text-[#D97706]">★ 4.5/5</span>
               <span>Trustpilot</span>
             </div>
           </div>
@@ -1159,22 +1159,22 @@ export default function Home() {
             {activeWorkTab === "advertiser" ? (
               <>
                 <div className="bg-[#F5F8FA] p-8 rounded-3xl border border-[#EAF1F6] space-y-4">
-                  <div className="w-10 h-10 rounded-full bg-[#3E4FEA] text-white font-bold flex items-center justify-center text-lg">1</div>
+                  <div className="w-10 h-10 rounded-full bg-[#F59E0B] text-white font-bold flex items-center justify-center text-lg">1</div>
                   <h3 className="font-bold text-xl text-[#112C3E] font-space">Sign Up</h3>
                   <p className="text-sm text-[#677F9B]">Create your free advertiser account in under 60 seconds.</p>
                 </div>
                 <div className="bg-[#F5F8FA] p-8 rounded-3xl border border-[#EAF1F6] space-y-4">
-                  <div className="w-10 h-10 rounded-full bg-[#3E4FEA] text-white font-bold flex items-center justify-center text-lg">2</div>
+                  <div className="w-10 h-10 rounded-full bg-[#F59E0B] text-white font-bold flex items-center justify-center text-lg">2</div>
                   <h3 className="font-bold text-xl text-[#112C3E] font-space">Set Metric Filters</h3>
                   <p className="text-sm text-[#677F9B]">Filter 150k+ platforms by Moz DA, Ahrefs DR, traffic, and category.</p>
                 </div>
                 <div className="bg-[#F5F8FA] p-8 rounded-3xl border border-[#EAF1F6] space-y-4">
-                  <div className="w-10 h-10 rounded-full bg-[#3E4FEA] text-white font-bold flex items-center justify-center text-lg">3</div>
+                  <div className="w-10 h-10 rounded-full bg-[#F59E0B] text-white font-bold flex items-center justify-center text-lg">3</div>
                   <h3 className="font-bold text-xl text-[#112C3E] font-space">Select Sites</h3>
                   <p className="text-sm text-[#677F9B]">Choose the best target blogs matching your budget and audience.</p>
                 </div>
                 <div className="bg-[#F5F8FA] p-8 rounded-3xl border border-[#EAF1F6] space-y-4">
-                  <div className="w-10 h-10 rounded-full bg-[#3E4FEA] text-white font-bold flex items-center justify-center text-lg">4</div>
+                  <div className="w-10 h-10 rounded-full bg-[#F59E0B] text-white font-bold flex items-center justify-center text-lg">4</div>
                   <h3 className="font-bold text-xl text-[#112C3E] font-space">Publish & Track</h3>
                   <p className="text-sm text-[#677F9B]">Submit your content and get verified backlinks with index guarantees.</p>
                 </div>
@@ -1182,22 +1182,22 @@ export default function Home() {
             ) : (
               <>
                 <div className="bg-[#F5F8FA] p-8 rounded-3xl border border-[#EAF1F6] space-y-4">
-                  <div className="w-10 h-10 rounded-full bg-[#8CF08A] text-[#112C3E] font-bold flex items-center justify-center text-lg">1</div>
+                  <div className="w-10 h-10 rounded-full bg-[#FEF3C7] text-[#D97706] font-bold flex items-center justify-center text-lg">1</div>
                   <h3 className="font-bold text-xl text-[#112C3E] font-space">Add Platform</h3>
                   <p className="text-sm text-[#677F9B]">Register your website or blog with verified ownership.</p>
                 </div>
                 <div className="bg-[#F5F8FA] p-8 rounded-3xl border border-[#EAF1F6] space-y-4">
-                  <div className="w-10 h-10 rounded-full bg-[#8CF08A] text-[#112C3E] font-bold flex items-center justify-center text-lg">2</div>
+                  <div className="w-10 h-10 rounded-full bg-[#FEF3C7] text-[#D97706] font-bold flex items-center justify-center text-lg">2</div>
                   <h3 className="font-bold text-xl text-[#112C3E] font-space">Set Pricing</h3>
                   <p className="text-sm text-[#677F9B]">Define your custom rates for guest posts and link insertions.</p>
                 </div>
                 <div className="bg-[#F5F8FA] p-8 rounded-3xl border border-[#EAF1F6] space-y-4">
-                  <div className="w-10 h-10 rounded-full bg-[#8CF08A] text-[#112C3E] font-bold flex items-center justify-center text-lg">3</div>
+                  <div className="w-10 h-10 rounded-full bg-[#FEF3C7] text-[#D97706] font-bold flex items-center justify-center text-lg">3</div>
                   <h3 className="font-bold text-xl text-[#112C3E] font-space">Accept Tasks</h3>
                   <p className="text-sm text-[#677F9B]">Review incoming pre-paid order requests from global advertisers.</p>
                 </div>
                 <div className="bg-[#F5F8FA] p-8 rounded-3xl border border-[#EAF1F6] space-y-4">
-                  <div className="w-10 h-10 rounded-full bg-[#8CF08A] text-[#112C3E] font-bold flex items-center justify-center text-lg">4</div>
+                  <div className="w-10 h-10 rounded-full bg-[#FEF3C7] text-[#D97706] font-bold flex items-center justify-center text-lg">4</div>
                   <h3 className="font-bold text-xl text-[#112C3E] font-space">Earn Money</h3>
                   <p className="text-sm text-[#677F9B]">Get paid directly after post publication & escrow release.</p>
                 </div>
@@ -1226,13 +1226,13 @@ export default function Home() {
               <div key={idx} className="bg-white rounded-3xl overflow-hidden border border-[#EAF1F6] shadow-sm flex flex-col justify-between group hover:shadow-xl transition duration-300">
                 <div className="relative h-48 overflow-hidden bg-[#F5F8FA]">
                   <img src={post.image} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
-                  <span className="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-xs font-bold text-[#3E4FEA]">
+                  <span className="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-xs font-bold text-[#F59E0B]">
                     {post.tag}
                   </span>
                 </div>
                 <div className="p-6 space-y-3">
                   <span className="text-xs text-[#677F9B] font-semibold">{post.date}</span>
-                  <h3 className="font-bold text-lg text-[#112C3E] leading-snug font-space group-hover:text-[#3E4FEA] transition">
+                  <h3 className="font-bold text-lg text-[#112C3E] leading-snug font-space group-hover:text-[#F59E0B] transition">
                     {post.title}
                   </h3>
                 </div>
@@ -1262,7 +1262,7 @@ export default function Home() {
                   className="w-full px-6 py-5 text-left font-bold text-lg text-[#112C3E] flex items-center justify-between gap-4 font-space"
                 >
                   <span>{faq.q}</span>
-                  <span className="text-2xl text-[#3E4FEA] font-extrabold">{openFaq === idx ? "−" : "+"}</span>
+                  <span className="text-2xl text-[#F59E0B] font-extrabold">{openFaq === idx ? "−" : "+"}</span>
                 </button>
                 {openFaq === idx && (
                   <div className="px-6 pb-6 text-sm text-[#677F9B] leading-relaxed font-medium">
@@ -1281,7 +1281,7 @@ export default function Home() {
             </div>
             <button
               onClick={() => setCallModalOpen(true)}
-              className="px-8 py-3.5 rounded-full bg-[#8CF08A] text-[#112C3E] font-bold text-sm hover:bg-emerald-400 transition whitespace-nowrap cursor-pointer shadow-lg"
+              className="px-8 py-3.5 rounded-full bg-[#F59E0B] text-white font-bold text-sm hover:bg-[#D97706] transition whitespace-nowrap cursor-pointer shadow-lg"
             >
               Contact Support
             </button>
@@ -1299,7 +1299,7 @@ export default function Home() {
                 </button>
 
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-[#3E4FEA]/10 text-[#3E4FEA] flex items-center justify-center font-bold text-xl">
+                  <div className="w-12 h-12 rounded-2xl bg-[#FEF3C7] text-[#D97706] flex items-center justify-center font-bold text-xl">
                     📞
                   </div>
                   <div>
@@ -1323,7 +1323,7 @@ export default function Home() {
                   <div className="space-y-2 text-xs text-[#112C3E]">
                     <div className="flex items-center justify-between font-medium">
                       <span className="text-[#677F9B]">Operating Hours:</span>
-                      <span className="font-bold bg-[#8CF08A]/30 text-[#112C3E] px-2.5 py-0.5 rounded-md">
+                      <span className="font-bold bg-[#FEF3C7] text-[#D97706] px-2.5 py-0.5 rounded-md">
                         9:00 AM – 6:00 PM (IST)
                       </span>
                     </div>
@@ -1333,7 +1333,7 @@ export default function Home() {
                     </div>
                     <div className="flex items-center justify-between font-medium">
                       <span className="text-[#677F9B]">Email Support:</span>
-                      <span className="font-bold text-[#3E4FEA]">contact@thecconnects.com</span>
+                      <span className="font-bold text-[#F59E0B]">contact@thecconnects.com</span>
                     </div>
                   </div>
                 </div>
@@ -1346,9 +1346,9 @@ export default function Home() {
                 <div className="grid grid-cols-2 gap-3 pt-1">
                   <a
                     href="tel:+919490056002"
-                    className="flex items-center justify-center gap-2 py-3 bg-[#112C3E] hover:bg-[#3E4FEA] text-white font-bold text-xs rounded-xl transition shadow-md"
+                    className="flex items-center justify-center gap-2 py-3 bg-[#112C3E] hover:bg-[#F59E0B] text-white font-bold text-xs rounded-xl transition shadow-md"
                   >
-                    <PhoneIcon className="w-4 h-4 text-[#8CF08A]" />
+                    <PhoneIcon className="w-4 h-4 text-[#F59E0B]" />
                     <span>Call Now</span>
                   </a>
                   <a
@@ -1375,7 +1375,7 @@ export default function Home() {
             Ready to Get Started?
           </h2>
           <p className="text-base text-[#677f9b] font-medium leading-relaxed max-w-lg mx-auto">
-            Place your content on <span className="text-[#3e4fea] font-bold">quality sites</span> with real traffic. You are one click away!
+            Place your content on <span className="text-[#F59E0B] font-bold">quality sites</span> with real traffic. You are one click away!
           </p>
 
           {ctaError && (
@@ -1400,7 +1400,7 @@ export default function Home() {
             }}
             className="space-y-6"
           >
-            <div className="max-w-[480px] mx-auto flex flex-col sm:flex-row items-center gap-2 p-1.5 rounded-full border border-[#dcdce5] bg-white shadow-sm focus-within:ring-2 focus-within:ring-[#3e4fea]">
+            <div className="max-w-[480px] mx-auto flex flex-col sm:flex-row items-center gap-2 p-1.5 rounded-full border border-[#dcdce5] bg-white shadow-sm focus-within:ring-2 focus-within:ring-[#F59E0B]">
               <input
                 type="email"
                 required
@@ -1414,7 +1414,7 @@ export default function Home() {
               />
               <button
                 type="submit"
-                className="w-full sm:w-auto whitespace-nowrap bg-[#112c3e] text-white hover:bg-[#3e4fea] transition rounded-full px-7 py-3.5 font-bold text-sm flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                className="w-full sm:w-auto whitespace-nowrap bg-[#112c3e] text-white hover:bg-[#F59E0B] transition rounded-full px-7 py-3.5 font-bold text-sm flex items-center justify-center gap-2 cursor-pointer shadow-md"
               >
                 <span>Sign Up for Free</span>
                 <span>→</span>

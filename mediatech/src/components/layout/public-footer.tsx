@@ -16,28 +16,12 @@ export function PublicFooter() {
           
           {/* 1. Left: Brand Logo & Short Bio */}
           <div className="lg:col-span-3 space-y-3">
-            <Link href="/" className="inline-flex items-center gap-3 group">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="36"
-                height="36"
-                viewBox="0 0 36 36"
-                fill="none"
-                className="transition-transform group-hover:scale-105"
-              >
-                <rect width="36" height="36" rx="18" fill="#3E4FEA" />
-                <path
-                  d="M10 24V12L15.5 19.5L20.5 12V24"
-                  stroke="white"
-                  strokeWidth="2.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <circle cx="25.5" cy="22.5" r="2" fill="#8CF08A" />
-              </svg>
-              <span className="font-bold text-2xl text-[#112C3E] tracking-tight font-space">
-                Media<span className="text-[#3E4FEA]">Hub</span>
-              </span>
+            <Link href="/" className="inline-flex items-center group">
+              <img
+                src="/mediahub.png"
+                alt="Media Hub Logo"
+                className="h-7 sm:h-8 w-auto object-contain transition-transform group-hover:scale-105"
+              />
             </Link>
             <p className="text-xs text-[#677F9B] leading-relaxed max-w-xs">
               Escrow-Protected Content Marketing & Digital PR Marketplace for Advertisers, Publishers, and Influencers.
@@ -49,30 +33,30 @@ export function PublicFooter() {
             
             {/* Top Navigation Links Bar */}
             <div className="flex flex-wrap items-center justify-start lg:justify-center gap-5 sm:gap-7 text-sm font-semibold text-[#112C3E]">
-              <Link href="/solutions" className="hover:text-[#3E4FEA] transition">
+              <Link href="/solutions" className="hover:text-[#F59E0B] transition">
                 Solutions
               </Link>
               
-              <Link href="/blog" className="flex items-center gap-1.5 hover:text-[#3E4FEA] transition group">
+              <Link href="/blog" className="flex items-center gap-1.5 hover:text-[#F59E0B] transition group">
                 <span>Blog</span>
-                <span className="px-1.5 py-0.5 text-[9px] font-black bg-gradient-to-r from-[#3E4FEA] to-[#FF4B8B] text-white rounded-full uppercase tracking-wider">
+                <span className="px-1.5 py-0.5 text-[9px] font-black bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white rounded-full uppercase tracking-wider">
                   NEW
                 </span>
               </Link>
 
-              <Link href="/faq" className="hover:text-[#3E4FEA] transition">
+              <Link href="/faq" className="hover:text-[#F59E0B] transition">
                 FAQ
               </Link>
 
-              <Link href="/media-kit" className="hover:text-[#3E4FEA] transition">
+              <Link href="/media-kit" className="hover:text-[#F59E0B] transition">
                 Media Kit
               </Link>
 
-              <Link href="/podcasts/library" className="hover:text-[#3E4FEA] transition">
+              <Link href="/podcasts/library" className="hover:text-[#F59E0B] transition">
                 Podcast Library
               </Link>
 
-              <Link href="/contact" className="hover:text-[#3E4FEA] transition">
+              <Link href="/contact" className="hover:text-[#F59E0B] transition">
                 Contact us
               </Link>
 
@@ -80,7 +64,7 @@ export function PublicFooter() {
               <div className="relative">
                 <button
                   onClick={() => setShowAdditional(!showAdditional)}
-                  className="flex items-center gap-1 hover:text-[#3E4FEA] transition font-semibold"
+                  className="flex items-center gap-1 hover:text-[#F59E0B] transition font-semibold"
                 >
                   <span>Additional services</span>
                   <ChevronDownIcon className="w-3.5 h-3.5 text-[#677F9B]" />
@@ -214,11 +198,11 @@ export function PublicFooter() {
 
         {/* Bottom Legal Links Divider */}
         <div className="pt-6 border-t border-[#EAF1F6] flex items-center justify-center gap-3 text-xs text-[#677F9B] font-medium">
-          <Link href="/terms" className="hover:text-[#3E4FEA] transition">
+          <Link href="/terms" className="hover:text-[#F59E0B] transition">
             Terms and Conditions
           </Link>
           <span>|</span>
-          <Link href="/privacy" className="hover:text-[#3E4FEA] transition">
+          <Link href="/privacy" className="hover:text-[#F59E0B] transition">
             Privacy Policy
           </Link>
         </div>

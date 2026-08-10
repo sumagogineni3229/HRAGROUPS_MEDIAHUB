@@ -15,6 +15,11 @@ export const authConfig: NextAuthConfig = {
       if (user) {
         token.id = user.id;
         token.role = (user as any).role;
+        // On first sign-in, set activeRole = role
+        if (!token.activeRole) {
+          token.activeRole = (user as any).role;
+        }
+        token.enabledRoles = (user as any).enabledRoles ?? [(user as any).role];
       }
       return token;
     },
@@ -22,6 +27,8 @@ export const authConfig: NextAuthConfig = {
       if (token) {
         session.user.id = token.id as string;
         (session.user as any).role = token.role as string;
+        (session.user as any).activeRole = (token.activeRole ?? token.role) as string;
+        (session.user as any).enabledRoles = (token.enabledRoles ?? [token.role]) as string[];
       }
       return session;
     },

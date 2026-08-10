@@ -25,13 +25,13 @@ export function Sidebar({ navItems, role }: SidebarProps) {
     <aside className="sidebar">
       {/* Logo */}
       <div className="sidebar-logo">
-        <div className="sidebar-logo__icon">
-          <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
-            <circle cx="18" cy="18" r="18" fill="#3E4FEA" />
-            <text x="18" y="23" textAnchor="middle" fill="white" fontSize="14" fontWeight="700" fontFamily="Space Grotesk">M</text>
-          </svg>
-        </div>
-        <span className="sidebar-logo__text">MediaHub</span>
+        <Link href="/" className="flex items-center">
+          <img
+            src="/mediahub.png"
+            alt="Media Hub Logo"
+            className="h-7 w-auto object-contain"
+          />
+        </Link>
       </div>
 
       {/* Navigation */}

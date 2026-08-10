@@ -61,7 +61,7 @@ export default function MediaKitPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#112C3E] font-sans antialiased selection:bg-[#3E4FEA] selection:text-white flex flex-col justify-between">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#112C3E] font-sans antialiased selection:bg-[#F59E0B] selection:text-white flex flex-col justify-between">
       {/* Navbar */}
       <PublicHeader activePage="podcasts" />
 
@@ -71,35 +71,35 @@ export default function MediaKitPage() {
         {/* ─────────────────────────────────────────────
            1. HERO BANNER ("MediaHub Talks")
            ───────────────────────────────────────────── */}
-        <section className="relative overflow-hidden rounded-[32px] sm:rounded-[40px] bg-gradient-to-r from-[#0C172C] via-[#11254B] to-[#1B365D] text-white p-8 sm:p-12 lg:p-16 shadow-2xl border border-white/10 w-full">
+        <section className="relative overflow-hidden rounded-[32px] sm:rounded-[40px] bg-[#FEF3C7]/40 text-[#112C3E] p-8 sm:p-12 lg:p-16 shadow-2xl border border-[#F59E0B]/30 w-full">
           {/* Subtle Background Glow Elements */}
-          <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#3E4FEA]/20 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#8CF08A]/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#F59E0B]/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#FEF3C7]/30 rounded-full blur-3xl pointer-events-none" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
             {/* Left Content */}
             <div className="lg:col-span-7 space-y-8">
               {/* MediaHub Talks Branding Badge */}
-              <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/15 px-5 py-2.5 rounded-full">
+              <div className="inline-flex items-center gap-3 bg-amber-100/80 backdrop-blur-md border border-amber-300 px-5 py-2.5 rounded-full">
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-xl tracking-tight text-white font-space">
-                    Media<span className="text-[#3E4FEA]">Hub</span>
+                  <span className="font-bold text-xl tracking-tight text-[#112C3E] font-space">
+                    Media<span className="text-[#D97706]">Hub</span>
                   </span>
-                  <span className="font-serif italic text-2xl text-[#8CF08A] font-semibold -ml-1">
+                  <span className="font-serif italic text-2xl text-[#D97706] font-semibold -ml-1">
                     Talks
                   </span>
                 </div>
               </div>
 
               {/* Main Headline */}
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black font-space leading-[1.15] tracking-tight">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black font-space leading-[1.15] tracking-tight text-[#112C3E]">
                 Talks with people who are shaping the future of search & media
               </h1>
 
               {/* Scroll Down Indicator */}
-              <div className="flex items-center gap-3 pt-4 text-xs sm:text-sm text-slate-300 font-medium">
-                <div className="w-6 h-10 rounded-full border-2 border-slate-400/60 flex items-start justify-center p-1">
-                  <div className="w-1.5 h-2.5 bg-[#8CF08A] rounded-full animate-bounce mt-1" />
+              <div className="flex items-center gap-3 pt-4 text-xs sm:text-sm text-slate-700 font-medium">
+                <div className="w-6 h-10 rounded-full border-2 border-slate-400 flex items-start justify-center p-1">
+                  <div className="w-1.5 h-2.5 bg-[#F59E0B] rounded-full animate-bounce mt-1" />
                 </div>
                 <span>Scroll down to learn more</span>
               </div>
@@ -107,41 +107,41 @@ export default function MediaKitPage() {
 
             {/* Right Graphic: Dynamic Host/Guest Visual representation */}
             <div className="lg:col-span-5 relative flex justify-center items-center">
-              <div className="relative w-full max-w-lg aspect-square rounded-3xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 p-8 flex flex-col justify-between overflow-hidden shadow-2xl backdrop-blur-sm">
+              <div className="relative w-full max-w-lg aspect-square rounded-3xl bg-white border border-amber-200/80 p-8 flex flex-col justify-between overflow-hidden shadow-xl text-[#112C3E]">
                 
                 {/* Floating 3D style accent badges */}
-                <div className="absolute top-6 right-6 bg-gradient-to-br from-[#3E4FEA] to-[#6366F1] p-3.5 rounded-2xl shadow-lg border border-white/20 animate-pulse">
+                <div className="absolute top-6 right-6 bg-gradient-to-br from-[#F59E0B] to-[#D97706] p-3.5 rounded-2xl shadow-lg border border-white/20 animate-pulse">
                   <PlayIcon className="w-7 h-7 text-white" />
                 </div>
                 
                 <div className="space-y-4">
-                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#8CF08A]/20 text-[#8CF08A] text-xs font-bold uppercase tracking-wider border border-[#8CF08A]/30">
-                    <SparklesIcon className="w-4 h-4" /> MediaHub Exclusive
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-100 text-amber-900 text-xs font-bold uppercase tracking-wider border border-amber-300">
+                    <SparklesIcon className="w-4 h-4 text-amber-600" /> MediaHub Exclusive
                   </div>
-                  <h3 className="text-2xl sm:text-3xl font-bold font-space text-white leading-snug">
+                  <h3 className="text-2xl sm:text-3xl font-bold font-space text-[#112C3E] leading-snug">
                     Where Digital Leaders Share Unfiltered Strategy
                   </h3>
                 </div>
 
                 {/* Avatar Stack Mockup */}
-                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/15 space-y-3">
+                <div className="bg-[#FEFCE8] backdrop-blur-md rounded-2xl p-5 border border-amber-200 space-y-3">
                   <div className="flex items-center gap-4">
                     <div className="flex -space-x-3 overflow-hidden">
-                      <div className="w-11 h-11 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center font-bold text-white text-sm border-2 border-[#11254B]">
+                      <div className="w-11 h-11 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center font-bold text-white text-sm border-2 border-white">
                         AR
                       </div>
-                      <div className="w-11 h-11 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center font-bold text-white text-sm border-2 border-[#11254B]">
+                      <div className="w-11 h-11 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center font-bold text-white text-sm border-2 border-white">
                         MK
                       </div>
-                      <div className="w-11 h-11 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center font-bold text-white text-sm border-2 border-[#11254B]">
+                      <div className="w-11 h-11 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center font-bold text-white text-sm border-2 border-white">
                         SJ
                       </div>
-                      <div className="w-11 h-11 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center font-bold text-white text-sm border-2 border-[#11254B]">
+                      <div className="w-11 h-11 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center font-bold text-white text-sm border-2 border-white">
                         +40
                       </div>
                     </div>
-                    <div className="text-xs sm:text-sm text-slate-200">
-                      <span className="font-bold text-white block">Industry Experts</span>
+                    <div className="text-xs sm:text-sm text-slate-700">
+                      <span className="font-bold text-[#112C3E] block">Industry Experts</span>
                       Featured on MediaHub Talks
                     </div>
                   </div>
@@ -164,9 +164,9 @@ export default function MediaKitPage() {
               </span>
               <div className="flex items-center gap-3">
                 <span className="font-black text-4xl sm:text-5xl text-[#112C3E] tracking-tight font-space">
-                  Media<span className="text-[#3E4FEA]">Hub</span>
+                  Media<span className="text-[#F59E0B]">Hub</span>
                 </span>
-                <span className="font-serif italic text-4xl sm:text-5xl text-[#3E4FEA] font-bold">
+                <span className="font-serif italic text-4xl sm:text-5xl text-[#F59E0B] font-bold">
                   Talks
                 </span>
               </div>
@@ -182,9 +182,9 @@ export default function MediaKitPage() {
               </Link>
               <button
                 onClick={() => setModalOpen(true)}
-                className="px-6 py-3.5 rounded-full bg-[#112C3E] text-white font-semibold text-sm hover:bg-[#3E4FEA] transition flex items-center gap-2 shadow-md"
+                className="px-6 py-3.5 rounded-full bg-[#112C3E] text-white font-semibold text-sm hover:bg-[#F59E0B] transition flex items-center gap-2 shadow-md"
               >
-                <PlayIcon className="w-4 h-4 text-[#8CF08A] fill-[#8CF08A]" />
+                <PlayIcon className="w-4 h-4 text-[#F59E0B] fill-[#F59E0B]" />
                 <span>Apply as a Guest</span>
               </button>
             </div>
@@ -251,27 +251,27 @@ export default function MediaKitPage() {
         {/* ─────────────────────────────────────────────
            3. WHY THIS PODCAST EXISTS?
            ───────────────────────────────────────────── */}
-        <section className="relative overflow-hidden rounded-[32px] sm:rounded-[40px] bg-gradient-to-br from-[#0D1B36] via-[#122A4F] to-[#18395B] text-white p-8 sm:p-14 lg:p-20 text-center space-y-10 border border-white/10 shadow-2xl w-full">
+        <section className="relative overflow-hidden rounded-[32px] sm:rounded-[40px] bg-[#FEF3C7]/40 text-[#112C3E] p-8 sm:p-14 lg:p-20 text-center space-y-10 border border-[#F59E0B]/30 shadow-xl w-full">
           {/* Radial Dashed Circles Graphic Background */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-15 pointer-events-none">
-            <div className="w-[800px] h-[800px] rounded-full border-2 border-dashed border-white flex items-center justify-center">
-              <div className="w-[600px] h-[600px] rounded-full border-2 border-dashed border-white flex items-center justify-center">
-                <div className="w-[400px] h-[400px] rounded-full border-2 border-dashed border-white" />
+          <div className="absolute inset-0 flex items-center justify-center opacity-25 pointer-events-none">
+            <div className="w-[800px] h-[800px] rounded-full border-2 border-dashed border-amber-400 flex items-center justify-center">
+              <div className="w-[600px] h-[600px] rounded-full border-2 border-dashed border-amber-400 flex items-center justify-center">
+                <div className="w-[400px] h-[400px] rounded-full border-2 border-dashed border-amber-400" />
               </div>
             </div>
           </div>
 
           <div className="relative z-10 max-w-4xl mx-auto space-y-4">
-            <h2 className="text-3xl sm:text-5xl font-black font-space text-[#8CF08A] tracking-tight">
+            <h2 className="text-3xl sm:text-5xl font-black font-space text-[#112C3E] tracking-tight">
               Why This Podcast Exists?
             </h2>
-            <p className="text-slate-200 text-base sm:text-lg leading-relaxed">
+            <p className="text-slate-700 text-base sm:text-lg leading-relaxed font-medium">
               Search isn’t just about rankings anymore. AI answers, zero-click behavior, entity signals, brand authority — the game is shifting fast.
             </p>
           </div>
 
           <div className="relative z-10 space-y-6">
-            <p className="text-lg font-bold font-space text-white uppercase tracking-wider">
+            <p className="text-lg font-bold font-space text-[#112C3E] uppercase tracking-wider">
               On MediaHub Talks, we unpack:
             </p>
 
@@ -284,9 +284,9 @@ export default function MediaKitPage() {
               ].map((item, idx) => (
                 <div
                   key={idx}
-                  className="w-full bg-white/95 backdrop-blur-md text-[#112C3E] rounded-full px-6 py-4 flex items-center gap-4 shadow-lg hover:bg-white hover:scale-[1.01] transition-all cursor-default"
+                  className="w-full bg-white backdrop-blur-md text-[#112C3E] rounded-full px-6 py-4 flex items-center gap-4 shadow-md border border-amber-200 hover:scale-[1.01] transition-all cursor-default"
                 >
-                  <div className="w-8 h-8 rounded-full border-2 border-[#112C3E] flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-full border-2 border-[#112C3E] flex items-center justify-center shrink-0 bg-amber-50">
                     <ChevronRightIcon className="w-4 h-4 text-[#112C3E] stroke-[3]" />
                   </div>
                   <span className="font-semibold text-sm sm:text-base">
@@ -298,7 +298,7 @@ export default function MediaKitPage() {
           </div>
 
           <div className="relative z-10 pt-4">
-            <p className="text-sm sm:text-base text-slate-300 font-medium">
+            <p className="text-sm sm:text-base text-slate-700 font-semibold">
               We're documenting ☕ how serious marketers & publishers adapt — in real time.
             </p>
           </div>
@@ -319,12 +319,12 @@ export default function MediaKitPage() {
         {/* ─────────────────────────────────────────────
            5. WHO IS IT FOR?
            ───────────────────────────────────────────── */}
-        <section className="rounded-[32px] sm:rounded-[40px] bg-gradient-to-b from-[#0F1B2E] via-[#142642] to-[#182E4F] text-white p-8 sm:p-14 lg:p-16 text-center space-y-10 border border-white/10 shadow-2xl w-full">
+        <section className="rounded-[32px] sm:rounded-[40px] bg-[#FEF3C7]/40 text-[#112C3E] p-8 sm:p-14 lg:p-16 text-center space-y-10 border border-[#F59E0B]/30 shadow-xl w-full">
           <div className="max-w-3xl mx-auto space-y-3">
-            <h2 className="text-3xl sm:text-4xl font-black font-space text-white tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-black font-space text-[#112C3E] tracking-tight">
               Who Is It For?
             </h2>
-            <p className="text-slate-300 text-sm sm:text-base">
+            <p className="text-slate-700 text-sm sm:text-base font-medium">
               This podcast is a perfect match for (yet, anyone in the industry is welcome to watch us):
             </p>
           </div>
@@ -341,12 +341,12 @@ export default function MediaKitPage() {
             ].map((role, idx) => (
               <div
                 key={idx}
-                className="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-6 text-left flex items-start gap-4 hover:bg-white/15 hover:border-white/25 transition-all shadow-md"
+                className="bg-white border border-amber-200 rounded-2xl p-6 text-left flex items-start gap-4 hover:shadow-md transition-all shadow-sm"
               >
-                <div className="w-7 h-7 rounded-full bg-[#8CF08A] flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
-                  <CheckIcon className="w-4 h-4 text-[#0F1B2E] stroke-[3]" />
+                <div className="w-7 h-7 rounded-full bg-[#F59E0B] flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
+                  <CheckIcon className="w-4 h-4 text-white stroke-[3]" />
                 </div>
-                <span className="font-bold text-base text-white font-space">
+                <span className="font-bold text-base text-[#112C3E] font-space">
                   {role}
                 </span>
               </div>
@@ -446,7 +446,7 @@ export default function MediaKitPage() {
           <div className="pt-2">
             <button
               onClick={() => setModalOpen(true)}
-              className="px-8 py-4 rounded-full bg-[#3E4FEA] text-white font-bold text-base hover:bg-[#112C3E] transition shadow-lg hover:shadow-xl"
+              className="px-8 py-4 rounded-full bg-[#F59E0B] text-white font-bold text-base hover:bg-[#D97706] transition shadow-lg hover:shadow-xl"
             >
               Apply to join as a guest
             </button>
@@ -456,35 +456,35 @@ export default function MediaKitPage() {
         {/* ─────────────────────────────────────────────
            7. WHY MEDIAHUB? (Added from latest user screenshots)
            ───────────────────────────────────────────── */}
-        <section className="rounded-[36px] bg-[#EEF4FF] border border-[#D5E2FF] p-8 sm:p-14 lg:p-16 relative overflow-hidden shadow-sm w-full">
+        <section className="rounded-[36px] bg-[#FEF3C7]/40 border border-[#F59E0B]/30 p-8 sm:p-14 lg:p-16 relative overflow-hidden shadow-sm w-full">
           {/* Subtle floating 3D chain link graphics mockup */}
-          <div className="absolute top-6 left-8 text-blue-300/40 text-6xl pointer-events-none transform -rotate-45 font-black">
+          <div className="absolute top-6 left-8 text-amber-300/40 text-6xl pointer-events-none transform -rotate-45 font-black">
             🔗
           </div>
-          <div className="absolute top-10 right-10 text-blue-300/40 text-6xl pointer-events-none transform rotate-12 font-black">
+          <div className="absolute top-10 right-10 text-amber-300/40 text-6xl pointer-events-none transform rotate-12 font-black">
             🔗
           </div>
-          <div className="absolute bottom-6 right-16 text-blue-300/40 text-5xl pointer-events-none transform -rotate-12 font-black">
+          <div className="absolute bottom-6 right-16 text-amber-300/40 text-5xl pointer-events-none transform -rotate-12 font-black">
             🔗
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
             {/* Left Column: Mascot Artwork */}
             <div className="lg:col-span-5 flex justify-center items-center">
-              <div className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-full bg-gradient-to-tr from-[#3E4FEA] to-[#6366F1] flex items-center justify-center shadow-2xl border-4 border-white/60">
+              <div className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-full bg-gradient-to-tr from-[#F59E0B] to-[#D97706] flex items-center justify-center shadow-2xl border-4 border-white/60">
                 {/* 3D Mascot Representation */}
                 <div className="w-48 h-48 sm:w-60 sm:h-60 rounded-full bg-[#112C3E] flex flex-col items-center justify-center text-center p-6 shadow-inner relative overflow-hidden">
                   <div className="flex gap-4 mb-2">
                     <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center">
-                      <div className="w-4 h-4 rounded-full bg-[#3E4FEA]" />
+                      <div className="w-4 h-4 rounded-full bg-[#F59E0B]" />
                     </div>
                     <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center">
-                      <div className="w-4 h-4 rounded-full bg-[#3E4FEA]" />
+                      <div className="w-4 h-4 rounded-full bg-[#F59E0B]" />
                     </div>
                   </div>
-                  <div className="w-6 h-3 bg-[#8CF08A] rounded-b-full mb-3" />
+                  <div className="w-6 h-3 bg-[#F59E0B] rounded-b-full mb-3" />
                   <span className="font-bold text-white font-space text-lg tracking-tight">
-                    Media<span className="text-[#3E4FEA]">Hub</span>
+                    Media<span className="text-[#F59E0B]">Hub</span>
                   </span>
                 </div>
               </div>
@@ -504,7 +504,7 @@ export default function MediaKitPage() {
                   "We see what’s breaking, what’s working, and what’s misunderstood.",
                 ].map((text, idx) => (
                   <div key={idx} className="flex items-start gap-4">
-                    <div className="w-7 h-7 rounded-full bg-[#22C55E] flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
+                    <div className="w-7 h-7 rounded-full bg-[#F59E0B] flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
                       <CheckIcon className="w-4 h-4 text-white stroke-[3]" />
                     </div>
                     <p className="text-base sm:text-lg font-medium text-[#112C3E] leading-relaxed">
@@ -517,10 +517,10 @@ export default function MediaKitPage() {
               <div className="pt-2">
                 <Link
                   href="/solutions"
-                  className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#112C3E] text-white font-bold text-base hover:bg-[#3E4FEA] transition shadow-md group"
+                  className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#112C3E] text-white font-bold text-base hover:bg-[#F59E0B] transition shadow-md group"
                 >
                   <span>Learn more about MediaHub</span>
-                  <div className="w-7 h-7 rounded-full bg-[#8CF08A] flex items-center justify-center text-[#112C3E] group-hover:translate-x-0.5 transition-transform">
+                  <div className="w-7 h-7 rounded-full bg-[#F59E0B] flex items-center justify-center text-white group-hover:translate-x-0.5 transition-transform">
                     <ArrowUpRightIcon className="w-4 h-4 stroke-[3]" />
                   </div>
                 </Link>
@@ -569,7 +569,7 @@ export default function MediaKitPage() {
                       placeholder="e.g. Sarah Jenkins"
                       value={guestForm.name}
                       onChange={(e) => setGuestForm({ ...guestForm, name: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#3E4FEA] text-sm text-[#112C3E]"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] text-sm text-[#112C3E]"
                     />
                   </div>
 
@@ -584,7 +584,7 @@ export default function MediaKitPage() {
                         placeholder="sarah@company.com"
                         value={guestForm.email}
                         onChange={(e) => setGuestForm({ ...guestForm, email: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#3E4FEA] text-sm text-[#112C3E]"
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] text-sm text-[#112C3E]"
                       />
                     </div>
                     <div>
@@ -596,7 +596,7 @@ export default function MediaKitPage() {
                         placeholder="e.g. Media Agency"
                         value={guestForm.company}
                         onChange={(e) => setGuestForm({ ...guestForm, company: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#3E4FEA] text-sm text-[#112C3E]"
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] text-sm text-[#112C3E]"
                       />
                     </div>
                   </div>
@@ -610,7 +610,7 @@ export default function MediaKitPage() {
                       placeholder="https://linkedin.com/in/username"
                       value={guestForm.linkedin}
                       onChange={(e) => setGuestForm({ ...guestForm, linkedin: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#3E4FEA] text-sm text-[#112C3E]"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] text-sm text-[#112C3E]"
                     />
                   </div>
 
@@ -624,7 +624,7 @@ export default function MediaKitPage() {
                       placeholder="Briefly describe what unique perspective or strategy you want to share..."
                       value={guestForm.topic}
                       onChange={(e) => setGuestForm({ ...guestForm, topic: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#3E4FEA] text-sm text-[#112C3E]"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] text-sm text-[#112C3E]"
                     />
                   </div>
 
@@ -637,9 +637,9 @@ export default function MediaKitPage() {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full py-3.5 rounded-full bg-[#112C3E] text-white font-bold text-sm hover:bg-[#3E4FEA] transition shadow-md flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    className="w-full py-3.5 rounded-full bg-[#112C3E] text-white font-bold text-sm hover:bg-[#F59E0B] transition shadow-md flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   >
-                    <PaperAirplaneIcon className={`w-4 h-4 text-[#8CF08A] ${submitting ? "animate-pulse" : ""}`} />
+                    <PaperAirplaneIcon className={`w-4 h-4 text-[#F59E0B] ${submitting ? "animate-pulse" : ""}`} />
                     <span>{submitting ? "Sending Application..." : "Submit Guest Application"}</span>
                   </button>
                 </form>
@@ -660,7 +660,7 @@ export default function MediaKitPage() {
                     setModalOpen(false);
                     setApplied(false);
                   }}
-                  className="px-6 py-2.5 rounded-full bg-[#112C3E] text-white font-semibold text-sm hover:bg-[#3E4FEA] transition"
+                  className="px-6 py-2.5 rounded-full bg-[#112C3E] text-white font-semibold text-sm hover:bg-[#F59E0B] transition"
                 >
                   Close Window
                 </button>

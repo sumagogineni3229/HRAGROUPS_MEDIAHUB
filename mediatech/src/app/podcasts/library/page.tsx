@@ -208,7 +208,7 @@ export default function PodcastLibraryPage() {
   const featuredEpisode = MEDIAHUB_GUIDES.find((ep) => ep.featured) || MEDIAHUB_GUIDES[0];
 
   return (
-    <div className="min-h-screen bg-[#F7FAFC] text-[#112C3E] font-sans antialiased selection:bg-[#3E4FEA] selection:text-white flex flex-col justify-between">
+    <div className="min-h-screen bg-[#F7FAFC] text-[#112C3E] font-sans antialiased selection:bg-[#F59E0B] selection:text-white flex flex-col justify-between">
       <div>
         {/* Header */}
         <PublicHeader activePage="podcasts" />
@@ -219,21 +219,21 @@ export default function PodcastLibraryPage() {
           {/* Hero Banner Section */}
           <div className="bg-white rounded-3xl p-8 sm:p-12 border border-[#EAF1F6] shadow-sm relative overflow-hidden space-y-8">
             {/* Background Decorative Element */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-[#3E4FEA]/10 via-[#8CF08A]/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-[#F59E0B]/10 via-[#FEF3C7]/20 to-transparent rounded-full blur-3xl pointer-events-none" />
 
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative z-10">
               <div className="space-y-4 max-w-3xl">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#3E4FEA]/10 border border-[#3E4FEA]/20 text-[#3E4FEA] text-xs font-bold uppercase tracking-wider">
-                  <BookOpenIcon className="w-4 h-4 text-[#3E4FEA]" />
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FEF3C7] border border-[#F59E0B]/30 text-[#D97706] text-xs font-bold uppercase tracking-wider">
+                  <BookOpenIcon className="w-4 h-4 text-[#F59E0B]" />
                   <span>MediaHub Technical Strategy & Knowledge Base</span>
                 </div>
 
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black font-space text-[#112C3E] tracking-tight leading-[1.1]">
-                  Media<span className="text-[#3E4FEA]">Hub</span> Strategy Library
+                  Media<span className="text-[#F59E0B]">Hub</span> Strategy Library
                 </h1>
 
                 <p className="text-slate-600 text-base sm:text-lg leading-relaxed">
-                  Read official technical design guides and operational architecture summaries directly from our startup specification (<code className="text-[#3E4FEA] bg-[#3E4FEA]/10 px-2 py-0.5 rounded font-mono text-xs">plan.md</code>). Includes Escrow security rules, daily link crawlers, admin moderation, and creator payout systems.
+                  Read official technical design guides and operational architecture summaries directly from our startup specification (<code className="text-[#D97706] bg-[#FEF3C7] px-2 py-0.5 rounded font-mono text-xs">plan.md</code>). Includes Escrow security rules, daily link crawlers, admin moderation, and creator payout systems.
                 </p>
 
                 {/* 3 Key Operational Pillars */}
@@ -247,7 +247,7 @@ export default function PodcastLibraryPage() {
                   </div>
 
                   <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-[#EAF1F6]">
-                    <CheckCircleIcon className="w-6 h-6 text-[#3E4FEA] shrink-0" />
+                    <CheckCircleIcon className="w-6 h-6 text-[#F59E0B] shrink-0" />
                     <div>
                       <span className="font-bold text-xs text-[#112C3E]">Daily Retention Crawls</span>
                       <span className="text-[11px] text-slate-500 block">Automated HTTP & link checks</span>
@@ -267,7 +267,7 @@ export default function PodcastLibraryPage() {
               <div className="flex flex-col sm:flex-row lg:flex-col items-stretch sm:items-center lg:items-end gap-4 shrink-0 relative z-10">
                 <Link
                   href="/media-kit"
-                  className="px-8 py-4 rounded-2xl bg-[#112C3E] text-white font-bold text-sm hover:bg-[#3E4FEA] transition shadow-md text-center flex items-center justify-center gap-2"
+                  className="px-8 py-4 rounded-2xl bg-[#112C3E] text-white font-bold text-sm hover:bg-[#F59E0B] transition shadow-md text-center flex items-center justify-center gap-2"
                 >
                   <span>Explore Media Kit</span>
                   <ArrowRightIcon className="w-4 h-4" />
@@ -279,34 +279,34 @@ export default function PodcastLibraryPage() {
 
           {/* Featured Strategy Guide Banner */}
           {featuredEpisode && (
-            <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0C172C] via-[#11254B] to-[#1B365D] text-white p-8 sm:p-12 shadow-xl border border-white/10 space-y-6">
+            <section className="relative overflow-hidden rounded-3xl bg-[#FEF3C7]/40 text-[#112C3E] p-8 sm:p-12 shadow-xl border border-[#F59E0B]/30 space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 <div className="lg:col-span-8 space-y-5">
                   <div className="flex items-center gap-3">
-                    <span className="px-3.5 py-1 rounded-full bg-[#8CF08A] text-[#0C172C] text-xs font-black uppercase tracking-wider">
+                    <span className="px-3.5 py-1 rounded-full bg-[#F59E0B] text-white text-xs font-black uppercase tracking-wider">
                       ★ Featured Technical Guide
                     </span>
-                    <span className="text-xs text-slate-300 flex items-center gap-1 font-medium bg-white/10 px-3 py-1 rounded-full">
+                    <span className="text-xs text-slate-700 flex items-center gap-1 font-medium bg-amber-100 border border-[#F59E0B]/30 px-3 py-1 rounded-full">
                       <ClockIcon className="w-3.5 h-3.5" /> {featuredEpisode.readTime}
                     </span>
                   </div>
 
-                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black font-space leading-snug text-white">
+                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black font-space leading-snug text-[#112C3E]">
                     {featuredEpisode.title}
                   </h2>
 
-                  <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+                  <p className="text-slate-700 text-sm sm:text-base leading-relaxed">
                     {featuredEpisode.summary}
                   </p>
 
                   <div className="flex flex-wrap items-center gap-4 pt-2">
-                    <div className="flex items-center gap-3 bg-white/10 px-4 py-2 rounded-2xl backdrop-blur-md">
-                      <div className="w-9 h-9 rounded-full bg-[#3E4FEA] flex items-center justify-center font-bold text-white text-xs shadow-md">
+                    <div className="flex items-center gap-3 bg-white/80 border border-amber-200 px-4 py-2 rounded-2xl">
+                      <div className="w-9 h-9 rounded-full bg-[#F59E0B] flex items-center justify-center font-bold text-white text-xs shadow-md">
                         MH
                       </div>
                       <div>
-                        <span className="font-bold text-white text-xs block">{featuredEpisode.speaker}</span>
-                        <span className="text-[11px] text-slate-300">{featuredEpisode.role}</span>
+                        <span className="font-bold text-[#112C3E] text-xs block">{featuredEpisode.speaker}</span>
+                        <span className="text-[11px] text-slate-600">{featuredEpisode.role}</span>
                       </div>
                     </div>
                   </div>
@@ -315,7 +315,7 @@ export default function PodcastLibraryPage() {
                 <div className="lg:col-span-4 flex flex-col items-center lg:items-end justify-center gap-4">
                   <button
                     onClick={() => setSelectedDigest(featuredEpisode)}
-                    className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-[#3E4FEA] text-white font-bold text-base hover:bg-[#8CF08A] hover:text-[#0C172C] transition shadow-lg flex items-center justify-center gap-3"
+                    className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-[#112C3E] text-white font-bold text-base hover:bg-[#1E3A8A] transition shadow-lg flex items-center justify-center gap-3"
                   >
                     <DocumentTextIcon className="w-6 h-6" />
                     <span>Read Featured Guide</span>
@@ -335,7 +335,7 @@ export default function PodcastLibraryPage() {
                   onClick={() => setSelectedCategory(cat)}
                   className={`px-5 py-2.5 rounded-2xl text-xs font-bold transition whitespace-nowrap ${
                     selectedCategory === cat
-                      ? "bg-[#3E4FEA] text-white shadow-md"
+                      ? "bg-[#F59E0B] text-white shadow-md"
                       : "bg-[#F8FAFC] text-slate-600 hover:bg-slate-200 border border-[#EAF1F6]"
                   }`}
                 >
@@ -352,7 +352,7 @@ export default function PodcastLibraryPage() {
                 placeholder="Search MediaHub topics, escrow, link crawlers..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 rounded-2xl border border-[#EAF1F6] bg-[#F8FAFC] text-xs font-medium text-[#112C3E] focus:outline-none focus:ring-2 focus:ring-[#3E4FEA] focus:bg-white"
+                className="w-full pl-11 pr-4 py-3 rounded-2xl border border-[#EAF1F6] bg-[#F8FAFC] text-xs font-medium text-[#112C3E] focus:outline-none focus:ring-2 focus:ring-[#F59E0B] focus:bg-white"
               />
             </div>
           </div>
@@ -367,13 +367,13 @@ export default function PodcastLibraryPage() {
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="inline-flex items-center gap-1 text-[11px] font-extrabold text-[#3E4FEA] uppercase tracking-wider bg-[#3E4FEA]/10 px-3 py-1 rounded-full border border-[#3E4FEA]/20">
+                    <span className="inline-flex items-center gap-1 text-[11px] font-extrabold text-[#D97706] uppercase tracking-wider bg-[#FEF3C7] px-3 py-1 rounded-full border border-[#F59E0B]/30">
                       <TagIcon className="w-3 h-3" /> {ep.category}
                     </span>
                     <span className="text-xs text-slate-400 font-medium">{ep.readTime} • {ep.date}</span>
                   </div>
 
-                  <h3 className="text-lg font-bold font-space text-[#112C3E] leading-snug group-hover:text-[#3E4FEA] transition-colors">
+                  <h3 className="text-lg font-bold font-space text-[#112C3E] leading-snug group-hover:text-[#F59E0B] transition-colors">
                     {ep.title}
                   </h3>
 
@@ -399,7 +399,7 @@ export default function PodcastLibraryPage() {
                         e.stopPropagation();
                         setSelectedDigest(ep);
                       }}
-                      className="px-4 py-2 rounded-xl bg-[#3E4FEA] hover:bg-[#2632A3] text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
+                      className="px-4 py-2 rounded-xl bg-[#F59E0B] hover:bg-[#D97706] text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
                     >
                       <DocumentTextIcon className="w-4 h-4" />
                       <span>Read Guide</span>
@@ -421,7 +421,7 @@ export default function PodcastLibraryPage() {
             {/* Header */}
             <div className="flex items-start justify-between gap-4 pb-4 border-b border-slate-100">
               <div>
-                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#3E4FEA] uppercase tracking-wider bg-[#3E4FEA]/10 px-2.5 py-0.5 rounded-full mb-2">
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#D97706] uppercase tracking-wider bg-[#FEF3C7] px-2.5 py-0.5 rounded-full mb-2">
                   {selectedDigest.category} • Technical Guide
                 </span>
                 <h3 className="text-xl font-bold font-space text-[#112C3E] leading-snug">
@@ -447,12 +447,12 @@ export default function PodcastLibraryPage() {
             {/* Key Takeaways */}
             <div className="space-y-3">
               <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                <ShieldCheckIcon className="w-4 h-4 text-[#3E4FEA]" /> Key Strategic Principles
+                <ShieldCheckIcon className="w-4 h-4 text-[#F59E0B]" /> Key Strategic Principles
               </h4>
               <ul className="space-y-2 text-xs sm:text-sm text-slate-700">
                 {selectedDigest.writtenDigest.keyTakeaways.map((item, idx) => (
                   <li key={idx} className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#3E4FEA] mt-2 shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B] mt-2 shrink-0" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -467,7 +467,7 @@ export default function PodcastLibraryPage() {
               <div className="space-y-2 text-xs text-slate-700 bg-[#112C3E] text-slate-200 p-4 rounded-2xl font-mono">
                 {selectedDigest.writtenDigest.technicalHighlights.map((tech, idx) => (
                   <div key={idx} className="flex items-start gap-2">
-                    <span className="text-[#8CF08A] font-bold">›</span>
+                    <span className="text-[#F59E0B] font-bold">›</span>
                     <span>{tech}</span>
                   </div>
                 ))}
@@ -479,7 +479,7 @@ export default function PodcastLibraryPage() {
               <span className="font-semibold text-slate-700">Reference: {selectedDigest.writtenDigest.planMdReference}</span>
               <button
                 onClick={() => setSelectedDigest(null)}
-                className="px-5 py-2 rounded-xl bg-[#3E4FEA] text-white font-bold hover:bg-[#2632A3] transition"
+                className="px-5 py-2 rounded-xl bg-[#F59E0B] text-white font-bold hover:bg-[#D97706] transition"
               >
                 Close Guide
               </button>

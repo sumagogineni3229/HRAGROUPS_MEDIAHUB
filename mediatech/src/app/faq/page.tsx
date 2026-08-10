@@ -51,7 +51,7 @@ export default function FaqPage() {
                 key={faq.id}
                 className={`bg-white rounded-[22px] border transition-all duration-200 overflow-hidden ${
                   isOpen
-                    ? "border-[#3E4FEA] shadow-md ring-1 ring-[#3E4FEA]/20"
+                    ? "border-[#F59E0B] shadow-md ring-1 ring-[#F59E0B]/20"
                     : "border-[#EAF1F6] hover:border-[#D5E1EA] shadow-sm"
                 }`}
               >
@@ -59,14 +59,14 @@ export default function FaqPage() {
                   onClick={() => toggleFaq(faq.id)}
                   className="w-full px-7 py-5 text-left flex items-center justify-between gap-4 focus:outline-none group"
                 >
-                  <span className="font-bold text-base sm:text-lg text-[#112C3E] font-space group-hover:text-[#3E4FEA] transition-colors leading-snug">
+                  <span className="font-bold text-base sm:text-lg text-[#112C3E] font-space group-hover:text-[#F59E0B] transition-colors leading-snug">
                     {faq.question}
                   </span>
 
                   {isOpen ? (
-                    <MinusCircleIcon className="w-6 h-6 text-[#3E4FEA] shrink-0" />
+                    <MinusCircleIcon className="w-6 h-6 text-[#F59E0B] shrink-0" />
                   ) : (
-                    <PlusCircleIcon className="w-6 h-6 text-[#3E4FEA] shrink-0 group-hover:scale-110 transition-transform" />
+                    <PlusCircleIcon className="w-6 h-6 text-[#F59E0B] shrink-0 group-hover:scale-110 transition-transform" />
                   )}
                 </button>
 
@@ -84,7 +84,7 @@ export default function FaqPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7FAFC] text-[#112C3E] font-sans antialiased selection:bg-[#3E4FEA] selection:text-white relative overflow-hidden flex flex-col justify-between">
+    <div className="min-h-screen bg-[#F7FAFC] text-[#112C3E] font-sans antialiased selection:bg-[#F59E0B] selection:text-white relative overflow-hidden flex flex-col justify-between">
       <div>
         {/* Header */}
         <PublicHeader activePage="faq" />
@@ -114,7 +114,7 @@ export default function FaqPage() {
                   placeholder="Search for answers"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-6 pr-12 py-4 bg-[#EAF0F5] rounded-full text-base text-[#112C3E] placeholder-[#677F9B] border border-transparent focus:border-[#3E4FEA] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3E4FEA]/20 transition shadow-inner"
+                  className="w-full pl-6 pr-12 py-4 bg-[#EAF0F5] rounded-full text-base text-[#112C3E] placeholder-[#677F9B] border border-transparent focus:border-[#F59E0B] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#F59E0B]/20 transition shadow-inner"
                 />
                 <MagnifyingGlassIcon className="w-5 h-5 text-[#677F9B] absolute right-5 top-1/2 -translate-y-1/2" />
               </div>
@@ -131,7 +131,7 @@ export default function FaqPage() {
                 </p>
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="px-5 py-2 rounded-full bg-[#3E4FEA] text-white text-xs font-bold"
+                  className="px-5 py-2 rounded-full bg-[#F59E0B] text-white text-xs font-bold"
                 >
                   Clear Search
                 </button>
@@ -159,8 +159,8 @@ export default function FaqPage() {
             If you have more questions,
           </h2>
           <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-[#112C3E] font-space leading-tight tracking-tight">
-            please <span className="text-[#3E4FEA]">ask</span> here or reach us at{" "}
-            <a href="mailto:support@mediahub.com" className="text-[#5271FF] hover:underline transition">
+            please <span className="text-[#F59E0B]">ask</span> here or reach us at{" "}
+            <a href="mailto:support@mediahub.com" className="text-[#F59E0B] hover:underline transition">
               support@mediahub.com
             </a>
           </h2>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { BellIcon, ChevronDownIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
 import { signOut } from "next-auth/react";
+import { RoleSwitcher } from "@/components/role-switcher";
 
 type Crumb = { label: string; href?: string };
 
@@ -27,6 +28,8 @@ type TopHeaderProps = {
   userAvatar?: string;
   notificationCount?: number;
   recentNotifications?: RecentNotif[];
+  activeRole?: string;
+  enabledRoles?: string[];
 };
 
 export function TopHeader({
@@ -39,6 +42,8 @@ export function TopHeader({
   userAvatar,
   notificationCount = 0,
   recentNotifications = [],
+  activeRole,
+  enabledRoles = [],
 }: TopHeaderProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
@@ -243,6 +248,14 @@ export function TopHeader({
                   <div className="user-role">{userRole}</div>
                   <div className="user-name">{userName || "User"}</div>
                 </div>
+
+                <div className="dropdown-divider" />
+
+                {/* Role Switcher */}
+                <RoleSwitcher
+                  activeRole={activeRole ?? userRole?.toUpperCase() ?? "ADVERTISER"}
+                  enabledRoles={enabledRoles}
+                />
 
                 <div className="dropdown-divider" />
 

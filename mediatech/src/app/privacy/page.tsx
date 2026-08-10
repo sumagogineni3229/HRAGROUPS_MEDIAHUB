@@ -7,7 +7,7 @@ import { FloatingSupportWidget } from "@/components/layout/floating-support-widg
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-[#F7FAFC] text-[#112C3E] font-sans antialiased selection:bg-[#3E4FEA] selection:text-white flex flex-col justify-between">
+    <div className="min-h-screen bg-[#F7FAFC] text-[#112C3E] font-sans antialiased selection:bg-[#F59E0B] selection:text-white flex flex-col justify-between">
       <div>
         <PublicHeader activePage="other" />
 
