@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PublicHeader } from "@/components/layout/public-header";
 import { PublicFooter } from "@/components/layout/public-footer";
 import { FloatingSupportWidget } from "@/components/layout/floating-support-widget";
-import { getBlogPostBySlug, getRelatedPosts, BlogPost } from "@/lib/blog-data";
+import { getRelatedPosts, BlogPost } from "@/lib/blog-data";
+import { getBlogPostBySlug } from "@/lib/blog-store";
 import {
   ClockIcon,
   CalendarIcon,
@@ -22,9 +23,20 @@ import {
 export default function BlogPostDetailPage() {
   const params = useParams();
   const slug = typeof params?.slug === "string" ? params.slug : Array.isArray(params?.slug) ? params.slug[0] : "";
-  const post: BlogPost | undefined = getBlogPostBySlug(slug);
-
+  const [post, setPost] = useState<BlogPost | undefined>(() => getBlogPostBySlug(slug));
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/blog")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.posts && Array.isArray(data.posts)) {
+          const found = data.posts.find((p: BlogPost) => p.slug === slug);
+          if (found) setPost(found);
+        }
+      })
+      .catch((err) => console.error("Failed to fetch article", err));
+  }, [slug]);
 
   if (!post) {
     return (

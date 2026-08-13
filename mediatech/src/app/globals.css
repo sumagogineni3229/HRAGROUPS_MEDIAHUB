@@ -559,3 +559,41 @@ body {
     opacity: 1;
   }
 }
+
+/* ─────────────────────────────────────────────
+   BRAND GLOW & MESH ANIMATIONS
+   ───────────────────────────────────────────── */
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 8s infinite ease-in-out;
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+.bg-mesh-pattern {
+  background-image: radial-gradient(rgba(17, 24, 39, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.bg-box-grid {
+  background-image: linear-gradient(to right, rgba(15, 23, 42, 0.05) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+}

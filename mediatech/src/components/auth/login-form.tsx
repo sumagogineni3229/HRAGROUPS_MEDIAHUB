@@ -46,19 +46,26 @@ export function LoginForm() {
       return;
     }
 
-    // Dynamic role redirection instead of landing page "/" fallback
+    // Dynamic role redirection taking user role into account
     try {
       const sessionRes = await fetch("/api/auth/session");
       const session = await sessionRes.json();
       if (session?.user?.role) {
-        const role = session.user.role;
+        const userRole = session.user.role;
+        // If callbackUrl is set to something specific (not root or auth route), prefer callbackUrl
+        if (callbackUrl && callbackUrl !== "/" && !callbackUrl.startsWith("/login") && !callbackUrl.startsWith("/register")) {
+          router.push(callbackUrl);
+          router.refresh();
+          return;
+        }
+
         const roleHome: Record<string, string> = {
           ADVERTISER: "/advertiser/sites",
           PUBLISHER:  "/publisher/platforms",
           INFLUENCER: "/influencer/channels",
           ADMIN:      "/admin/dashboard",
         };
-        router.push(roleHome[role] ?? "/");
+        router.push(roleHome[userRole] ?? "/");
         router.refresh();
         return;
       }

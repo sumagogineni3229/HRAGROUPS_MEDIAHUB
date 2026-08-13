@@ -10,17 +10,17 @@ export function PublicFooter() {
   return (
     <footer className="relative bg-[#F7FAFC] border-t border-[#EAF1F6] pt-12 pb-8 text-[#112C3E] w-full font-sans">
       <div className="w-full px-6 sm:px-10 lg:px-16 max-w-[1600px] mx-auto space-y-10">
-        
+
         {/* Main Footer Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start lg:items-center">
-          
+
           {/* 1. Left: Brand Logo & Short Bio */}
           <div className="lg:col-span-3 space-y-3">
             <Link href="/" className="inline-flex items-center group">
               <img
-                src="/mediahub.png"
+                src="/mediahub1.png"
                 alt="Media Hub Logo"
-                className="h-7 sm:h-8 w-auto object-contain transition-transform group-hover:scale-105"
+                className="h-10 sm:h-12 w-auto object-contain transition-transform group-hover:scale-105"
               />
             </Link>
             <p className="text-xs text-[#677F9B] leading-relaxed max-w-xs">
@@ -30,13 +30,13 @@ export function PublicFooter() {
 
           {/* 2. Center: Primary Nav & Payment Method Vectors */}
           <div className="lg:col-span-6 flex flex-col items-start lg:items-center space-y-6">
-            
+
             {/* Top Navigation Links Bar */}
             <div className="flex flex-wrap items-center justify-start lg:justify-center gap-5 sm:gap-7 text-sm font-semibold text-[#112C3E]">
               <Link href="/solutions" className="hover:text-[#F59E0B] transition">
                 Solutions
               </Link>
-              
+
               <Link href="/blog" className="flex items-center gap-1.5 hover:text-[#F59E0B] transition group">
                 <span>Blog</span>
                 <span className="px-1.5 py-0.5 text-[9px] font-black bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white rounded-full uppercase tracking-wider">
@@ -135,7 +135,7 @@ export function PublicFooter() {
 
           {/* 3. Right: Social Icons & Address */}
           <div className="lg:col-span-3 flex flex-col items-start lg:items-end space-y-4">
-            
+
             {/* Social Vector Icons */}
             <div className="flex items-center gap-2.5">
               {/* Telegram */}

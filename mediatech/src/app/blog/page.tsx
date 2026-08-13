@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PublicHeader } from "@/components/layout/public-header";
 import { PublicFooter } from "@/components/layout/public-footer";
 import { FloatingSupportWidget } from "@/components/layout/floating-support-widget";
-import { BLOG_CATEGORIES, BLOG_POSTS, TOP_ARTICLES, BlogPost } from "@/lib/blog-data";
+import { BLOG_CATEGORIES, TOP_ARTICLES, BlogPost } from "@/lib/blog-data";
+import { getCombinedBlogPosts } from "@/lib/blog-store";
 import {
   MagnifyingGlassIcon,
   ChevronLeftIcon,
@@ -29,10 +30,22 @@ export default function BlogIndexPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("View all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [recommendedIndex, setRecommendedIndex] = useState(0);
+  const [allPosts, setAllPosts] = useState<BlogPost[]>(() => getCombinedBlogPosts());
 
-  const featuredPost = BLOG_POSTS.find((post) => post.featured) || BLOG_POSTS[0];
+  useEffect(() => {
+    fetch("/api/blog")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.posts && Array.isArray(data.posts)) {
+          setAllPosts(data.posts);
+        }
+      })
+      .catch((err) => console.error("Failed to fetch live blogs", err));
+  }, []);
 
-  const filteredPosts = BLOG_POSTS.filter((post) => {
+  const featuredPost = allPosts.find((post) => post.featured) || allPosts[0] || getCombinedBlogPosts()[0];
+
+  const filteredPosts = allPosts.filter((post) => {
     const matchesCategory = selectedCategory === "View all" || post.category === selectedCategory;
     const matchesSearch =
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -41,7 +54,7 @@ export default function BlogIndexPage() {
     return matchesCategory && matchesSearch;
   });
 
-  const recommendedPosts = BLOG_POSTS.filter((post) => post.slug !== featuredPost.slug);
+  const recommendedPosts = allPosts.filter((post) => post.slug !== featuredPost?.slug);
 
   const handleNextRecommended = () => {
     setRecommendedIndex((prev) => (prev + 1) % Math.max(1, recommendedPosts.length - 2));
@@ -84,8 +97,8 @@ export default function BlogIndexPage() {
                 {BLOG_CATEGORIES.map((category) => {
                   const isActive = selectedCategory === category;
                   const count = category === "View all" 
-                    ? BLOG_POSTS.length 
-                    : BLOG_POSTS.filter(p => p.category === category).length;
+                    ? allPosts.length 
+                    : allPosts.filter(p => p.category === category).length;
                     
                   return (
                     <button

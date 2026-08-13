@@ -114,7 +114,7 @@ export default async function AdminWithdrawalsPage({ searchParams }: { searchPar
   const pendingTotal = counts.find((c: any) => c.status === "PENDING")?._sum.amount ?? 0;
 
   return (
-    <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+    <div className="w-full">
       <div className="mb-6">
         <span className="text-xs text-muted font-inter">Admin &gt; Withdrawals</span>
         <h1 className="text-2xl font-bold font-space text-dark mt-1">Withdrawal Approvals</h1>

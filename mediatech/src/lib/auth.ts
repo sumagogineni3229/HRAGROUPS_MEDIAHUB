@@ -36,9 +36,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user, trigger, session: sessionUpdate }) {
       if (user) {
         token.id = user.id;
+        if ((user as any).role === "ADMIN") {
+          token.role = "ADMIN";
+          token.activeRole = "ADMIN";
+        }
       }
       // Support client-side session.update({ activeRole }) call
-      if (trigger === "update" && sessionUpdate?.activeRole) {
+      if (trigger === "update" && sessionUpdate?.activeRole && token.role !== "ADMIN") {
         token.activeRole = sessionUpdate.activeRole;
       }
       if (token.id) {
@@ -58,8 +62,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               dbUser.enabledRoles && dbUser.enabledRoles.length > 0
                 ? dbUser.enabledRoles
                 : [dbUser.role];
-            // Only override activeRole from DB if not set in token yet
-            if (!token.activeRole) {
+            // Only override activeRole from DB if not set in token yet, but ADMIN always forces activeRole = ADMIN
+            if (dbUser.role === "ADMIN") {
+              token.activeRole = "ADMIN";
+            } else if (!token.activeRole) {
               token.activeRole = dbUser.role;
             }
           }

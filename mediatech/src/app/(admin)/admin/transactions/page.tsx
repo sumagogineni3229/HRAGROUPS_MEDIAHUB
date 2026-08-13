@@ -49,7 +49,7 @@ export default async function AdminTransactionsPage({ searchParams }: { searchPa
   const earnings = totals.find((t: any) => t.type === "EARNING")?._sum.amount ?? 0;
 
   return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+    <div className="w-full">
       <div className="mb-6">
         <span className="text-xs text-muted font-inter">Admin &gt; Transactions</span>
         <h1 className="text-2xl font-bold font-space text-dark mt-1">Transaction Log</h1>

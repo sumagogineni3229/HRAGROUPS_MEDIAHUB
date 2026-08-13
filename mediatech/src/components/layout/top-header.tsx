@@ -76,8 +76,8 @@ export function TopHeader({
     userRole === "Advertiser"
       ? "/advertiser/balance"
       : userRole === "Publisher"
-      ? "/publisher/balance"
-      : "/influencer/balance";
+        ? "/publisher/balance"
+        : "/influencer/balance";
 
   const notifPageHref = "/notifications";
 
@@ -251,13 +251,16 @@ export function TopHeader({
 
                 <div className="dropdown-divider" />
 
-                {/* Role Switcher */}
-                <RoleSwitcher
-                  activeRole={activeRole ?? userRole?.toUpperCase() ?? "ADVERTISER"}
-                  enabledRoles={enabledRoles}
-                />
-
-                <div className="dropdown-divider" />
+                {/* Role Switcher (Hidden for Admin users) */}
+                {!userRole?.toLowerCase().includes("admin") && activeRole?.toUpperCase() !== "ADMIN" && (
+                  <>
+                    <RoleSwitcher
+                      activeRole={activeRole ?? userRole?.toUpperCase() ?? "ADVERTISER"}
+                      enabledRoles={enabledRoles}
+                    />
+                    <div className="dropdown-divider" />
+                  </>
+                )}
 
                 <div className="dropdown-section">
                   <Link

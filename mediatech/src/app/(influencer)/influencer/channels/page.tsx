@@ -26,7 +26,7 @@ export default async function InfluencerChannelsPage() {
   });
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+    <div className="w-full">
       {/* Header Info */}
       <div className="flex justify-between items-center mb-6">
         <div>

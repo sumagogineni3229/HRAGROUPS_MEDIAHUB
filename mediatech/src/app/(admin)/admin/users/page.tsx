@@ -170,7 +170,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
   };
 
   return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+    <div className="w-full">
       <div className="mb-6">
         <span className="text-xs text-muted font-inter">Admin &gt; Users</span>
         <h1 className="text-2xl font-bold font-space text-dark mt-1">User Management</h1>

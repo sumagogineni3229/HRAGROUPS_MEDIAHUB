@@ -49,7 +49,7 @@ export default async function InfluencerTasksPage({ searchParams }: PageProps) {
   ];
 
   return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+    <div className="w-full">
       <div className="mb-6">
         <span className="text-xs text-muted font-inter">Home &gt; Tasks</span>
         <h1 className="text-2xl font-bold font-space text-dark mt-2">Brand Deals</h1>

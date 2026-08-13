@@ -47,7 +47,8 @@ export default auth((req) => {
 
   // Logged-in user visiting auth page → redirect to dashboard
   if (isAuthRoute && session?.user) {
-    const role = ((session.user as any).activeRole ?? (session.user as any).role) as string;
+    const mainRole = (session.user as any).role as string;
+    const role = mainRole === "ADMIN" ? "ADMIN" : (((session.user as any).activeRole ?? mainRole) as string);
     console.log(`[MIDDLEWARE] Redirecting logged-in user to: ${ROLE_HOME[role]}`);
     return NextResponse.redirect(new URL(ROLE_HOME[role] ?? "/login", nextUrl));
   }
@@ -63,7 +64,8 @@ export default auth((req) => {
   }
 
   // Role-based access control
-  const role = ((session.user as any).activeRole ?? (session.user as any).role) as string;
+  const mainRole = (session.user as any).role as string;
+  const role = mainRole === "ADMIN" ? "ADMIN" : (((session.user as any).activeRole ?? mainRole) as string);
   const allowed = ROLE_ROUTES[role] ?? [];
   const isAllowed = allowed.some((r) => pathname.startsWith(r));
 

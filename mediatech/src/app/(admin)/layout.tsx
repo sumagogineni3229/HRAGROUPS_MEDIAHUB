@@ -14,6 +14,7 @@ import { db } from "@/lib/db";
 
 const adminNavItems = [
   { label: "Dashboard",         href: "/admin/dashboard",     icon: <Squares2X2Icon className="w-4 h-4" /> },
+  { label: "Blog Posts",        href: "/admin/blogs",         icon: <ClipboardDocumentListIcon className="w-4 h-4" /> },
   { label: "Users",             href: "/admin/users",         icon: <UsersIcon className="w-4 h-4" /> },
   { label: "Listings",          href: "/admin/listings",      icon: <CheckBadgeIcon className="w-4 h-4" /> },
   { label: "Tasks",             href: "/admin/tasks",         icon: <ClipboardDocumentListIcon className="w-4 h-4" /> },
@@ -59,6 +60,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           bonus={user?.bonus ?? 0}
           userName={user?.name ?? session.user.name ?? ""}
           userRole="Admin"
+          activeRole="ADMIN"
           userAvatar={user?.avatar ?? session.user.image ?? undefined}
           notificationCount={notificationCount}
           recentNotifications={recentNotifications as any}

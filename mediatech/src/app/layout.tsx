@@ -10,6 +10,7 @@ const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
   display: "swap",
   weight: ["400", "500", "600", "700"],
+  fallback: ["system-ui", "sans-serif"],
 });
 
 const inter = Inter({
@@ -17,6 +18,7 @@ const inter = Inter({
   variable: "--font-inter",
   display: "swap",
   weight: ["400", "500", "600"],
+  fallback: ["system-ui", "sans-serif"],
 });
 
 export const metadata: Metadata = {

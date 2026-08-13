@@ -72,7 +72,7 @@ export default async function PublisherPlatformsPage({
   });
 
   return (
-    <div className="platforms-container">
+    <div className="w-full">
       <PublisherBanners hasRejectedPlatforms={platforms.some((p: any) => p.status === "REJECTED")} />
 
       {/* Header Info */}

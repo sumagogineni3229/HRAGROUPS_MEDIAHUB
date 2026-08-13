@@ -42,8 +42,12 @@ export default async function AdvertiserLayout({ children }: { children: React.R
   }
 
   const role = (session.user as any).role as string;
+  if (role === "ADMIN") {
+    redirect("/admin/dashboard");
+  }
+
   const activeRole = ((session.user as any).activeRole ?? role) as string;
-  if (activeRole !== "ADVERTISER" && role !== "ADMIN") {
+  if (activeRole !== "ADVERTISER") {
     redirect("/login");
   }
 

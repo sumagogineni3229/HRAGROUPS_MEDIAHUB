@@ -117,7 +117,7 @@ export default async function AdvertiserTasksPage({ searchParams }: AdvertiserTa
   ];
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+    <div className="w-full">
       {/* Header */}
       <div className="mb-6 font-inter">
         <span className="text-xs text-muted">Home &gt; Tasks</span>

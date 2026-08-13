@@ -13,7 +13,7 @@ export default async function InfluencerDemandPage() {
   }
 
   return (
-    <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+    <div className="w-full">
       <div className="mb-6">
         <span className="text-xs text-muted font-inter">Home &gt; Demand</span>
         <h1 className="text-2xl font-bold font-space text-dark mt-2">Open Demand Campaigns</h1>

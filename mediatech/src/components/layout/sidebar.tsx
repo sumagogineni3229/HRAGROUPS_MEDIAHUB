@@ -27,9 +27,9 @@ export function Sidebar({ navItems, role }: SidebarProps) {
       <div className="sidebar-logo">
         <Link href="/" className="flex items-center">
           <img
-            src="/mediahub.png"
+            src="/mediahub1.png"
             alt="Media Hub Logo"
-            className="h-7 w-auto object-contain"
+            className="h-10 w-auto object-contain"
           />
         </Link>
       </div>

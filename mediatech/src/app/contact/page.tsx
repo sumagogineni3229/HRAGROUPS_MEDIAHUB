@@ -173,22 +173,22 @@ export default function ContactPage() {
         </section>
 
         {/* ─────────────────────────────────────────────
-           2. "FOR ADVERTISERS" MINT GREEN FORM CARD (Screenshot 2)
+           2. "FOR ADVERTISERS" FORM CARD
            ───────────────────────────────────────────── */}
         <section>
-          <div className="bg-[#7BF28D] rounded-3xl p-8 sm:p-12 shadow-xl text-[#112C3E] space-y-6 max-w-4xl mx-auto relative overflow-hidden">
+          <div className="bg-white rounded-3xl p-8 sm:p-12 shadow-xl border border-slate-200 text-slate-900 space-y-6 max-w-4xl mx-auto relative overflow-hidden">
             <div>
-              <h3 className="text-3xl font-extrabold font-space">For advertisers</h3>
-              <p className="text-xs text-[#112C3E]/80 mt-1">
-                Fields marked <span className="text-red-600 font-bold">*</span> are required
+              <h3 className="text-3xl font-extrabold font-space text-slate-950">For advertisers</h3>
+              <p className="text-xs text-slate-500 mt-1">
+                Fields marked <span className="text-red-500 font-bold">*</span> are required
               </p>
             </div>
 
             {submitted ? (
-              <div className="bg-white rounded-2xl p-8 text-center space-y-3 shadow-md">
-                <CheckCircleIcon className="w-12 h-12 text-[#F59E0B] mx-auto" />
-                <h4 className="text-xl font-bold font-space">Message Received!</h4>
-                <p className="text-sm text-[#677F9B]">
+              <div className="bg-amber-50 rounded-2xl p-8 text-center space-y-3 border border-amber-200">
+                <CheckCircleIcon className="w-12 h-12 text-[#D97706] mx-auto" />
+                <h4 className="text-xl font-bold font-space text-slate-900">Message Received!</h4>
+                <p className="text-sm text-slate-600">
                   Thank you for contacting MediaHub. Our campaign specialists will get back to you at {formData.email} within 2 hours.
                 </p>
               </div>
@@ -197,38 +197,38 @@ export default function ContactPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {/* Your name */}
                   <div className="space-y-1">
-                    <label className="text-xs font-bold">Your name <span className="text-red-600">*</span></label>
+                    <label className="text-xs font-bold text-slate-800">Your name <span className="text-red-500">*</span></label>
                     <input
                       type="text"
                       required
                       placeholder="Your name"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full bg-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#112C3E] text-[#112C3E] placeholder-[#94A3B8]"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#F59E0B] text-slate-900 placeholder-slate-400 font-medium"
                     />
                   </div>
 
                   {/* Your email */}
                   <div className="space-y-1">
-                    <label className="text-xs font-bold">Your email <span className="text-red-600">*</span></label>
+                    <label className="text-xs font-bold text-slate-800">Your email <span className="text-red-500">*</span></label>
                     <input
                       type="email"
                       required
                       placeholder="Email address *"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full bg-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#112C3E] text-[#112C3E] placeholder-[#94A3B8]"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#F59E0B] text-slate-900 placeholder-slate-400 font-medium"
                     />
                   </div>
 
                   {/* Your phone */}
                   <div className="space-y-1">
-                    <label className="text-xs font-bold">Your phone <span className="text-red-600">*</span></label>
+                    <label className="text-xs font-bold text-slate-800">Your phone <span className="text-red-500">*</span></label>
                     <div className="flex gap-2">
                       <select
                         value={formData.countryCode}
                         onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
-                        className="bg-white rounded-xl px-3 py-3 text-sm font-semibold focus:outline-none text-[#112C3E] shrink-0"
+                        className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:border-[#F59E0B] shrink-0"
                       >
                         <option value="+91">+91 (IN)</option>
                         <option value="+1">+1 (US)</option>
@@ -241,18 +241,18 @@ export default function ContactPage() {
                         placeholder="9490056002"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className="w-full bg-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#112C3E] text-[#112C3E] placeholder-[#94A3B8]"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#F59E0B] text-slate-900 placeholder-slate-400 font-medium"
                       />
                     </div>
                   </div>
 
                   {/* Your company size */}
                   <div className="space-y-1">
-                    <label className="text-xs font-bold">Your company size</label>
+                    <label className="text-xs font-bold text-slate-800">Your company size</label>
                     <select
                       value={formData.companySize}
                       onChange={(e) => setFormData({ ...formData, companySize: e.target.value })}
-                      className="w-full bg-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#112C3E] text-[#112C3E]"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#F59E0B] text-slate-900 font-medium"
                     >
                       <option value="">Choose size</option>
                       <option value="1-10">1-10 employees</option>
@@ -264,12 +264,12 @@ export default function ContactPage() {
                   </div>
 
                   {/* Goals */}
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold">What goals would you like to achieve with MediaHub?</label>
+                  <div className="space-y-1 md:col-span-2">
+                    <label className="text-xs font-bold text-slate-800">What goals would you like to achieve with MediaHub?</label>
                     <select
                       value={formData.goal}
                       onChange={(e) => setFormData({ ...formData, goal: e.target.value })}
-                      className="w-full bg-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#112C3E] text-[#112C3E]"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#F59E0B] text-slate-900 font-medium"
                     >
                       <option value="">Choose goal</option>
                       <option value="serp">Improve SERP Rankings</option>
@@ -280,46 +280,47 @@ export default function ContactPage() {
                   </div>
 
                   {/* How can we help you */}
-                  <div className="space-y-1 md:col-span-1">
-                    <label className="text-xs font-bold">How can we help you? <span className="text-red-600">*</span></label>
+                  <div className="space-y-1 md:col-span-2">
+                    <label className="text-xs font-bold text-slate-800">How can we help you? <span className="text-red-500">*</span></label>
                     <textarea
                       required
-                      rows={3}
+                      rows={4}
                       placeholder="Your message"
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full bg-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#112C3E] text-[#112C3E] placeholder-[#94A3B8]"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#F59E0B] text-slate-900 placeholder-slate-400 font-medium"
                     />
                   </div>
                 </div>
 
                 {errorMsg && (
-                  <div className="p-3 text-xs font-semibold bg-red-100 text-red-700 border border-red-300 rounded-xl">
+                  <div className="p-3 text-xs font-semibold bg-red-50 text-red-600 border border-red-200 rounded-xl">
                     {errorMsg}
                   </div>
                 )}
 
-                {/* reCAPTCHA Mock Widget & Submit Button */}
+                {/* reCAPTCHA Widget & Submit Button */}
                 <div className="pt-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
                   {/* reCAPTCHA Box */}
                   <div
                     onClick={() => setFormData({ ...formData, robotChecked: !formData.robotChecked })}
-                    className={`bg-white rounded-xl border p-3 flex items-center gap-4 text-xs font-semibold text-slate-700 shadow-sm shrink-0 cursor-pointer transition ${formData.robotChecked ? "border-emerald-500 bg-emerald-50/30" : "border-[#CBD5E1]"
-                      }`}
+                    className={`bg-slate-50 rounded-xl border p-3 flex items-center gap-4 text-xs font-semibold text-slate-700 shrink-0 cursor-pointer transition ${
+                      formData.robotChecked ? "border-emerald-500 bg-emerald-50/50" : "border-slate-300 hover:border-slate-400"
+                    }`}
                   >
                     <input
                       type="checkbox"
                       id="recaptcha-check"
                       checked={formData.robotChecked}
                       onChange={(e) => setFormData({ ...formData, robotChecked: e.target.checked })}
-                      className="w-5 h-5 accent-[#112C3E] rounded cursor-pointer"
+                      className="w-5 h-5 accent-[#F59E0B] rounded cursor-pointer"
                     />
-                    <label htmlFor="recaptcha-check" className="cursor-pointer select-none">
+                    <label htmlFor="recaptcha-check" className="cursor-pointer select-none font-bold">
                       I'm not a robot
                     </label>
-                    <div className="text-[9px] text-slate-400 text-center pl-2">
+                    <div className="text-[9px] text-slate-400 text-center pl-2 border-l border-slate-200">
                       <span className="text-base block">{formData.robotChecked ? "✅" : "🔄"}</span>
-                      <span>reCAPTCHA</span>
+                      <span className="font-semibold text-slate-500">reCAPTCHA</span>
                     </div>
                   </div>
 
@@ -328,20 +329,20 @@ export default function ContactPage() {
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-[#112C3E] text-white font-extrabold text-sm hover:bg-[#F59E0B] transition shadow-xl disabled:opacity-50 cursor-pointer"
+                      className="inline-flex items-center gap-3 px-9 py-3.5 rounded-full bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white font-extrabold text-sm hover:shadow-lg hover:shadow-amber-500/25 transition shadow-md disabled:opacity-50 cursor-pointer"
                     >
                       <span>{submitting ? "Submitting..." : "Submit"}</span>
                       <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
-                        <ArrowUpRightIcon className="w-3.5 h-3.5" />
+                        <ArrowUpRightIcon className="w-3.5 h-3.5 text-white" />
                       </div>
                     </button>
                   </div>
                 </div>
 
-                <p className="text-[11px] text-[#112C3E]/80">
+                <p className="text-[11px] text-slate-500">
                   By submitting your message you agree to our{" "}
-                  <Link href="/terms" className="underline font-bold">Terms and Conditions</Link> and{" "}
-                  <Link href="/privacy" className="underline font-bold">Privacy Policy</Link>
+                  <Link href="/terms" className="underline font-bold text-slate-700">Terms and Conditions</Link> and{" "}
+                  <Link href="/privacy" className="underline font-bold text-slate-700">Privacy Policy</Link>
                 </p>
               </form>
             )}

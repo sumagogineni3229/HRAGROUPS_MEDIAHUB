@@ -22,7 +22,7 @@ export default async function PublisherReferralPage() {
   const paidCommission = referrals.filter((r: any) => r.isPaid).reduce((sum: number, r: any) => sum + r.commission, 0);
 
   return (
-    <div style={{ maxWidth: "900px", margin: "0 auto" }}>
+    <div className="w-full">
       <div className="mb-6">
         <span className="text-xs text-muted font-inter">Home &gt; Referral Program</span>
         <h1 className="text-2xl font-bold font-space text-dark mt-1">Referral Program</h1>

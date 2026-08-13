@@ -54,7 +54,7 @@ export default async function AdvertiserProjectsPage({ searchParams }: { searchP
   const showForm = params.action === "new";
 
   return (
-    <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+    <div className="w-full">
       <div className="flex justify-between items-center mb-6">
         <div>
           <span className="text-xs text-muted font-inter">Home &gt; My Projects</span>

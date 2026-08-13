@@ -85,7 +85,7 @@ export default async function AdminListingsPage({ searchParams }: { searchParams
   }
 
   return (
-    <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+    <div className="w-full">
       <div className="mb-6">
         <span className="text-xs text-muted font-inter">Admin &gt; Listings</span>
         <h1 className="text-2xl font-bold font-space text-dark mt-1">Listings Approval Queue</h1>

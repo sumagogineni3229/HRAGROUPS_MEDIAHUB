@@ -50,7 +50,7 @@ export default async function AdvertiserPartnersPage({ searchParams }: { searchP
   }
 
   return (
-    <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+    <div className="w-full">
       <div className="mb-6">
         <span className="text-xs text-muted font-inter">Home &gt; Media Partner List</span>
         <h1 className="text-2xl font-bold font-space text-dark mt-1">Media Partner List</h1>

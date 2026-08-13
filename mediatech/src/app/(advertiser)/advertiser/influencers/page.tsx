@@ -59,7 +59,7 @@ export default async function AdvertiserInfluencersPage({
   });
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+    <div className="w-full">
       {/* Header Row */}
       <div className="flex justify-between items-center mb-6">
         <div>
@@ -72,7 +72,7 @@ export default async function AdvertiserInfluencersPage({
       <div className="bg-card border-base rounded-lg p-6 mb-6">
         <form method="GET" action="/advertiser/influencers" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* Social Platform Selection tabs */}
-          <div className="flex gap-4 pb-2 border-b border-muted">
+          <div className="flex flex-wrap gap-4 pb-2 border-b border-muted">
             <Link 
               href="/advertiser/influencers"
               className={`status-tab pb-2 ${!platform ? 'active font-bold text-primary' : 'text-muted'}`}
@@ -107,6 +107,20 @@ export default async function AdvertiserInfluencersPage({
               style={platform === 'X' ? { borderBottom: '2px solid var(--color-primary)' } : {}}
             >
               X (Twitter)
+            </Link>
+            <Link 
+              href="/advertiser/influencers?platform=FACEBOOK"
+              className={`status-tab pb-2 ${platform === 'FACEBOOK' ? 'active font-bold text-primary' : 'text-muted'}`}
+              style={platform === 'FACEBOOK' ? { borderBottom: '2px solid var(--color-primary)' } : {}}
+            >
+              Facebook
+            </Link>
+            <Link 
+              href="/advertiser/influencers?platform=LINKEDIN"
+              className={`status-tab pb-2 ${platform === 'LINKEDIN' ? 'active font-bold text-primary' : 'text-muted'}`}
+              style={platform === 'LINKEDIN' ? { borderBottom: '2px solid var(--color-primary)' } : {}}
+            >
+              LinkedIn
             </Link>
           </div>
 

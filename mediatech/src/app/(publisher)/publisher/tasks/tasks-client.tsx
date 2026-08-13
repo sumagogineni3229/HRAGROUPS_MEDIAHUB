@@ -67,7 +67,7 @@ export default function TasksClient({
   }, []);
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+    <div className="w-full">
       {/* Breadcrumb & Title */}
       <div className="mb-6 font-inter text-xs text-muted">
         <span>Home &gt; Tasks</span>

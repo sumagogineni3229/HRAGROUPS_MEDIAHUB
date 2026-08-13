@@ -34,6 +34,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
+  if (user.role === "ADMIN") {
+    return NextResponse.json({ error: "Admin accounts cannot switch roles." }, { status: 403 });
+  }
+
   // Build the new enabledRoles array (union of existing + new role)
   const existingRoles: string[] = user.enabledRoles.length > 0 ? user.enabledRoles : [user.role];
   const updatedRoles = Array.from(new Set([...existingRoles, newRole]));

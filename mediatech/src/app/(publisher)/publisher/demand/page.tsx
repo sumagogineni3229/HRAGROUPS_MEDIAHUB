@@ -83,7 +83,7 @@ export default async function PublisherDemandPage() {
   const progressPercent = Math.min(100, Math.round((lifetimeEarnings / targetEarnings) * 100));
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+    <div className="w-full">
       {/* Breadcrumb & Title */}
       <div className="mb-6 font-inter text-xs text-muted">
         <span>Home &gt; Publisher Progress &amp; Performance</span>

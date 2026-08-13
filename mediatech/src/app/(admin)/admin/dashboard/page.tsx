@@ -58,7 +58,7 @@ export default async function AdminDashboardPage() {
   ];
 
   return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+    <div className="w-full">
       <div className="mb-6">
         <span className="text-xs text-muted font-inter">Admin &gt; Dashboard</span>
         <h1 className="text-2xl font-bold font-space text-dark mt-1">Admin Dashboard</h1>

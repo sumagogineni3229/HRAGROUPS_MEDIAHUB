@@ -25,9 +25,9 @@ export default function LoginPage() {
         <div className="login-logo">
           <Link href="/">
             <img
-              src="/mediahub.png"
+              src="/mediahub1.png"
               alt="Media Hub Logo"
-              style={{ height: "28px", width: "auto", objectFit: "contain", margin: "0 auto" }}
+              style={{ height: "42px", width: "auto", objectFit: "contain", margin: "0 auto" }}
             />
           </Link>
         </div>

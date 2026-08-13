@@ -26,8 +26,12 @@ export default async function PublisherLayout({ children }: { children: React.Re
   }
 
   const role = (session.user as any).role as string;
+  if (role === "ADMIN") {
+    redirect("/admin/dashboard");
+  }
+
   const activeRole = ((session.user as any).activeRole ?? role) as string;
-  if (activeRole !== "PUBLISHER" && role !== "ADMIN") {
+  if (activeRole !== "PUBLISHER") {
     redirect("/login");
   }
 
