@@ -153,8 +153,9 @@ export default async function AdvertiserSitesPage({
       <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
         <div className="flex items-center gap-3">
           <h1 className="text-3xl font-bold font-space text-slate-900" style={{ color: '#0f172a' }}>Search for sites</h1>
-          <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
-            +{platforms.length > 0 ? (platforms.length * 120 + 12000).toLocaleString() : '12,985'} new sites
+          <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>{platforms.length.toLocaleString()} verified {platforms.length === 1 ? 'site' : 'sites'} available</span>
           </span>
         </div>
 

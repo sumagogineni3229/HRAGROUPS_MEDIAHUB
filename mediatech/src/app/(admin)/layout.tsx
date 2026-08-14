@@ -55,15 +55,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <div className="main-content">
         <TopHeader
           breadcrumbs={[{ label: "Admin", href: "/admin/dashboard" }]}
-          balance={user?.balance ?? 0}
-          reserved={user?.reserved ?? 0}
-          bonus={user?.bonus ?? 0}
-          userName={user?.name ?? session.user.name ?? ""}
+          userName={user?.name ?? session.user.name ?? "Admin User"}
           userRole="Admin"
           activeRole="ADMIN"
           userAvatar={user?.avatar ?? session.user.image ?? undefined}
           notificationCount={notificationCount}
           recentNotifications={recentNotifications as any}
+          showWallet={false}
+          showRoleSwitcher={false}
         />
         <main className="page-body">
           {children}

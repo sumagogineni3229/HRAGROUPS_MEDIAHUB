@@ -2,7 +2,17 @@ import { NextResponse } from "next/server";
 import { getCombinedBlogPosts, addBlogPost } from "@/lib/blog-store";
 import { BlogPost } from "@/lib/blog-data";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const slug = searchParams.get("slug");
+  if (slug) {
+    const { getBlogPostBySlug } = await import("@/lib/blog-store");
+    const post = getBlogPostBySlug(slug);
+    if (!post) {
+      return NextResponse.json({ error: "Post not found." }, { status: 404 });
+    }
+    return NextResponse.json({ post });
+  }
   const posts = getCombinedBlogPosts();
   return NextResponse.json({ posts });
 }

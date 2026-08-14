@@ -30,6 +30,8 @@ type TopHeaderProps = {
   recentNotifications?: RecentNotif[];
   activeRole?: string;
   enabledRoles?: string[];
+  showWallet?: boolean;
+  showRoleSwitcher?: boolean;
 };
 
 export function TopHeader({
@@ -44,12 +46,23 @@ export function TopHeader({
   recentNotifications = [],
   activeRole,
   enabledRoles = [],
+  showWallet,
+  showRoleSwitcher,
 }: TopHeaderProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [activityStatus, setActivityStatus] = useState(true);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
+
+  const isEditorOrAdmin =
+    userRole?.toLowerCase().includes("editor") ||
+    userRole?.toLowerCase().includes("admin") ||
+    activeRole?.toUpperCase() === "EDITOR" ||
+    activeRole?.toUpperCase() === "ADMIN";
+
+  const shouldShowWallet = showWallet !== undefined ? showWallet : !isEditorOrAdmin;
+  const shouldShowRoleSwitcher = showRoleSwitcher !== undefined ? showRoleSwitcher : !isEditorOrAdmin;
 
   const initials = userName
     .split(" ")
@@ -110,19 +123,21 @@ export function TopHeader({
       {/* Right side */}
       <div className="header-right">
         {/* Wallet info */}
-        <Link href={balanceHref} className="header-wallet hover:opacity-80 transition-opacity">
-          <span className="header-wallet__item">
-            Balance: <strong>${balance.toFixed(2)}</strong>
-          </span>
-          <span className="header-wallet__sep" />
-          <span className="header-wallet__item">
-            Reserved: <strong>${reserved.toFixed(2)}</strong>
-          </span>
-          <span className="header-wallet__sep" />
-          <span className="header-wallet__item">
-            Bonus: <strong>${bonus.toFixed(2)}</strong>
-          </span>
-        </Link>
+        {shouldShowWallet && (
+          <Link href={balanceHref} className="header-wallet hover:opacity-80 transition-opacity">
+            <span className="header-wallet__item">
+              Balance: <strong>${balance.toFixed(2)}</strong>
+            </span>
+            <span className="header-wallet__sep" />
+            <span className="header-wallet__item">
+              Reserved: <strong>${reserved.toFixed(2)}</strong>
+            </span>
+            <span className="header-wallet__sep" />
+            <span className="header-wallet__item">
+              Bonus: <strong>${bonus.toFixed(2)}</strong>
+            </span>
+          </Link>
+        )}
 
         {/* Actions */}
         <div className="header-actions">
@@ -251,8 +266,8 @@ export function TopHeader({
 
                 <div className="dropdown-divider" />
 
-                {/* Role Switcher (Hidden for Admin users) */}
-                {!userRole?.toLowerCase().includes("admin") && activeRole?.toUpperCase() !== "ADMIN" && (
+                {/* Role Switcher (Hidden for Admin and Editor users) */}
+                {shouldShowRoleSwitcher && (
                   <>
                     <RoleSwitcher
                       activeRole={activeRole ?? userRole?.toUpperCase() ?? "ADVERTISER"}
@@ -263,13 +278,15 @@ export function TopHeader({
                 )}
 
                 <div className="dropdown-section">
-                  <Link
-                    href={balanceHref}
-                    className="dropdown-item dropdown-item-wallet"
-                  >
-                    <span>Balance</span>
-                    <ChevronDownIcon className="w-4 h-4 text-grey-blue" />
-                  </Link>
+                  {shouldShowWallet && (
+                    <Link
+                      href={balanceHref}
+                      className="dropdown-item dropdown-item-wallet"
+                    >
+                      <span>Balance</span>
+                      <ChevronDownIcon className="w-4 h-4 text-grey-blue" />
+                    </Link>
+                  )}
                   <Link href="/account-settings" className="dropdown-item">
                     Account Settings
                   </Link>

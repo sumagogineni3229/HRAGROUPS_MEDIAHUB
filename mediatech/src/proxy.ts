@@ -13,6 +13,7 @@ const ROLE_HOME: Record<string, string> = {
   PUBLISHER:  "/publisher/platforms",
   INFLUENCER: "/influencer/channels",
   ADMIN:      "/admin/dashboard",
+  EDITOR:     "/editor/pages",
 };
 
 // Route prefixes each role is allowed
@@ -21,6 +22,7 @@ const ROLE_ROUTES: Record<string, string[]> = {
   PUBLISHER:  ["/publisher",  "/wallet", "/profile", "/notifications"],
   INFLUENCER: ["/influencer", "/wallet", "/profile", "/notifications"],
   ADMIN:      ["/admin", "/advertiser", "/publisher", "/influencer", "/wallet", "/profile", "/notifications"],
+  EDITOR:     ["/editor", "/wallet", "/profile", "/notifications"],
 };
 
 const AUTH_ROUTES   = ["/login", "/register", "/forgot-password", "/reset-password"];
@@ -45,8 +47,8 @@ export default auth((req) => {
   // Allow all API routes through (handled separately)
   if (isApiRoute) return NextResponse.next();
 
-  // Logged-in user visiting auth page → redirect to dashboard
-  if (isAuthRoute && session?.user) {
+  // Logged-in user visiting login page → redirect to dashboard
+  if (pathname === "/login" && session?.user) {
     const mainRole = (session.user as any).role as string;
     const role = mainRole === "ADMIN" ? "ADMIN" : (((session.user as any).activeRole ?? mainRole) as string);
     console.log(`[MIDDLEWARE] Redirecting logged-in user to: ${ROLE_HOME[role]}`);

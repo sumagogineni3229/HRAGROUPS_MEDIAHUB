@@ -1,10 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PublicHeader } from "@/components/layout/public-header";
 import { PublicFooter } from "@/components/layout/public-footer";
 import { FloatingSupportWidget } from "@/components/layout/floating-support-widget";
+import {
+  DEFAULT_PODCAST_SPONSORSHIP_PAGE_CONTENT,
+  PodcastSponsorshipPageContent,
+} from "@/lib/page-content-data";
 import {
   MagnifyingGlassIcon,
   SparklesIcon,
@@ -175,7 +179,7 @@ const MEDIAHUB_GUIDES: GuideArticle[] = [
     writtenDigest: {
       keyTakeaways: [
         "Real-time dynamic currency conversion for advertisers worldwide.",
-        "Local payment methods including UPI (India), Cards (Stripe), and PayPal.",
+        "Local payment methods including PhonePe (UPI, QR, Cards, NetBanking), and PayPal.",
         "Global payouts via PayPal, Wise, Payoneer, and direct ACH/SEPA wire transfers.",
         "Automated tax invoice generation and compliance tracking.",
       ],
@@ -190,9 +194,28 @@ const MEDIAHUB_GUIDES: GuideArticle[] = [
 ];
 
 export default function PodcastLibraryPage() {
+  const [content, setContent] = useState<PodcastSponsorshipPageContent>(DEFAULT_PODCAST_SPONSORSHIP_PAGE_CONTENT);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedDigest, setSelectedDigest] = useState<GuideArticle | null>(null);
+
+  useEffect(() => {
+    async function loadCms() {
+      try {
+        const res = await fetch("/api/cms/page?key=podcast_sponsorship_page_data");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.html) {
+            try {
+              const parsed = JSON.parse(data.html);
+              setContent((prev) => ({ ...prev, ...parsed }));
+            } catch (e) {}
+          }
+        }
+      } catch (e) {}
+    }
+    loadCms();
+  }, []);
 
   const categories = ["All", "Escrow & Security", "Quality Assurance", "Platform Moderation", "Publisher Growth", "Influencer Campaigns"];
 
@@ -206,6 +229,7 @@ export default function PodcastLibraryPage() {
   });
 
   const featuredEpisode = MEDIAHUB_GUIDES.find((ep) => ep.featured) || MEDIAHUB_GUIDES[0];
+  const c = content;
 
   return (
     <div className="min-h-screen bg-[#F7FAFC] text-[#112C3E] font-sans antialiased selection:bg-[#F59E0B] selection:text-white flex flex-col justify-between">
@@ -225,15 +249,15 @@ export default function PodcastLibraryPage() {
               <div className="space-y-4 max-w-3xl">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FEF3C7] border border-[#F59E0B]/30 text-[#D97706] text-xs font-bold uppercase tracking-wider">
                   <BookOpenIcon className="w-4 h-4 text-[#F59E0B]" />
-                  <span>MediaHub Technical Strategy & Knowledge Base</span>
+                  <span>{c.badge}</span>
                 </div>
 
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black font-space text-[#112C3E] tracking-tight leading-[1.1]">
-                  Media<span className="text-[#F59E0B]">Hub</span> Strategy Library
+                  {c.heroHeadline} <span className="text-[#F59E0B]">{c.heroHeadlineHighlight}</span>
                 </h1>
 
                 <p className="text-slate-600 text-base sm:text-lg leading-relaxed">
-                  Read official technical design guides and operational architecture summaries directly from our startup specification (<code className="text-[#D97706] bg-[#FEF3C7] px-2 py-0.5 rounded font-mono text-xs">plan.md</code>). Includes Escrow security rules, daily link crawlers, admin moderation, and creator payout systems.
+                  {c.heroSubtitle}
                 </p>
 
                 {/* 3 Key Operational Pillars */}
@@ -241,24 +265,24 @@ export default function PodcastLibraryPage() {
                   <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-[#EAF1F6]">
                     <ShieldCheckIcon className="w-6 h-6 text-[#22c55e] shrink-0" />
                     <div>
-                      <span className="font-bold text-xs text-[#112C3E] block">100% Escrow Guard</span>
-                      <span className="text-[11px] text-slate-500">Funds locked until verification</span>
+                      <span className="font-bold text-xs text-[#112C3E] block">{c.pillar1Title}</span>
+                      <span className="text-[11px] text-slate-500">{c.pillar1Subtitle}</span>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-[#EAF1F6]">
                     <CheckCircleIcon className="w-6 h-6 text-[#F59E0B] shrink-0" />
                     <div>
-                      <span className="font-bold text-xs text-[#112C3E]">Daily Retention Crawls</span>
-                      <span className="text-[11px] text-slate-500 block">Automated HTTP & link checks</span>
+                      <span className="font-bold text-xs text-[#112C3E]">{c.pillar2Title}</span>
+                      <span className="text-[11px] text-slate-500 block">{c.pillar2Subtitle}</span>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-[#EAF1F6]">
                     <BanknotesIcon className="w-6 h-6 text-[#8B5CF6] shrink-0" />
                     <div>
-                      <span className="font-bold text-xs text-[#112C3E]">Multi-Currency Payouts</span>
-                      <span className="text-[11px] text-slate-500 block">UPI, PayPal, Wise & Wire</span>
+                      <span className="font-bold text-xs text-[#112C3E]">{c.pillar3Title}</span>
+                      <span className="text-[11px] text-slate-500 block">{c.pillar3Subtitle}</span>
                     </div>
                   </div>
                 </div>
@@ -269,10 +293,10 @@ export default function PodcastLibraryPage() {
                   href="/media-kit"
                   className="px-8 py-4 rounded-2xl bg-[#112C3E] text-white font-bold text-sm hover:bg-[#F59E0B] transition shadow-md text-center flex items-center justify-center gap-2"
                 >
-                  <span>Explore Media Kit</span>
+                  <span>{c.btnExploreMediaKit}</span>
                   <ArrowRightIcon className="w-4 h-4" />
                 </Link>
-                <span className="text-xs text-slate-500 font-medium text-center lg:text-right">6 Technical Strategy Guides Available</span>
+                <span className="text-xs text-slate-500 font-medium text-center lg:text-right">{c.guidesCountLabel}</span>
               </div>
             </div>
           </div>
@@ -284,19 +308,19 @@ export default function PodcastLibraryPage() {
                 <div className="lg:col-span-8 space-y-5">
                   <div className="flex items-center gap-3">
                     <span className="px-3.5 py-1 rounded-full bg-[#F59E0B] text-white text-xs font-black uppercase tracking-wider">
-                      ★ Featured Technical Guide
+                      {c.featuredBadge}
                     </span>
                     <span className="text-xs text-slate-700 flex items-center gap-1 font-medium bg-amber-100 border border-[#F59E0B]/30 px-3 py-1 rounded-full">
-                      <ClockIcon className="w-3.5 h-3.5" /> {featuredEpisode.readTime}
+                      <ClockIcon className="w-3.5 h-3.5" /> {c.featuredReadTime}
                     </span>
                   </div>
 
                   <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black font-space leading-snug text-[#112C3E]">
-                    {featuredEpisode.title}
+                    {c.featuredTitle}
                   </h2>
 
                   <p className="text-slate-700 text-sm sm:text-base leading-relaxed">
-                    {featuredEpisode.summary}
+                    {c.featuredSummary}
                   </p>
 
                   <div className="flex flex-wrap items-center gap-4 pt-2">
@@ -305,8 +329,8 @@ export default function PodcastLibraryPage() {
                         MH
                       </div>
                       <div>
-                        <span className="font-bold text-[#112C3E] text-xs block">{featuredEpisode.speaker}</span>
-                        <span className="text-[11px] text-slate-600">{featuredEpisode.role}</span>
+                        <span className="font-bold text-[#112C3E] text-xs block">{c.featuredSpeaker}</span>
+                        <span className="text-[11px] text-slate-600">{c.featuredRole}</span>
                       </div>
                     </div>
                   </div>
@@ -318,7 +342,7 @@ export default function PodcastLibraryPage() {
                     className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-[#112C3E] text-white font-bold text-base hover:bg-[#1E3A8A] transition shadow-lg flex items-center justify-center gap-3"
                   >
                     <DocumentTextIcon className="w-6 h-6" />
-                    <span>Read Featured Guide</span>
+                    <span>{c.featuredBtnText}</span>
                   </button>
                 </div>
               </div>

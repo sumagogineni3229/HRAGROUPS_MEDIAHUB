@@ -141,7 +141,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     category: "Account & Billing",
     question: "How to manage your credits?",
     answer:
-      "You can manage credits in your Advertiser Billing Dashboard. Add funds via Credit Card, PayPal, Stripe, UPI, or Bank Transfer. Track transaction history, download VAT invoices, and monitor reserved escrow funds in real time.",
+      "You can manage credits in your Advertiser Billing Dashboard. Add funds instantly via PhonePe, UPI (Google Pay, Paytm, BHIM), Credit/Debit Cards, NetBanking, PayPal, or Bank Transfer. Track transaction history, download invoices, and monitor reserved escrow funds in real time.",
   },
   {
     id: "notification-settings",

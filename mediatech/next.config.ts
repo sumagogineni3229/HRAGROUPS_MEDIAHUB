@@ -31,6 +31,16 @@ const nextConfig: NextConfig = {
       "date-fns",
     ],
   },
+
+  async redirects() {
+    return [
+      {
+        source: "/signup",
+        destination: "/register",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -64,6 +64,7 @@ export function LoginForm() {
           PUBLISHER:  "/publisher/platforms",
           INFLUENCER: "/influencer/channels",
           ADMIN:      "/admin/dashboard",
+          EDITOR:     "/editor/pages",
         };
         router.push(roleHome[userRole] ?? "/");
         router.refresh();
@@ -86,12 +87,12 @@ export function LoginForm() {
       <div className="form-field">
         <input
           className="input"
-          type="email"
-          placeholder="Email"
+          type="text"
+          placeholder="Email / Phone"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          autoComplete="email"
+          autoComplete="username"
         />
       </div>
 

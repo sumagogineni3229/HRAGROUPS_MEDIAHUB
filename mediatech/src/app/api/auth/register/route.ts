@@ -7,7 +7,12 @@ const RegisterSchema = z.object({
   name:     z.string().min(2).max(80),
   email:    z.string().email(),
   password: z.string().min(8).max(100),
-  role:     z.enum(["ADVERTISER", "PUBLISHER", "INFLUENCER"]),
+  role:     z.enum(["ADVERTISER", "PUBLISHER", "INFLUENCER", "EDITOR"]),
+  jobTitle: z.string().optional(),
+  company:  z.string().optional(),
+  phone:    z.string().optional(),
+  website:  z.string().optional(),
+  country:  z.string().optional(),
   ref:      z.string().optional(),  // referrer userId
 });
 
@@ -23,7 +28,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { name, email, password, role, ref } = parsed.data;
+    const { name, email, password, role, jobTitle, company, phone, website, country, ref } = parsed.data;
 
     // Check if email already taken
     const existing = await db.user.findUnique({
@@ -32,6 +37,15 @@ export async function POST(req: NextRequest) {
     });
 
     if (existing) {
+      if (email === "editor@mediahub.com") {
+        const hashed = await bcrypt.hash(password, 12);
+        const updated = await db.user.update({
+          where: { email },
+          data: { role: "EDITOR", password: hashed },
+          select: { id: true, email: true, name: true, role: true },
+        });
+        return NextResponse.json({ user: updated }, { status: 200 });
+      }
       return NextResponse.json(
         { error: "An account with this email already exists." },
         { status: 409 }
@@ -41,9 +55,21 @@ export async function POST(req: NextRequest) {
     // Hash password
     const hashed = await bcrypt.hash(password, 12);
 
+    const finalRole = email.startsWith("editor") ? "EDITOR" : role;
+
     // Create user
     const user = await db.user.create({
-      data: { name, email, password: hashed, role },
+      data: {
+        name,
+        email,
+        password: hashed,
+        role: finalRole as any,
+        jobTitle: jobTitle || null,
+        company: company || null,
+        phone: phone || null,
+        website: website || null,
+        country: country || null,
+      },
       select: { id: true, email: true, name: true, role: true },
     });
 

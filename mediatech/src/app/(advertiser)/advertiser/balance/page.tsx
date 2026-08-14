@@ -60,74 +60,28 @@ export default async function AdvertiserBalancePage({
     const depositValue = amountValue;
     if (depositValue < 5) throw new Error("Minimum deposit is $5.00");
 
-    // Initialize Stripe Checkout Session for payment
-    if (methodLabel === "Credit Card" || methodLabel === "PayPal" || methodLabel === "Stripe") {
-      const { stripe } = await import("@/lib/stripe");
-      try {
-        const stripeSession = await stripe.checkout.sessions.create({
-          payment_method_types: ["card"],
-          line_items: [
-            {
-              price_data: {
-                currency: "usd",
-                product_data: {
-                  name: "MediaHub Advertiser Wallet Top-Up",
-                  description: "Credits will be added to your account balance.",
-                },
-                unit_amount: Math.round(depositValue * 100), // amount in cents
-              },
-              quantity: 1,
-            },
-          ],
-          mode: "payment",
-          success_url: `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/advertiser/balance?payment=success`,
-          cancel_url: `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/advertiser/balance?payment=cancelled`,
-          metadata: {
-            userId: session.user.id,
-            amount: depositValue.toString(),
-          },
-        });
+    // Initialize PhonePe / MediaHub Payments Gateway
+    const { initiatePhonePePayment } = await import("@/lib/phonepe");
+    const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
+    const redirectUrl = `${baseUrl}/api/payments/phonepe/callback?userId=${encodeURIComponent(session.user.id)}&amount=${depositValue}`;
+    const callbackUrl = `${baseUrl}/api/payments/phonepe/webhook`;
 
-        if (!stripeSession.url) {
-          throw new Error("Failed to generate checkout session url");
-        }
-
-        return { url: stripeSession.url };
-      } catch (err: any) {
-        console.error("Stripe error:", err);
-        throw new Error(err.message || "Failed to initialize Stripe checkout");
-      }
-    }
-
-    // Fallback: Local Sandbox/PayPal deposit
-    const { db } = await import("@/lib/db");
-    
-    // Transaction atomically increments balance to prevent race conditions
-    await db.$transaction([
-      db.user.update({
-        where: { id: session.user.id },
-        data: { balance: { increment: depositValue } }
-      }),
-      db.transaction.create({
-        data: {
-          userId: session.user.id,
-          type: "TOPUP",
-          amount: depositValue,
-          note: `Funds added via ${methodLabel}`
-        }
-      })
-    ]);
-
-    // Notify user of successful top-up
-    await db.notification.create({
-      data: {
+    try {
+      const result = await initiatePhonePePayment({
         userId: session.user.id,
-        type: "PAYMENT",
-        title: "Balance topped up",
-        body: `$${depositValue.toFixed(2)} was successfully added to your balance via ${methodLabel}.`,
-        link: "/advertiser/balance",
+        amountUsd: depositValue,
+        redirectUrl,
+        callbackUrl,
+      });
+
+      if (result.checkoutUrl) {
+        return { url: result.checkoutUrl };
       }
-    });
+      throw new Error("Failed to generate PhonePe checkout URL");
+    } catch (err: any) {
+      console.error("PhonePe initiation error:", err);
+      throw new Error(err.message || "Failed to initialize PhonePe payment gateway");
+    }
   }
 
   return (

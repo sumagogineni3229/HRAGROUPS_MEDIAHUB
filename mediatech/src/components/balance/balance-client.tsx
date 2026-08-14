@@ -43,7 +43,7 @@ export function BalanceClient({
 }: BalanceClientProps) {
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const [isTopUpOpen, setIsTopUpOpen] = useState(false);
-  const [selectedMethod, setSelectedMethod] = useState<"paypal" | "wire" | "card">("card");
+  const [withdrawMethod, setWithdrawMethod] = useState<"paypal" | "wire">("paypal");
   const [paypalEmail, setPaypalEmail] = useState("");
   const [bankName, setBankName] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
@@ -76,9 +76,9 @@ export function BalanceClient({
 
     startTransition(async () => {
       try {
-        const methodLabel = selectedMethod === "paypal" ? "PayPal" : "Bank Transfer";
+        const methodLabel = withdrawMethod === "paypal" ? "PayPal" : "Bank Transfer";
         const details =
-          selectedMethod === "paypal"
+          withdrawMethod === "paypal"
             ? paypalEmail
             : `${bankName} (${accountNumber})`;
 
@@ -102,8 +102,7 @@ export function BalanceClient({
 
     startTransition(async () => {
       try {
-        const methodLabel = selectedMethod === "paypal" ? "PayPal" : "Credit Card";
-        const res = await onAddFundsAction(depositValue, methodLabel);
+        const res = await onAddFundsAction(depositValue, "PhonePe");
         if (res?.url) {
           window.location.href = res.url;
           return;
@@ -262,11 +261,8 @@ export function BalanceClient({
         </div>
         {basePath === "advertiser" ? (
           <button
-            onClick={() => {
-              setSelectedMethod("card");
-              setIsTopUpOpen(true);
-            }}
-            className="btn btn-primary font-semibold font-space"
+            onClick={() => setIsTopUpOpen(true)}
+            className="btn btn-primary font-semibold font-space cursor-pointer"
             style={{ borderRadius: "8px", padding: "12px 24px" }}
           >
             Add Funds
@@ -463,9 +459,10 @@ export function BalanceClient({
               }}
             >
               <button
-                onClick={() => setSelectedMethod("paypal")}
-                className={`btn btn-sm flex flex-col items-center gap-1 p-3 ${
-                  selectedMethod === "paypal"
+                type="button"
+                onClick={() => setWithdrawMethod("paypal")}
+                className={`btn btn-sm flex flex-col items-center gap-1 p-3 cursor-pointer ${
+                  withdrawMethod === "paypal"
                     ? "btn-primary"
                     : "btn-outline text-muted"
                 }`}
@@ -475,9 +472,10 @@ export function BalanceClient({
                 <span className="text-xs">PayPal</span>
               </button>
               <button
-                onClick={() => setSelectedMethod("wire")}
-                className={`btn btn-sm flex flex-col items-center gap-1 p-3 ${
-                  selectedMethod === "wire"
+                type="button"
+                onClick={() => setWithdrawMethod("wire")}
+                className={`btn btn-sm flex flex-col items-center gap-1 p-3 cursor-pointer ${
+                  withdrawMethod === "wire"
                     ? "btn-primary"
                     : "btn-outline text-muted"
                 }`}
@@ -509,7 +507,7 @@ export function BalanceClient({
                 />
               </div>
 
-              {selectedMethod === "paypal" ? (
+              {withdrawMethod === "paypal" ? (
                 <div>
                   <label className="text-sm font-medium text-dark block mb-2 font-inter">
                     PayPal Email Address
@@ -607,32 +605,21 @@ export function BalanceClient({
               </button>
             </div>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "10px",
-                marginBottom: "20px",
-              }}
-            >
-              <button
-                onClick={() => setSelectedMethod("paypal")}
-                className={`btn btn-sm py-2 text-xs font-semibold ${
-                  selectedMethod === "paypal" ? "btn-primary" : "btn-outline text-muted"
-                }`}
-                style={{ borderRadius: "8px" }}
-              >
-                PayPal
-              </button>
-              <button
-                onClick={() => setSelectedMethod("card")}
-                className={`btn btn-sm py-2 text-xs font-semibold ${
-                  selectedMethod === "card" ? "btn-primary" : "btn-outline text-muted"
-                }`}
-                style={{ borderRadius: "8px" }}
-              >
-                Credit Card
-              </button>
+            {/* MediaHub Payments Badge Header (Yellow/Amber Theme) */}
+            <div className="p-3 bg-[#FFFBEB] border border-[#FDE68A] rounded-xl flex items-center justify-between gap-3 mb-4">
+              <div className="flex items-center gap-2.5">
+                <span className="w-8 h-8 rounded-lg bg-[#F59E0B] text-white font-black flex items-center justify-center text-xs shadow-xs font-space">
+                  MH
+                </span>
+                <div>
+                  <h4 className="text-xs font-bold text-[#78350F] font-space">MediaHub Payments</h4>
+                  <p className="text-[10px] text-[#92400E]">UPI · QR · Cards · NetBanking</p>
+                </div>
+              </div>
+              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Active
+              </span>
             </div>
 
             <form
@@ -641,7 +628,7 @@ export function BalanceClient({
             >
               <div>
                 <label className="text-sm font-medium text-dark block mb-2 font-inter">
-                  Amount ($)
+                  Amount to Deposit ($ USD)
                 </label>
                 <input
                   type="number"
@@ -650,17 +637,35 @@ export function BalanceClient({
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="Min $5.00"
-                  className="input"
+                  className="input focus:ring-2 focus:ring-amber-400"
                   required
                 />
               </div>
 
+              <div className="p-3.5 bg-[#FFFBEB] border border-[#FDE68A] rounded-xl space-y-1.5 text-xs text-[#78350F]">
+                <div className="flex justify-between font-semibold">
+                  <span>INR Equivalent Amount:</span>
+                  <span className="font-bold text-sm text-[#92400E]">
+                    ₹{parseFloat(amount || "0") > 0 ? (parseFloat(amount) * 95.61).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"} INR
+                  </span>
+                </div>
+                <div className="flex justify-between text-[11px] text-[#B45309]">
+                  <span>Exchange rate reference:</span>
+                  <span className="font-semibold">1 USD = ₹95.61 INR</span>
+                </div>
+                <div className="pt-1.5 border-t border-[#FDE68A] text-[10px] text-[#92400E] flex items-center gap-1">
+                  <span>⚡ Instant Credit · Supports GPay, PhonePe, Paytm, BHIM UPI, QR, Credit/Debit & NetBanking</span>
+                </div>
+              </div>
+
               <button
                 type="submit"
-                className="btn btn-primary w-full font-space font-semibold mt-4"
+                className="btn w-full font-space font-bold mt-2 cursor-pointer bg-[#F59E0B] hover:bg-[#D97706] text-white shadow-md transition-all text-sm py-3 rounded-xl"
                 disabled={isPending}
               >
-                {isPending ? "Processing..." : `Add $${amount || "0"}`}
+                {isPending
+                  ? "Processing Payment..."
+                  : `Pay ($${amount || "0.00"} USD)`}
               </button>
             </form>
           </div>

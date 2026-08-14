@@ -43,6 +43,11 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
         role: true,
         isSuspended: true,
         password: true,
+        phone: true,
+        jobTitle: true,
+        company: true,
+        website: true,
+        country: true,
         accounts: { select: { provider: true } },
         balance: true,
         earnings: true,
@@ -167,6 +172,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
     PUBLISHER:  { bg: "#e8fbee", color: "#16a34a" },
     INFLUENCER: { bg: "#FFF8E8", color: "#d97706" },
     ADMIN:      { bg: "#fff0f0", color: "#dc2626" },
+    EDITOR:     { bg: "#F3E8FF", color: "#7E22CE" },
   };
 
   return (
@@ -196,6 +202,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
             <option value="PUBLISHER">Publisher</option>
             <option value="INFLUENCER">Influencer</option>
             <option value="ADMIN">Admin</option>
+            <option value="EDITOR">Editor</option>
           </select>
 
           <select name="authType" defaultValue={authType} className="input text-sm" style={{ width: "180px" }}>
@@ -216,6 +223,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
             <thead>
               <tr className="border-b border-border bg-app">
                 <th className="px-5 py-3 text-xs font-semibold text-muted uppercase tracking-wide">User</th>
+                <th className="px-5 py-3 text-xs font-semibold text-muted uppercase tracking-wide">Contact & Profile</th>
                 <th className="px-5 py-3 text-xs font-semibold text-muted uppercase tracking-wide">Sign-up Method</th>
                 <th className="px-5 py-3 text-xs font-semibold text-muted uppercase tracking-wide">Role & Status</th>
                 <th className="px-5 py-3 text-xs font-semibold text-muted uppercase tracking-wide text-right">Balance</th>
@@ -227,7 +235,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
             </thead>
             <tbody>
               {users.length === 0 ? (
-                <tr><td colSpan={8} className="px-5 py-12 text-center text-muted font-inter text-sm">No users found</td></tr>
+                <tr><td colSpan={9} className="px-5 py-12 text-center text-muted font-inter text-sm">No users found</td></tr>
               ) : users.map((u: any) => {
                 const roleStyle = ROLE_COLORS[u.role] ?? ROLE_COLORS.ADMIN;
                 const isGoogle = u.accounts.some((a: any) => a.provider === "google");
@@ -251,6 +259,25 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
                           <p className="font-semibold font-space text-dark text-sm">{u.name ?? "—"}</p>
                           <p className="text-xs text-muted">{u.email}</p>
                         </div>
+                      </div>
+                    </td>
+                    <td className="px-5 py-3">
+                      <div className="flex flex-col gap-0.5 text-xs text-slate-700">
+                        {u.jobTitle && <p><span className="font-semibold text-slate-900">Title:</span> {u.jobTitle}</p>}
+                        {u.company && <p><span className="font-semibold text-slate-900">Company:</span> {u.company}</p>}
+                        {u.phone && <p><span className="font-semibold text-slate-900">Phone:</span> {u.phone}</p>}
+                        {u.website && (
+                          <p>
+                            <span className="font-semibold text-slate-900">Site:</span>{" "}
+                            <a href={u.website.startsWith("http") ? u.website : `https://${u.website}`} target="_blank" rel="noreferrer" className="text-primary underline">
+                              {u.website}
+                            </a>
+                          </p>
+                        )}
+                        {u.country && <p><span className="font-semibold text-slate-900">Country:</span> {u.country}</p>}
+                        {!u.jobTitle && !u.company && !u.phone && !u.website && !u.country && (
+                          <span className="text-slate-400 font-normal">—</span>
+                        )}
                       </div>
                     </td>
                     <td className="px-5 py-3">

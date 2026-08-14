@@ -23,36 +23,92 @@ import {
 export default function BlogPostDetailPage() {
   const params = useParams();
   const slug = typeof params?.slug === "string" ? params.slug : Array.isArray(params?.slug) ? params.slug[0] : "";
-  const [post, setPost] = useState<BlogPost | undefined>(() => getBlogPostBySlug(slug));
+  const [post, setPost] = useState<BlogPost | undefined>(() => (slug ? getBlogPostBySlug(slug) : undefined));
   const [copied, setCopied] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/blog")
+    setMounted(true);
+    if (!slug) {
+      setLoading(false);
+      return;
+    }
+
+    const localFound = getBlogPostBySlug(slug);
+    if (localFound) {
+      setPost(localFound);
+      setLoading(false);
+    }
+
+    fetch(`/api/blog?slug=${encodeURIComponent(slug)}`)
       .then((res) => res.json())
       .then((data) => {
-        if (data.posts && Array.isArray(data.posts)) {
-          const found = data.posts.find((p: BlogPost) => p.slug === slug);
-          if (found) setPost(found);
+        if (data.post) {
+          setPost(data.post);
+        } else {
+          return fetch("/api/blog")
+            .then((r) => r.json())
+            .then((d) => {
+              if (d.posts && Array.isArray(d.posts)) {
+                const found = d.posts.find((p: BlogPost) => p.slug === slug);
+                if (found) setPost(found);
+              }
+            });
         }
       })
-      .catch((err) => console.error("Failed to fetch article", err));
+      .catch((err) => console.error("Failed to fetch article", err))
+      .finally(() => setLoading(false));
   }, [slug]);
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-[#F4F7F9] text-[#112C3E] font-sans antialiased selection:bg-[#F59E0B] selection:text-white flex flex-col justify-between">
+        <div>
+          <PublicHeader activePage="blog" />
+          <div className="max-w-md mx-auto my-20 p-10 text-center space-y-3">
+            <div className="animate-spin w-8 h-8 border-3 border-amber-500 border-t-transparent rounded-full mx-auto" />
+            <p className="text-sm text-slate-500 font-medium">Loading article...</p>
+          </div>
+        </div>
+        <PublicFooter />
+      </div>
+    );
+  }
+
+  if (loading && !post) {
+    return (
+      <div className="min-h-screen bg-[#F4F7F9] text-[#112C3E] font-sans antialiased selection:bg-[#F59E0B] selection:text-white flex flex-col justify-between">
+        <div>
+          <PublicHeader activePage="blog" />
+          <div className="max-w-md mx-auto my-20 p-10 text-center space-y-3">
+            <div className="animate-spin w-8 h-8 border-3 border-amber-500 border-t-transparent rounded-full mx-auto" />
+            <p className="text-sm text-slate-500 font-medium">Loading article...</p>
+          </div>
+        </div>
+        <PublicFooter />
+      </div>
+    );
+  }
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-[#F4F7F9] text-[#112C3E]">
-        <PublicHeader activePage="blog" />
-        <div className="max-w-md mx-auto my-20 bg-white p-10 rounded-3xl border border-[#EAF1F6] text-center space-y-4 shadow-xl">
-          <h2 className="text-2xl font-bold font-space">Article Not Found</h2>
-          <p className="text-sm text-[#677F9B]">The blog article you are looking for does not exist or has been moved.</p>
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#F59E0B] text-white font-bold text-xs"
-          >
-            <ArrowLeftIcon className="w-4 h-4" />
-            Back to Blog Index
-          </Link>
+      <div className="min-h-screen bg-[#F4F7F9] text-[#112C3E] font-sans antialiased selection:bg-[#F59E0B] selection:text-white flex flex-col justify-between">
+        <div>
+          <PublicHeader activePage="blog" />
+          <div className="max-w-md mx-auto my-20 bg-white p-10 rounded-3xl border border-[#EAF1F6] text-center space-y-4 shadow-xl">
+            <h2 className="text-2xl font-bold font-space">Article Not Found</h2>
+            <p className="text-sm text-[#677F9B]">The blog article you are looking for does not exist or has been moved.</p>
+            <Link
+              href="/blog"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#F59E0B] text-white font-bold text-xs"
+            >
+              <ArrowLeftIcon className="w-4 h-4" />
+              <span>Back to Blog Index</span>
+            </Link>
+          </div>
         </div>
+        <PublicFooter />
       </div>
     );
   }
@@ -140,9 +196,19 @@ export default function BlogPostDetailPage() {
       {/* 2. MAIN CONTENT LAYOUT */}
       <section className="py-12 w-full px-6 sm:px-8 lg:px-12">
         {/* Hero Featured Image */}
-        <div className="rounded-3xl overflow-hidden shadow-xl mb-12 border border-[#EAF1F6]">
-          <img src={post.featuredImage} alt={post.title} className="w-full h-auto rounded-3xl" />
-        </div>
+        {post.featuredImage && (
+          <div className="rounded-3xl overflow-hidden shadow-xl mb-12 border border-[#EAF1F6] bg-slate-100 max-h-[550px]">
+            <img
+              src={post.featuredImage}
+              alt={post.title}
+              onError={(e) => {
+                (e.target as HTMLImageElement).src =
+                  "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&auto=format&fit=crop&q=80";
+              }}
+              className="w-full h-full max-h-[550px] object-cover rounded-3xl"
+            />
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* Table of Contents & Sticky Sidebar */}
@@ -246,7 +312,7 @@ export default function BlogPostDetailPage() {
                 href="/register"
                 className="inline-block px-8 py-3.5 bg-[#F59E0B] text-white font-extrabold rounded-full hover:bg-[#D97706] transition shadow-lg text-sm"
               >
-                Start Guest Posting Campaign
+                Sign Up for Free
               </Link>
             </div>
           </article>

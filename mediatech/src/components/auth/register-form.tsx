@@ -36,6 +36,11 @@ export function RegisterForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [jobTitle, setJobTitle] = useState("");
+  const [company, setCompany] = useState("");
+  const [phone, setPhone] = useState("");
+  const [website, setWebsite] = useState("");
+  const [country, setCountry] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -51,7 +56,7 @@ export function RegisterForm() {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password, role, ref: refCode }),
+        body: JSON.stringify({ name, email, password, role, jobTitle, company, phone, website, country, ref: refCode }),
       });
 
       const data = await res.json();
@@ -173,17 +178,24 @@ export function RegisterForm() {
           </button>
 
           <div className="login-divider" style={{ margin: "4px 0 10px 0" }}>
-            <span>Or register with email</span>
+            <span>Or register with details</span>
           </div>
 
-          <input className="input" type="text" placeholder="Full name" value={name} onChange={e => setName(e.target.value)} required autoComplete="name" />
-          <input className="input" type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required autoComplete="email" />
+          <input className="input" type="text" placeholder="Full name *" value={name} onChange={e => setName(e.target.value)} required autoComplete="name" />
+          <input className="input" type="email" placeholder="Email *" value={email} onChange={e => setEmail(e.target.value)} required autoComplete="email" />
           <div style={{ position: "relative" }}>
-            <input className="input" type={showPassword ? "text" : "password"} placeholder="Password (min 8 characters)" value={password} onChange={e => setPassword(e.target.value)} required minLength={8} autoComplete="new-password" style={{ paddingRight: "60px" }} />
+            <input className="input" type={showPassword ? "text" : "password"} placeholder="Password (min 8 characters) *" value={password} onChange={e => setPassword(e.target.value)} required minLength={8} autoComplete="new-password" style={{ paddingRight: "60px" }} />
             <button type="button" onClick={() => setShowPassword(!showPassword)} className="password-toggle">
               {showPassword ? "Hide" : "Show"}
             </button>
           </div>
+
+          <input className="input" type="text" placeholder="Job Title" value={jobTitle} onChange={e => setJobTitle(e.target.value)} autoComplete="organization-title" />
+          <input className="input" type="text" placeholder="Company Name" value={company} onChange={e => setCompany(e.target.value)} autoComplete="organization" />
+          <input className="input" type="tel" placeholder="Phone Number" value={phone} onChange={e => setPhone(e.target.value)} autoComplete="tel" />
+          <input className="input" type="url" placeholder="Website (e.g. https://example.com)" value={website} onChange={e => setWebsite(e.target.value)} autoComplete="url" />
+          <input className="input" type="text" placeholder="Country" value={country} onChange={e => setCountry(e.target.value)} autoComplete="country-name" />
+
           <button type="submit" disabled={loading} className="login-submit-btn">
             <span>{loading ? "Creating account…" : "Create Account"}</span>
             <span className="login-submit-arrow">

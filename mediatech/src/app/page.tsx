@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PublicFooter } from "@/components/layout/public-footer";
 import { FloatingSupportWidget } from "@/components/layout/floating-support-widget";
+import { PublicHeader } from "@/components/layout/public-header";
+import { DEFAULT_HOME_PAGE_CONTENT, HomePageContent } from "@/lib/page-content-data";
 import {
   MagnifyingGlassIcon,
   GlobeAltIcon,
@@ -25,14 +27,35 @@ import {
   PhoneIcon,
 } from "@heroicons/react/24/solid";
 
-import { PublicHeader } from "@/components/layout/public-header";
-
 export default function Home() {
+  const [content, setContent] = useState<HomePageContent>(DEFAULT_HOME_PAGE_CONTENT);
   const [demoCallModalOpen, setDemoCallModalOpen] = useState(false);
   const [demoCallForm, setDemoCallForm] = useState({ phone: "", email: "", reason: "" });
   const [demoCallSubmitting, setDemoCallSubmitting] = useState(false);
   const [demoCallSuccess, setDemoCallSuccess] = useState(false);
   const [demoCallError, setDemoCallError] = useState("");
+
+  useEffect(() => {
+    async function loadCms() {
+      try {
+        const res = await fetch("/api/cms/page?key=home_page_data");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.html) {
+            try {
+              const parsed = JSON.parse(data.html);
+              setContent((prev) => ({ ...prev, ...parsed }));
+            } catch (err) {
+              console.error("Failed to parse home_page_data JSON", err);
+            }
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    loadCms();
+  }, []);
 
   const handleDemoCallSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,6 +82,8 @@ export default function Home() {
     }
   };
 
+  const c = content;
+
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans antialiased bg-box-grid selection:bg-[#F59E0B] selection:text-white">
       {/* ─────────────────────────────────────────────
@@ -67,7 +92,7 @@ export default function Home() {
       <PublicHeader activePage="home" />
 
       {/* ─────────────────────────────────────────────
-         2. HERO SECTION (MATCHING SCREENSHOT 1)
+         2. HERO SECTION (EXACT DESIGN AS IS)
          ───────────────────────────────────────────── */}
       <section className="relative pt-16 pb-20 overflow-hidden border-b border-slate-200/80 text-center">
         {/* Glow light background */}
@@ -77,21 +102,21 @@ export default function Home() {
           {/* Top Pill Badge */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold shadow-2xs">
             <SparklesIcon className="w-3.5 h-3.5 text-[#F59E0B]" />
-            <span>The C-Suite trusted marketplace · MediaHub</span>
+            <span>{c.heroBadge}</span>
           </div>
 
           {/* Hero Main Heading */}
           <h1 className="text-4xl sm:text-6xl lg:text-[68px] font-black leading-[1.08] tracking-tight text-slate-950 font-space">
-            The Premier Marketplace for<br />
+            {c.heroTitle1}<br />
             <span className="bg-gradient-to-r from-[#F59E0B] via-[#D97706] to-amber-700 bg-clip-text text-transparent">
-              Guest Posting, Link Building
+              {c.heroTitleHighlight}
             </span><br />
-            & Influencer Marketing
+            {c.heroTitle2}
           </h1>
 
           {/* Subheading */}
           <p className="text-base sm:text-lg text-slate-600 font-normal leading-relaxed max-w-3xl mx-auto">
-            Connect with <strong className="text-slate-950 font-extrabold">150,000+ publishers</strong>, websites, bloggers, news portals, influencers and creators worldwide — all in one escrow-protected marketplace.
+            {c.heroSubtitle}
           </p>
 
           {/* Hero Action Buttons */}
@@ -101,7 +126,7 @@ export default function Home() {
               className="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white font-bold text-sm flex items-center gap-2 hover:shadow-lg hover:shadow-amber-500/25 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-md"
             >
               <MagnifyingGlassIcon className="w-4 h-4 text-white" />
-              <span>Find Publishers</span>
+              <span>{c.btnExplore}</span>
             </Link>
 
             <Link
@@ -109,7 +134,7 @@ export default function Home() {
               className="px-7 py-3.5 rounded-2xl bg-white border border-slate-200 text-slate-800 font-bold text-sm flex items-center gap-2 hover:border-amber-400 hover:text-amber-600 hover:shadow-xs transition-all shadow-2xs"
             >
               <GlobeAltIcon className="w-4 h-4 text-slate-500" />
-              <span>Monetize My Website</span>
+              <span>{c.btnPublisher}</span>
             </Link>
 
             <Link
@@ -117,7 +142,7 @@ export default function Home() {
               className="px-7 py-3.5 rounded-2xl bg-white border border-slate-200 text-slate-800 font-bold text-sm flex items-center gap-2 hover:border-amber-400 hover:text-amber-600 hover:shadow-xs transition-all shadow-2xs"
             >
               <StarIcon className="w-4 h-4 text-slate-500" />
-              <span>Join as Influencer</span>
+              <span>{c.btnInfluencer}</span>
             </Link>
 
             <button
@@ -125,27 +150,27 @@ export default function Home() {
               className="px-7 py-3.5 rounded-2xl bg-slate-900 text-white font-bold text-sm flex items-center gap-2 hover:bg-[#F59E0B] transition-all shadow-md cursor-pointer"
             >
               <PhoneIcon className="w-4 h-4 text-amber-400" />
-              <span>Book Demo Call</span>
+              <span>{c.btnDemo}</span>
             </button>
           </div>
 
           {/* 4 Key Metrics Bar */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-12 border-t border-slate-100 max-w-4xl mx-auto">
             <div className="text-center space-y-1">
-              <p className="text-3xl sm:text-4xl font-black text-[#D97706] font-space tracking-tight">152,384+</p>
-              <p className="text-xs font-semibold text-slate-500">Websites</p>
+              <p className="text-3xl sm:text-4xl font-black text-[#D97706] font-space tracking-tight">{c.metric1Value}</p>
+              <p className="text-xs font-semibold text-slate-500">{c.metric1Label}</p>
             </div>
             <div className="text-center space-y-1">
-              <p className="text-3xl sm:text-4xl font-black text-[#D97706] font-space tracking-tight">48,210+</p>
-              <p className="text-xs font-semibold text-slate-500">Influencers</p>
+              <p className="text-3xl sm:text-4xl font-black text-[#D97706] font-space tracking-tight">{c.metric2Value}</p>
+              <p className="text-xs font-semibold text-slate-500">{c.metric2Label}</p>
             </div>
             <div className="text-center space-y-1">
-              <p className="text-3xl sm:text-4xl font-black text-[#D97706] font-space tracking-tight">412,963+</p>
-              <p className="text-xs font-semibold text-slate-500">Orders Completed</p>
+              <p className="text-3xl sm:text-4xl font-black text-[#D97706] font-space tracking-tight">{c.metric3Value}</p>
+              <p className="text-xs font-semibold text-slate-500">{c.metric3Label}</p>
             </div>
             <div className="text-center space-y-1">
-              <p className="text-3xl sm:text-4xl font-black text-[#D97706] font-space tracking-tight">87,521+</p>
-              <p className="text-xs font-semibold text-slate-500">Active Users</p>
+              <p className="text-3xl sm:text-4xl font-black text-[#D97706] font-space tracking-tight">{c.metric4Value}</p>
+              <p className="text-xs font-semibold text-slate-500">{c.metric4Label}</p>
             </div>
           </div>
 
@@ -153,35 +178,35 @@ export default function Home() {
           <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-6 bg-white rounded-3xl p-6 sm:px-10 border border-slate-200 shadow-sm relative overflow-hidden text-left">
             <div className="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-b from-[#F59E0B] to-[#D97706]" />
             <div className="space-y-1 pl-2">
-              <p className="text-lg font-bold text-slate-900">Looking for customized enterprise PR distribution?</p>
-              <p className="text-sm font-semibold text-[#D97706]">Schedule a 15-minute consultation with our media strategists.</p>
+              <p className="text-lg font-bold text-slate-900">{c.demoBannerTitle}</p>
+              <p className="text-sm font-semibold text-[#D97706]">{c.demoBannerSubtitle}</p>
             </div>
             <button
               onClick={() => setDemoCallModalOpen(true)}
               className="px-7 py-3 rounded-full bg-slate-900 text-white hover:bg-[#F59E0B] font-bold text-sm transition-all shadow-md flex items-center gap-2 cursor-pointer shrink-0"
             >
               <PhoneIcon className="w-4 h-4 text-amber-400" />
-              <span>Book Demo Call</span>
+              <span>{c.demoBannerBtn}</span>
             </button>
           </div>
         </div>
       </section>
 
       {/* ─────────────────────────────────────────────
-         3. CORE SERVICES (MATCHING SCREENSHOT 2 TOP)
+         3. CORE SERVICES (EXACT DESIGN AS IS)
          ───────────────────────────────────────────── */}
       <section className="py-24 bg-white border-b border-slate-100">
         <div className="w-full px-6 sm:px-12 lg:px-16 space-y-12 text-center max-w-6xl mx-auto">
           {/* Badge & Title */}
           <div className="space-y-3">
             <span className="px-3.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700 font-mono text-xs font-bold uppercase">
-              Core Services
+              {c.servicesBadge}
             </span>
             <h2 className="text-3xl sm:text-5xl font-black text-slate-950 font-space tracking-tight">
-              Everything you need to scale your authority
+              {c.servicesTitle}
             </h2>
             <p className="text-slate-500 text-base max-w-2xl mx-auto">
-              Five battle-tested products powering thousands of campaigns every month.
+              {c.servicesSubtitle}
             </p>
           </div>
 
@@ -192,9 +217,9 @@ export default function Home() {
               <div className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center shadow-xs">
                 <LinkIcon className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 font-space">Link Insertion</h3>
+              <h3 className="text-lg font-bold text-slate-900 font-space">{c.service1Title}</h3>
               <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                Place your link on an existing high-authority article — fast and cost-effective.
+                {c.service1Desc}
               </p>
             </div>
 
@@ -203,9 +228,9 @@ export default function Home() {
               <div className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center shadow-xs">
                 <DocumentTextIcon className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 font-space">Guest Posting</h3>
+              <h3 className="text-lg font-bold text-slate-900 font-space">{c.service2Title}</h3>
               <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                Publish on top-tier websites with editorial control and verified metrics.
+                {c.service2Desc}
               </p>
             </div>
 
@@ -214,9 +239,9 @@ export default function Home() {
               <div className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center shadow-xs">
                 <PencilSquareIcon className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 font-space">Content + Guest Post</h3>
+              <h3 className="text-lg font-bold text-slate-900 font-space">{c.service3Title}</h3>
               <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                We write expert content tailored to your niche and publish it for you.
+                {c.service3Desc}
               </p>
             </div>
 
@@ -225,9 +250,9 @@ export default function Home() {
               <div className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center shadow-xs">
                 <MegaphoneIcon className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 font-space">Custom PR Packages</h3>
+              <h3 className="text-lg font-bold text-slate-900 font-space">{c.service4Title}</h3>
               <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                Curated digital PR campaigns across news portals, magazines and trade media.
+                {c.service4Desc}
               </p>
             </div>
 
@@ -236,9 +261,9 @@ export default function Home() {
               <div className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center shadow-xs">
                 <UserGroupIcon className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 font-space">Influencer Marketing</h3>
+              <h3 className="text-lg font-bold text-slate-900 font-space">{c.service5Title}</h3>
               <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                Sponsored posts, reels, stories & UGC from creators across every major platform.
+                {c.service5Desc}
               </p>
             </div>
           </div>
@@ -246,7 +271,7 @@ export default function Home() {
       </section>
 
       {/* ─────────────────────────────────────────────
-         4. DUAL SPLIT CARDS (MATCHING SCREENSHOT 2 BOTTOM)
+         4. DUAL SPLIT CARDS (EXACT DESIGN AS IS)
          ───────────────────────────────────────────── */}
       <section className="py-24 bg-slate-50/60 border-b border-slate-100">
         <div className="w-full px-6 sm:px-12 lg:px-16 max-w-6xl mx-auto">
@@ -255,31 +280,31 @@ export default function Home() {
             <div className="bg-gradient-to-b from-amber-50/50 via-white to-white rounded-[32px] p-8 sm:p-10 border border-amber-200 shadow-sm flex flex-col justify-between space-y-8">
               <div className="space-y-4">
                 <span className="px-3.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold font-mono">
-                  For Publishers
+                  {c.pubCardBadge}
                 </span>
                 <h3 className="text-3xl font-black text-slate-950 font-space tracking-tight">
-                  Monetize your website on autopilot
+                  {c.pubCardTitle}
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed font-normal">
-                  List your site once, set your prices and receive paid guest post + link insertion orders from vetted advertisers — every week.
+                  {c.pubCardDesc}
                 </p>
 
                 <div className="space-y-3 pt-2 text-sm font-medium text-slate-700">
                   <div className="flex items-center gap-3">
                     <CheckCircleIcon className="w-5 h-5 text-[#D97706]" />
-                    <span>Zero listing fees · 3% platform commission</span>
+                    <span>{c.pubCardBullet1}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircleIcon className="w-5 h-5 text-[#D97706]" />
-                    <span>Auto-payouts after buyer approval</span>
+                    <span>{c.pubCardBullet2}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircleIcon className="w-5 h-5 text-[#D97706]" />
-                    <span>Add unlimited websites & contributors</span>
+                    <span>{c.pubCardBullet3}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircleIcon className="w-5 h-5 text-[#D97706]" />
-                    <span>Real-time chat with advertisers</span>
+                    <span>{c.pubCardBullet4}</span>
                   </div>
                 </div>
               </div>
@@ -289,7 +314,7 @@ export default function Home() {
                   href="/register?role=publisher"
                   className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white font-bold text-sm hover:shadow-lg transition"
                 >
-                  <span>Start earning</span>
+                  <span>{c.pubCardBtn}</span>
                   <ArrowRightIcon className="w-4 h-4" />
                 </Link>
               </div>
@@ -299,31 +324,31 @@ export default function Home() {
             <div className="bg-gradient-to-b from-amber-50/50 via-white to-white rounded-[32px] p-8 sm:p-10 border border-amber-200 shadow-sm flex flex-col justify-between space-y-8">
               <div className="space-y-4">
                 <span className="px-3.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold font-mono">
-                  For Influencers
+                  {c.infCardBadge}
                 </span>
                 <h3 className="text-3xl font-black text-slate-950 font-space tracking-tight">
-                  Turn your audience into income
+                  {c.infCardTitle}
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed font-normal">
-                  Connect Instagram, YouTube, TikTok, LinkedIn, X and Facebook accounts to receive brand deals from global advertisers.
+                  {c.infCardDesc}
                 </p>
 
                 <div className="space-y-3 pt-2 text-sm font-medium text-slate-700">
                   <div className="flex items-center gap-3">
                     <CheckCircleIcon className="w-5 h-5 text-[#D97706]" />
-                    <span>Set your own rates for posts, reels & stories</span>
+                    <span>{c.infCardBullet1}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircleIcon className="w-5 h-5 text-[#D97706]" />
-                    <span>Escrow-protected payments — no chasing brands</span>
+                    <span>{c.infCardBullet2}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircleIcon className="w-5 h-5 text-[#D97706]" />
-                    <span>Audience demographics dashboard</span>
+                    <span>{c.infCardBullet3}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircleIcon className="w-5 h-5 text-[#D97706]" />
-                    <span>Get discovered by 50k+ active advertisers</span>
+                    <span>{c.infCardBullet4}</span>
                   </div>
                 </div>
               </div>
@@ -333,7 +358,7 @@ export default function Home() {
                   href="/register?role=influencer"
                   className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white font-bold text-sm hover:shadow-lg transition"
                 >
-                  <span>Join as creator</span>
+                  <span>{c.infCardBtn}</span>
                   <ArrowRightIcon className="w-4 h-4" />
                 </Link>
               </div>
@@ -343,16 +368,16 @@ export default function Home() {
       </section>
 
       {/* ─────────────────────────────────────────────
-         5. HOW IT WORKS 4 STEPS (MATCHING SCREENSHOT 3 TOP)
+         5. HOW IT WORKS 4 STEPS (EXACT DESIGN AS IS)
          ───────────────────────────────────────────── */}
       <section className="py-24 bg-white border-b border-slate-100 text-center">
         <div className="w-full px-6 sm:px-12 lg:px-16 space-y-12 max-w-6xl mx-auto">
           <div className="space-y-3">
             <span className="px-3.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700 font-mono text-xs font-bold uppercase">
-              How it works
+              {c.howItWorksBadge}
             </span>
             <h2 className="text-3xl sm:text-5xl font-black text-slate-950 font-space tracking-tight">
-              From discovery to live placement in 4 steps
+              {c.howItWorksTitle}
             </h2>
           </div>
 
@@ -362,9 +387,9 @@ export default function Home() {
               <div className="w-12 h-12 rounded-2xl bg-[#D97706] text-white flex items-center justify-center shadow-xs">
                 <MagnifyingGlassIcon className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 font-space">1. Discover</h3>
+              <h3 className="text-lg font-bold text-slate-900 font-space">{c.step1Title}</h3>
               <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                Filter 150k+ websites & influencers by DA, DR, traffic, niche, country and price.
+                {c.step1Desc}
               </p>
             </div>
 
@@ -373,9 +398,9 @@ export default function Home() {
               <div className="w-12 h-12 rounded-2xl bg-[#D97706] text-white flex items-center justify-center shadow-xs">
                 <WalletIcon className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 font-space">2. Fund Wallet</h3>
+              <h3 className="text-lg font-bold text-slate-900 font-space">{c.step2Title}</h3>
               <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                Top up via Razorpay, Stripe, PayPal, UPI, PhonePe or Google Pay. Funds held in escrow.
+                {c.step2Desc}
               </p>
             </div>
 
@@ -384,9 +409,9 @@ export default function Home() {
               <div className="w-12 h-12 rounded-2xl bg-[#D97706] text-white flex items-center justify-center shadow-xs">
                 <ChatBubbleLeftRightIcon className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 font-space">3. Collaborate</h3>
+              <h3 className="text-lg font-bold text-slate-900 font-space">{c.step3Title}</h3>
               <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                Chat directly with publishers. Submit content, briefs, links and creative assets.
+                {c.step3Desc}
               </p>
             </div>
 
@@ -395,42 +420,42 @@ export default function Home() {
               <div className="w-12 h-12 rounded-2xl bg-[#D97706] text-white flex items-center justify-center shadow-xs">
                 <CheckCircleIcon className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 font-space">4. Approve & Release</h3>
+              <h3 className="text-lg font-bold text-slate-900 font-space">{c.step4Title}</h3>
               <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                Verify the placement. Funds release automatically. Auto-approve after 7 days.
+                {c.step4Desc}
               </p>
             </div>
           </div>
 
-          {/* 3 Trust Cards Row (Bottom of Screenshot 3) */}
+          {/* 3 Trust Cards Row */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8 border-t border-slate-100 text-left">
             <div className="bg-white p-6 rounded-3xl border border-slate-200 space-y-3 shadow-2xs">
               <div className="flex items-center gap-2 text-slate-900 font-bold">
                 <ShieldCheckIcon className="w-5 h-5 text-[#D97706]" />
-                <span className="font-space text-base">Escrow Protected</span>
+                <span className="font-space text-base">{c.trust1Title}</span>
               </div>
               <p className="text-xs text-slate-500 leading-relaxed">
-                Every order is escrow-protected. Funds release only after you approve the placement.
+                {c.trust1Desc}
               </p>
             </div>
 
             <div className="bg-white p-6 rounded-3xl border border-slate-200 space-y-3 shadow-2xs">
               <div className="flex items-center gap-2 text-slate-900 font-bold">
                 <BoltIcon className="w-5 h-5 text-[#D97706]" />
-                <span className="font-space text-base">Verified Metrics</span>
+                <span className="font-space text-base">{c.trust2Title}</span>
               </div>
               <p className="text-xs text-slate-500 leading-relaxed">
-                Live DA, DR, organic traffic, spam score and engagement data — never trust a stale screenshot again.
+                {c.trust2Desc}
               </p>
             </div>
 
             <div className="bg-white p-6 rounded-3xl border border-slate-200 space-y-3 shadow-2xs">
               <div className="flex items-center gap-2 text-slate-900 font-bold">
                 <ArrowTrendingUpIcon className="w-5 h-5 text-[#D97706]" />
-                <span className="font-space text-base">Built for Scale</span>
+                <span className="font-space text-base">{c.trust3Title}</span>
               </div>
               <p className="text-xs text-slate-500 leading-relaxed">
-                API, bulk orders, agency multi-seats, white-label reporting — for teams placing 100+ orders/month.
+                {c.trust3Desc}
               </p>
             </div>
           </div>
@@ -438,29 +463,29 @@ export default function Home() {
       </section>
 
       {/* ─────────────────────────────────────────────
-         6. CONVERSION CTA BANNER (MATCHING SCREENSHOT 4)
+         6. CONVERSION CTA BANNER (EXACT DESIGN AS IS)
          ───────────────────────────────────────────── */}
       <section className="py-20 bg-white">
         <div className="w-full px-6 sm:px-12 lg:px-16 max-w-5xl mx-auto text-center">
           <div className="bg-gradient-to-r from-[#F59E0B] via-[#D97706] to-[#B45309] p-12 sm:p-16 rounded-[36px] text-white shadow-2xl space-y-6">
             <h2 className="text-3xl sm:text-5xl font-black font-space tracking-tight">
-              Ready to scale your authority?
+              {c.ctaTitle}
             </h2>
             <p className="text-amber-100 text-sm sm:text-base max-w-xl mx-auto font-medium">
-              Join 87,000+ marketers, agencies and creators already growing on MediaHub.
+              {c.ctaSubtitle}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3.5 pt-2">
               <Link
                 href="/register"
                 className="px-8 py-3.5 rounded-2xl bg-white text-slate-950 font-bold text-sm hover:bg-amber-50 hover:shadow-lg transition"
               >
-                Create free account
+                {c.ctaBtn1}
               </Link>
               <Link
                 href="/solutions"
                 className="px-8 py-3.5 rounded-2xl bg-white/10 border border-white/30 text-white font-bold text-sm hover:bg-white/20 transition"
               >
-                Browse marketplace
+                {c.ctaBtn2}
               </Link>
             </div>
           </div>
@@ -580,4 +605,3 @@ export default function Home() {
     </div>
   );
 }
-

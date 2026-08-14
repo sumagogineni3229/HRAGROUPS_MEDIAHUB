@@ -1,23 +1,44 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PublicHeader } from "@/components/layout/public-header";
 import { PublicFooter } from "@/components/layout/public-footer";
 import { FloatingSupportWidget } from "@/components/layout/floating-support-widget";
-import { FAQ_ITEMS, FaqItem } from "@/lib/faq-data";
+import { FaqItem } from "@/lib/faq-data";
+import { DEFAULT_FAQ_PAGE_CONTENT, FaqPageContent } from "@/lib/page-content-data";
 import {
   MagnifyingGlassIcon,
   PlusCircleIcon,
   MinusCircleIcon,
-  ChevronDownIcon,
 } from "@heroicons/react/24/outline";
 
 export default function FaqPage() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [openFaqId, setOpenFaqId] = useState<string | null>(null);
+  const [faqContent, setFaqContent] = useState<FaqPageContent>(DEFAULT_FAQ_PAGE_CONTENT);
 
-  const filteredFaqs = FAQ_ITEMS.filter((item) => {
+  useEffect(() => {
+    async function loadCms() {
+      try {
+        const res = await fetch("/api/cms/page?key=faq_page_data");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.html) {
+            try {
+              const parsed = JSON.parse(data.html);
+              setFaqContent((prev) => ({ ...prev, ...parsed }));
+            } catch (e) {}
+          }
+        }
+      } catch (e) {}
+    }
+    loadCms();
+  }, []);
+
+  const items = faqContent.faqs && faqContent.faqs.length > 0 ? faqContent.faqs : DEFAULT_FAQ_PAGE_CONTENT.faqs;
+
+  const filteredFaqs = items.filter((item) => {
     return (
       item.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.answer.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -57,7 +78,7 @@ export default function FaqPage() {
               >
                 <button
                   onClick={() => toggleFaq(faq.id)}
-                  className="w-full px-7 py-5 text-left flex items-center justify-between gap-4 focus:outline-none group"
+                  className="w-full px-7 py-5 text-left flex items-center justify-between gap-4 focus:outline-none group cursor-pointer"
                 >
                   <span className="font-bold text-base sm:text-lg text-[#112C3E] font-space group-hover:text-[#F59E0B] transition-colors leading-snug">
                     {faq.question}
@@ -100,10 +121,10 @@ export default function FaqPage() {
         {/* MAIN ACCORDIONS CONTAINER */}
         <main className="w-full px-6 sm:px-8 lg:px-12 py-12 max-w-4xl mx-auto space-y-12 relative z-10">
           
-          {/* 1. HERO TITLE */}
+          {/* 1. HERO TITLE (Design Preserved) */}
           <div className="text-center space-y-6 pt-4">
             <h1 className="text-5xl sm:text-6xl font-black text-[#112C3E] font-space tracking-tight">
-              FAQ
+              {faqContent.heroTitle}
             </h1>
 
             {/* 2. SEARCH BAR */}
@@ -111,7 +132,7 @@ export default function FaqPage() {
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="Search for answers"
+                  placeholder={faqContent.searchPlaceholder}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-6 pr-12 py-4 bg-[#EAF0F5] rounded-full text-base text-[#112C3E] placeholder-[#677F9B] border border-transparent focus:border-[#F59E0B] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#F59E0B]/20 transition shadow-inner"
@@ -121,7 +142,7 @@ export default function FaqPage() {
             </div>
           </div>
 
-          {/* 3. FAQ ACCORDIONS */}
+          {/* 3. FAQ ACCORDIONS (Grouped By Category) */}
           <div className="space-y-10">
             {filteredFaqs.length === 0 ? (
               <div className="bg-white rounded-3xl border border-[#EAF1F6] p-12 text-center space-y-3 shadow-sm">
@@ -138,11 +159,11 @@ export default function FaqPage() {
               </div>
             ) : (
               <>
-                {renderFaqSection("Buyer`s Frequently Asked Questions", buyerFaqs)}
-                {renderFaqSection("Task Statuses & Workflow", taskFaqs)}
-                {renderFaqSection("Platform Metrics & Verification", metricFaqs)}
-                {renderFaqSection("Guarantees & Escrow Refund Policy", guaranteeFaqs)}
-                {renderFaqSection("Account, Billing & Data Management", accountFaqs)}
+                {renderFaqSection(faqContent.cat1Title || "Buyer`s Frequently Asked Questions", buyerFaqs)}
+                {renderFaqSection(faqContent.cat2Title || "Task Statuses & Workflow", taskFaqs)}
+                {renderFaqSection(faqContent.cat3Title || "Platform Metrics & Verification", metricFaqs)}
+                {renderFaqSection(faqContent.cat4Title || "Guarantees & Escrow Refund Policy", guaranteeFaqs)}
+                {renderFaqSection(faqContent.cat5Title || "Account, Billing & Data Management", accountFaqs)}
               </>
             )}
           </div>
@@ -151,17 +172,17 @@ export default function FaqPage() {
       </div>
 
       {/* ─────────────────────────────────────────────
-         2-LINE CONTACT BANNER (EXACTLY 2 LINES)
+         2-LINE CONTACT BANNER (Design Preserved)
          ───────────────────────────────────────────── */}
       <section className="py-20 px-6 text-center bg-gradient-to-b from-[#F7FAFC] via-white to-[#F4F7FA] relative overflow-hidden">
         <div className="max-w-4xl mx-auto space-y-1 relative z-10">
           <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-[#112C3E] font-space leading-tight tracking-tight">
-            If you have more questions,
+            {faqContent.contactBannerLine1}
           </h2>
           <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-[#112C3E] font-space leading-tight tracking-tight">
-            please <span className="text-[#F59E0B]">ask</span> here or reach us at{" "}
-            <a href="mailto:support@mediahub.com" className="text-[#F59E0B] hover:underline transition">
-              support@mediahub.com
+            {faqContent.contactBannerLine2}{" "}
+            <a href={`mailto:${faqContent.contactEmail}`} className="text-[#F59E0B] hover:underline transition">
+              {faqContent.contactEmail}
             </a>
           </h2>
         </div>

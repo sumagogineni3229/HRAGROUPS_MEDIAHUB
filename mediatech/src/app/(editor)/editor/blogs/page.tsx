@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import { BLOG_CATEGORIES, BlogPost } from "@/lib/blog-data";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
-import { PlusIcon, CheckCircleIcon, TrashIcon, PhotoIcon, EyeIcon, SparklesIcon } from "@heroicons/react/24/solid";
+import { PlusIcon, CheckCircleIcon, TrashIcon, PhotoIcon, EyeIcon } from "@heroicons/react/24/solid";
 
-export default function AdminBlogsPage() {
+export default function EditorBlogsPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
@@ -26,8 +26,8 @@ export default function AdminBlogsPage() {
     title: "",
     excerpt: "",
     category: BLOG_CATEGORIES[1],
-    authorName: "MediaHub Admin",
-    authorRole: "Chief Content Strategist",
+    authorName: "MediaHub Content Team",
+    authorRole: "Senior Editor",
     featuredImage: "",
     contentHtml: "",
   });
@@ -107,22 +107,22 @@ export default function AdminBlogsPage() {
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Failed to publish blog post.");
+        throw new Error(data.error || "Failed to create blog post.");
       }
 
-      setSuccessMsg("Blog post published successfully! It is now live in the AI Engine (/blog).");
+      setSuccessMsg("Blog post published successfully!");
       setForm({
         title: "",
         excerpt: "",
         category: BLOG_CATEGORIES[1],
-        authorName: "MediaHub Admin",
-        authorRole: "Chief Content Strategist",
+        authorName: "MediaHub Content Team",
+        authorRole: "Senior Editor",
         featuredImage: "",
         contentHtml: "",
       });
       fetchPosts();
     } catch (err: any) {
-      setErrorMsg(err.message || "Failed to publish post.");
+      setErrorMsg(err.message || "Failed to create post.");
     } finally {
       setCreating(false);
     }
@@ -131,25 +131,20 @@ export default function AdminBlogsPage() {
   return (
     <div className="w-full space-y-8 font-inter">
       <div>
-        <div className="flex items-center gap-2">
-          <span className="p-2 rounded-xl bg-amber-50 border border-amber-200 text-[#D97706]">
-            <SparklesIcon className="w-5 h-5" />
-          </span>
-          <h1 className="text-2xl font-bold font-space text-slate-900">Admin Blog & AI Engine CMS</h1>
-        </div>
+        <h1 className="text-2xl font-bold font-space text-slate-900">Blog Editor & Content Publishing</h1>
         <p className="text-sm text-slate-500 font-inter mt-1">
-          Create, edit, and publish blog articles directly to the live AI Engine. Word-style formatting with inline image insertion.
+          Create, edit, and publish blog posts. Insert inline images anywhere inside paragraphs and preview before publishing.
         </p>
       </div>
 
       {successMsg && (
-        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-semibold rounded-xl flex items-center gap-2 animate-in fade-in">
+        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-semibold rounded-xl flex items-center gap-2">
           <CheckCircleIcon className="w-5 h-5 text-emerald-600 flex-shrink-0" />
           <span>{successMsg}</span>
         </div>
       )}
       {errorMsg && (
-        <div className="p-4 bg-red-50 border border-red-200 text-red-700 text-sm font-semibold rounded-xl animate-in fade-in">
+        <div className="p-4 bg-red-50 border border-red-200 text-red-700 text-sm font-semibold rounded-xl">
           {errorMsg}
         </div>
       )}
@@ -296,21 +291,21 @@ export default function AdminBlogsPage() {
               disabled={creating}
               className="px-6 py-3 bg-[#112C3E] text-white rounded-xl text-sm font-bold font-space hover:bg-slate-800 transition disabled:opacity-50 cursor-pointer"
             >
-              {creating ? "Publishing Post..." : "Publish Blog Post to AI Engine"}
+              {creating ? "Publishing Post..." : "Publish Blog Post"}
             </button>
           </form>
         )}
       </div>
 
       {/* Published Posts Table */}
-      <div className="p-6 bg-white border border-slate-200 rounded-2xl shadow-xs">
+      <div className="p-6 bg-white border border-slate-200 rounded-2xl">
         <h2 className="text-lg font-bold font-space text-slate-900 mb-4">Published Articles ({posts.length})</h2>
         {loading ? (
           <div className="text-center py-8 text-slate-400 text-sm">Loading articles...</div>
         ) : (
           <div className="divide-y divide-slate-100">
             {posts.map((post) => (
-              <div key={post.slug} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div key={post.slug} className="py-4 flex items-center justify-between gap-4">
                 <a
                   href={`/blog/${post.slug}`}
                   target="_blank"
@@ -337,12 +332,12 @@ export default function AdminBlogsPage() {
                   </div>
                 </a>
 
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center gap-2">
                   <a
                     href={`/blog/${post.slug}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition"
+                    className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition"
                   >
                     View Live
                   </a>
@@ -350,7 +345,7 @@ export default function AdminBlogsPage() {
                     type="button"
                     onClick={() => handleDelete(post.slug)}
                     disabled={deletingSlug === post.slug}
-                    className="px-3.5 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg text-xs font-semibold flex items-center gap-1 transition cursor-pointer"
+                    className="px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg text-xs font-semibold flex items-center gap-1 transition cursor-pointer"
                   >
                     <TrashIcon className="w-3.5 h-3.5" />
                     Delete

@@ -36,13 +36,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user, trigger, session: sessionUpdate }) {
       if (user) {
         token.id = user.id;
-        if ((user as any).role === "ADMIN") {
-          token.role = "ADMIN";
-          token.activeRole = "ADMIN";
+        if ((user as any).role === "ADMIN" || (user as any).role === "EDITOR") {
+          token.role = (user as any).role;
+          token.activeRole = (user as any).role;
         }
       }
       // Support client-side session.update({ activeRole }) call
-      if (trigger === "update" && sessionUpdate?.activeRole && token.role !== "ADMIN") {
+      if (trigger === "update" && sessionUpdate?.activeRole && token.role !== "ADMIN" && token.role !== "EDITOR") {
         token.activeRole = sessionUpdate.activeRole;
       }
       if (token.id) {
@@ -62,9 +62,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               dbUser.enabledRoles && dbUser.enabledRoles.length > 0
                 ? dbUser.enabledRoles
                 : [dbUser.role];
-            // Only override activeRole from DB if not set in token yet, but ADMIN always forces activeRole = ADMIN
-            if (dbUser.role === "ADMIN") {
-              token.activeRole = "ADMIN";
+            // Only override activeRole from DB if not set in token yet, but ADMIN and EDITOR always force activeRole
+            if (dbUser.role === "ADMIN" || dbUser.role === "EDITOR") {
+              token.activeRole = dbUser.role;
             } else if (!token.activeRole) {
               token.activeRole = dbUser.role;
             }
@@ -87,10 +87,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+        const identifier = (credentials?.email || (credentials as any)?.login) as string | undefined;
+        if (!identifier || !credentials?.password) return null;
 
-        const user = await db.user.findUnique({
-          where: { email: credentials.email as string },
+        // Allow identifier to match either email or phone
+        const user = await db.user.findFirst({
+          where: {
+            OR: [
+              { email: identifier },
+              { phone: identifier },
+            ],
+          },
           select: { id: true, email: true, name: true, avatar: true, role: true, password: true, isSuspended: true },
         });
 

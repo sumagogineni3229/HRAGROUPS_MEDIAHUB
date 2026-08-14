@@ -6,7 +6,7 @@ import { generateChecksum, getPhonePeConfig } from "@/lib/phonepe";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  return NextResponse.json({ status: "ok", message: "PhonePe Payments Webhook is active." });
+  return NextResponse.json({ status: "ok", message: "PhonePe Webhook endpoint is active." });
 }
 
 export async function POST(req: Request) {
@@ -28,11 +28,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing response payload" }, { status: 400 });
     }
 
-    // Verify SHA256 checksum in production
+    // Verify SHA256 checksum if X-VERIFY header is present
     if (xVerify) {
       const expectedChecksum = generateChecksum(base64Response, "", config.saltKey, config.saltIndex);
       if (xVerify !== expectedChecksum && config.env === "PRODUCTION") {
-        console.error("Invalid PhonePe webhook signature");
+        console.error("Invalid PhonePe webhook signature:", { received: xVerify, expected: expectedChecksum });
         return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
       }
     }
@@ -45,9 +45,10 @@ export async function POST(req: Request) {
       const merchantTransactionId = paymentData.merchantTransactionId;
       const amountPaise = paymentData.amount || 0;
       const amountUsd = Number((amountPaise / 100 / config.usdToInrRate).toFixed(2));
-      const merchantUserId = paymentData.merchantUserId;
+      const merchantUserId = paymentData.merchantUserId; // e.g. "USER_..."
       const rawUserId = merchantUserId ? merchantUserId.replace(/^USER_/, "") : "";
 
+      // Check if transaction was already processed
       const existingTx = await db.transaction.findFirst({
         where: {
           note: {
@@ -57,6 +58,7 @@ export async function POST(req: Request) {
       });
 
       if (!existingTx && amountUsd > 0) {
+        // Find user by matching ID
         const user = await db.user.findFirst({
           where: {
             id: {
@@ -76,7 +78,7 @@ export async function POST(req: Request) {
                 userId: user.id,
                 type: "TOPUP",
                 amount: amountUsd,
-                note: `Funds added via PhonePe (Tx: ${merchantTransactionId})`,
+                note: `Funds added via PhonePe Webhook (Tx: ${merchantTransactionId})`,
               },
             }),
             db.notification.create({
@@ -95,7 +97,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ received: true });
   } catch (err: any) {
-    console.error("PhonePe webhook error:", err);
+    console.error("PhonePe Webhook processing error:", err);
     return NextResponse.json({ error: err.message || "Webhook processing error" }, { status: 500 });
   }
 }
