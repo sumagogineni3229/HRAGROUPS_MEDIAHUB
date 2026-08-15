@@ -110,7 +110,7 @@ export default async function NewTaskPage({ searchParams }: PageProps) {
       resolvedProjectId = projectId;
     }
 
-    // Begin transaction: deduct balance, reserve funds, create task
+    // Begin transaction: deduct balance, reserve funds, create task, record payment transaction
     const [, task] = await db.$transaction([
       db.user.update({
         where: { id: session.user.id },
@@ -135,8 +135,21 @@ export default async function NewTaskPage({ searchParams }: PageProps) {
           sellerEarning: targetPrice * 0.9,
           status: "TASK_REVIEW"
         }
-      })
+      }),
     ]);
+
+    // Record the PAYMENT transaction for Advertiser transaction history
+    await db.transaction.create({
+      data: {
+        userId: session.user.id,
+        taskId: task.id,
+        type: "PAYMENT",
+        amount: -targetPrice,
+        note: platform
+          ? `Order for Placement on ${platform.name || platform.url}`
+          : `Order for Sponsorship with @${channel?.handle}`,
+      },
+    });
 
     // Notify the seller
     const { createNotification } = await import("@/lib/notifications");

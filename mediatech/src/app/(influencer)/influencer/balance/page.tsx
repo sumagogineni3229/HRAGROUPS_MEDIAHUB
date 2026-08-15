@@ -12,6 +12,7 @@ interface SearchParams {
   type?: string;
   view?: string;
   action?: string;
+  query?: string;
 }
 
 export default async function InfluencerBalancePage({
@@ -28,32 +29,16 @@ export default async function InfluencerBalancePage({
   const currentTab = resolvedParams.type || "ALL";
   const activeView = (resolvedParams.view || "main") as "main" | "reserved" | "bonus";
   const isRequestAction = resolvedParams.action === "request";
+  const urlQuery = resolvedParams.query || "";
 
-  const influencer = await db.user.findUnique({
-    where: { id: session.user.id },
-    select: { balance: true, reserved: true, earnings: true },
-  });
+  const { getUserRoleWallet, getUserRoleTransactions } = await import("@/lib/wallet");
+  const wallet = await getUserRoleWallet(session.user.id, "INFLUENCER");
 
-  const pendingTasks = await db.task.aggregate({
-    where: {
-      sellerId: session.user.id,
-      sellerType: "INFLUENCER",
-      status: { in: ["TASK_ACCEPTANCE", "TASK_REVIEW", "IN_PROGRESS", "YOUR_APPROVAL", "IMPROVEMENT"] },
-    },
-    _sum: { sellerEarning: true },
-  });
+  const balance = wallet.balance;
+  const reserved = wallet.reserved;
+  const earnings = wallet.earnings;
 
-  const balance = influencer?.balance ?? 0;
-  const reserved = (pendingTasks._sum.sellerEarning ?? 0) + (influencer?.reserved ?? 0);
-  const earnings = influencer?.earnings ?? 0;
-
-  const transactions = await db.transaction.findMany({
-    where: {
-      userId: session.user.id,
-      ...(currentTab !== "ALL" ? { type: currentTab as any } : {}),
-    },
-    orderBy: { createdAt: "desc" },
-  });
+  const transactions = await getUserRoleTransactions(session.user.id, "INFLUENCER", currentTab, urlQuery);
 
   async function handleRequestPayoutAction(
     amountValue: number,
@@ -65,36 +50,33 @@ export default async function InfluencerBalancePage({
     if (!session?.user?.id) return;
 
     const { db } = await import("@/lib/db");
+    const { getUserRoleWallet } = await import("@/lib/wallet");
+    const infWallet = await getUserRoleWallet(session.user.id, "INFLUENCER");
 
-    const user = await db.user.findUnique({
-      where: { id: session.user.id },
-      select: { balance: true },
-    });
-
-    if (!user || user.balance < amountValue) {
-      throw new Error("Insufficient funds");
+    if (infWallet.balance < amountValue) {
+      throw new Error("Insufficient Influencer earnings balance");
     }
 
-    // Create a pending withdrawal request — balance held, NOT deducted until admin marks PAID
-    await db.$transaction([
-      db.withdrawal.create({
-        data: {
-          userId: session.user.id,
-          amount: amountValue,
-          method: methodLabel,
-          details,
-          status: "PENDING",
-        },
-      }),
-      db.transaction.create({
-        data: {
-          userId: session.user.id,
-          type: "WITHDRAWAL",
-          amount: -amountValue,
-          note: `Withdrawal request submitted via ${methodLabel}`,
-        },
-      }),
-    ]);
+    // Create a pending influencer withdrawal request
+    const wd = await db.withdrawal.create({
+      data: {
+        userId: session.user.id,
+        amount: amountValue,
+        method: methodLabel,
+        details: `[INFLUENCER] ${details}`,
+        status: "PENDING",
+      },
+    });
+
+    await db.transaction.create({
+      data: {
+        userId: session.user.id,
+        type: "WITHDRAWAL",
+        amount: -amountValue,
+        note: `Payout via ${methodLabel} (${details})`,
+        reference: wd.id,
+      },
+    });
 
     // Notify influencer their request was received
     await db.notification.create({

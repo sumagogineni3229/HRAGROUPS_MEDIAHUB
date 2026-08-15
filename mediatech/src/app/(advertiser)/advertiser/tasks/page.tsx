@@ -81,7 +81,16 @@ export default async function AdvertiserTasksPage({ searchParams }: AdvertiserTa
           status: "COMPLETED", 
           completedAt: new Date()
         }
-      })
+      }),
+      db.transaction.create({
+        data: {
+          userId: task.sellerId,
+          taskId,
+          type: "EARNING",
+          amount: publisherEarnings,
+          note: "Task approved — earnings released",
+        },
+      }),
     ]);
 
     // Process referral commission if seller was referred

@@ -93,6 +93,15 @@ export default async function PublisherTaskDetailPage({
     await db.$transaction([
       db.user.update({ where: { id: t.advertiserId }, data: { reserved: { decrement: t.price }, balance: { increment: t.price } } }),
       db.task.update({ where: { id }, data: { status: "REJECTED" } }),
+      db.transaction.create({
+        data: {
+          userId: t.advertiserId,
+          taskId: id,
+          type: "REFUND",
+          amount: t.price,
+          note: "Order declined by publisher — funds refunded",
+        },
+      }),
     ]);
 
     const { createNotification } = await import("@/lib/notifications");

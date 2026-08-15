@@ -12,6 +12,7 @@ interface SearchParams {
   type?: string;
   view?: string;
   action?: string;
+  query?: string;
 }
 
 export default async function PublisherBalancePage({
@@ -28,32 +29,16 @@ export default async function PublisherBalancePage({
   const currentTab = resolvedParams.type || "ALL";
   const activeView = (resolvedParams.view || "main") as "main" | "reserved" | "bonus";
   const isRequestAction = resolvedParams.action === "request";
+  const urlQuery = resolvedParams.query || "";
 
-  const publisher = await db.user.findUnique({
-    where: { id: session.user.id },
-    select: { balance: true, reserved: true, earnings: true },
-  });
+  const { getUserRoleWallet, getUserRoleTransactions } = await import("@/lib/wallet");
+  const wallet = await getUserRoleWallet(session.user.id, "PUBLISHER");
 
-  const pendingTasks = await db.task.aggregate({
-    where: {
-      sellerId: session.user.id,
-      sellerType: "PUBLISHER",
-      status: { in: ["TASK_ACCEPTANCE", "TASK_REVIEW", "IN_PROGRESS", "YOUR_APPROVAL", "IMPROVEMENT"] },
-    },
-    _sum: { sellerEarning: true },
-  });
+  const balance = wallet.balance;
+  const reserved = wallet.reserved;
+  const earnings = wallet.earnings;
 
-  const balance = publisher?.balance ?? 0;
-  const reserved = (pendingTasks._sum.sellerEarning ?? 0) + (publisher?.reserved ?? 0);
-  const earnings = publisher?.earnings ?? 0;
-
-  const transactions = await db.transaction.findMany({
-    where: {
-      userId: session.user.id,
-      ...(currentTab !== "ALL" ? { type: currentTab as any } : {}),
-    },
-    orderBy: { createdAt: "desc" },
-  });
+  const transactions = await getUserRoleTransactions(session.user.id, "PUBLISHER", currentTab, urlQuery);
 
   async function handleRequestPayoutAction(
     amountValue: number,
@@ -65,37 +50,33 @@ export default async function PublisherBalancePage({
     if (!session?.user?.id) return;
 
     const { db } = await import("@/lib/db");
+    const { getUserRoleWallet } = await import("@/lib/wallet");
+    const pubWallet = await getUserRoleWallet(session.user.id, "PUBLISHER");
 
-    const user = await db.user.findUnique({
-      where: { id: session.user.id },
-      select: { balance: true },
-    });
-
-    if (!user || user.balance < amountValue) {
-      throw new Error("Insufficient funds");
+    if (pubWallet.balance < amountValue) {
+      throw new Error("Insufficient Publisher earnings balance");
     }
 
-    // Create a pending withdrawal request — balance is held but NOT deducted yet.
-    // Admin processes it and marks PAID, at which point withdrawn is incremented.
-    await db.$transaction([
-      db.withdrawal.create({
-        data: {
-          userId: session.user.id,
-          amount: amountValue,
-          method: methodLabel,
-          details,
-          status: "PENDING",
-        },
-      }),
-      db.transaction.create({
-        data: {
-          userId: session.user.id,
-          type: "WITHDRAWAL",
-          amount: -amountValue,
-          note: `Withdrawal request submitted via ${methodLabel}`,
-        },
-      }),
-    ]);
+    // Create a pending publisher withdrawal request
+    const wd = await db.withdrawal.create({
+      data: {
+        userId: session.user.id,
+        amount: amountValue,
+        method: methodLabel,
+        details: `[PUBLISHER] ${details}`,
+        status: "PENDING",
+      },
+    });
+
+    await db.transaction.create({
+      data: {
+        userId: session.user.id,
+        type: "WITHDRAWAL",
+        amount: -amountValue,
+        note: `Payout via ${methodLabel} (${details})`,
+        reference: wd.id,
+      },
+    });
 
     // Notify user of submitted request
     await db.notification.create({

@@ -43,10 +43,13 @@ export function BalanceClient({
 }: BalanceClientProps) {
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const [isTopUpOpen, setIsTopUpOpen] = useState(false);
-  const [withdrawMethod, setWithdrawMethod] = useState<"paypal" | "wire">("paypal");
-  const [paypalEmail, setPaypalEmail] = useState("");
+  const [withdrawMethod, setWithdrawMethod] = useState<"upi" | "bank">("upi");
+  const [upiId, setUpiId] = useState("");
+  const [upiHolderName, setUpiHolderName] = useState("");
+  const [accountHolderName, setAccountHolderName] = useState("");
   const [bankName, setBankName] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
+  const [ifscCode, setIfscCode] = useState("");
   const [amount, setAmount] = useState("");
 
   const [isPending, startTransition] = useTransition();
@@ -74,14 +77,27 @@ export function BalanceClient({
       return;
     }
 
+    let methodLabel = "";
+    let details = "";
+
+    if (withdrawMethod === "upi") {
+      if (!upiId.trim()) {
+        alert("Please enter a valid UPI ID");
+        return;
+      }
+      methodLabel = "UPI";
+      details = `UPI ID: ${upiId.trim()}${upiHolderName.trim() ? ` (Name: ${upiHolderName.trim()})` : ""}`;
+    } else {
+      if (!accountHolderName.trim() || !bankName.trim() || !accountNumber.trim() || !ifscCode.trim()) {
+        alert("Please fill in all bank account fields");
+        return;
+      }
+      methodLabel = "Bank Transfer";
+      details = `A/C Name: ${accountHolderName.trim()} | Bank: ${bankName.trim()} | A/C No: ${accountNumber.trim()} | IFSC: ${ifscCode.trim().toUpperCase()}`;
+    }
+
     startTransition(async () => {
       try {
-        const methodLabel = withdrawMethod === "paypal" ? "PayPal" : "Bank Transfer";
-        const details =
-          withdrawMethod === "paypal"
-            ? paypalEmail
-            : `${bankName} (${accountNumber})`;
-
         await onWithdrawalAction(withdrawValue, methodLabel, details);
         setIsWithdrawOpen(false);
         window.location.reload();
@@ -146,7 +162,7 @@ export function BalanceClient({
   }
 
   return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+    <div className="w-full">
       {/* Breadcrumb & H1 */}
       <PageHeader crumbs={["Home", breadcrumbLabel]} title={balanceTitle} />
 
@@ -375,68 +391,198 @@ export function BalanceClient({
       {/* Transactions List */}
       <div className="bg-card border-base rounded-lg p-6 mb-8">
         {/* Search Filter and Transaction tabs */}
-        {activeBalanceType === "main" && (
-          <div className="mb-6">
-            <div className="relative mb-4" style={{ maxWidth: "400px" }}>
-              <input
-                type="text"
-                className="input"
-                placeholder="Task ID or Content order ID"
-                style={{ paddingRight: "36px" }}
-              />
-            </div>
-            <div className="flex gap-2">
-              <button className="btn btn-outline btn-sm bg-[#EEF0FD] border-none text-dark font-semibold">
-                All Payments
-              </button>
-              <button className="btn btn-ghost btn-sm text-muted">
-                Product Payments
-              </button>
-              <button className="btn btn-ghost btn-sm text-muted">
-                Earnings received
-              </button>
-              <button className="btn btn-ghost btn-sm text-muted">Other</button>
-            </div>
+        <div className="mb-6">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const formData = new FormData(e.currentTarget);
+              const q = (formData.get("search") as string) || "";
+              const params = new URLSearchParams(window.location.search);
+              if (q.trim()) {
+                params.set("query", q.trim());
+              } else {
+                params.delete("query");
+              }
+              window.location.search = params.toString();
+            }}
+            className="flex gap-3 mb-4"
+            style={{ maxWidth: "500px" }}
+          >
+            <input
+              type="text"
+              name="search"
+              defaultValue={typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("query") || "" : ""}
+              className="input flex-1"
+              placeholder="Search by Note, Order ID, or Tx ID..."
+            />
+            <button type="submit" className="btn btn-outline btn-sm font-semibold">
+              Search
+            </button>
+          </form>
+
+          {/* Role-Specific Filter Tabs */}
+          <div className="flex gap-2 flex-wrap">
+            {basePath === "advertiser" ? (
+              <>
+                <Link
+                  href="/advertiser/balance?type=ALL"
+                  className={`btn btn-sm ${currentTab === "ALL" ? "bg-primary text-white" : "btn-ghost text-muted"}`}
+                >
+                  All Transactions
+                </Link>
+                <Link
+                  href="/advertiser/balance?type=TOPUP"
+                  className={`btn btn-sm ${currentTab === "TOPUP" ? "bg-primary text-white" : "btn-ghost text-muted"}`}
+                >
+                  Top-Ups (Deposits)
+                </Link>
+                <Link
+                  href="/advertiser/balance?type=PAYMENT"
+                  className={`btn btn-sm ${currentTab === "PAYMENT" ? "bg-primary text-white" : "btn-ghost text-muted"}`}
+                >
+                  Order Payments
+                </Link>
+                <Link
+                  href="/advertiser/balance?type=REFUND"
+                  className={`btn btn-sm ${currentTab === "REFUND" ? "bg-primary text-white" : "btn-ghost text-muted"}`}
+                >
+                  Refunds
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  href={`/${basePath}/balance?type=ALL`}
+                  className={`btn btn-sm ${currentTab === "ALL" ? "bg-primary text-white" : "btn-ghost text-muted"}`}
+                >
+                  All Transactions
+                </Link>
+                <Link
+                  href={`/${basePath}/balance?type=EARNING`}
+                  className={`btn btn-sm ${currentTab === "EARNING" ? "bg-primary text-white" : "btn-ghost text-muted"}`}
+                >
+                  Order Earnings
+                </Link>
+                <Link
+                  href={`/${basePath}/balance?type=WITHDRAWAL`}
+                  className={`btn btn-sm ${currentTab === "WITHDRAWAL" ? "bg-primary text-white" : "btn-ghost text-muted"}`}
+                >
+                  Withdrawals / Payouts
+                </Link>
+              </>
+            )}
           </div>
-        )}
+        </div>
 
         {transactions.length === 0 ? (
           <div className="py-8 text-center text-muted font-inter text-sm">
-            This list is empty. You have no transactions yet.
+            No transactions found for this selection.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse font-inter text-sm">
               <thead>
                 <tr className="border-b border-border text-muted text-xs uppercase tracking-wider">
-                  <th className="py-3 px-4 font-semibold w-32">Date</th>
-                  <th className="py-3 px-4 font-semibold">Transaction description</th>
-                  <th className="py-3 px-4 font-semibold text-right w-48">
-                    Transaction amount
-                  </th>
-                  <th className="py-3 px-4 font-semibold text-right w-28">Balance</th>
+                  <th className="py-3 px-4 font-semibold w-28">Date</th>
+                  <th className="py-3 px-4 font-semibold w-28">Type</th>
+                  <th className="py-3 px-4 font-semibold w-28">Status</th>
+                  <th className="py-3 px-4 font-semibold">Description / Details</th>
+                  <th className="py-3 px-4 font-semibold text-right w-44">Amount</th>
                 </tr>
               </thead>
               <tbody>
-                {transactions.map((tx) => (
-                  <tr key={tx.id} className="border-b border-border hover:bg-[#F8FAFC]">
-                    <td className="py-4 px-4 text-muted font-medium whitespace-nowrap" suppressHydrationWarning>
-                      {new Date(tx.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="py-4 px-4 font-semibold text-dark max-w-xl break-words">
-                      {tx.note || "Placement Earnings"}
-                    </td>
-                    <td
-                      className={`py-4 px-4 text-right font-bold whitespace-nowrap ${
-                        tx.amount < 0 ? "text-danger" : "text-success"
-                      }`}
-                    >
-                      {tx.amount < 0 ? "-" : "+"}$
-                      {Math.abs(tx.amount).toFixed(2)}
-                    </td>
-                    <td className="py-4 px-4 text-right text-muted font-medium whitespace-nowrap">—</td>
-                  </tr>
-                ))}
+                {transactions.map((tx) => {
+                  const isPositive = tx.amount > 0;
+                  const typeLabel =
+                    tx.type === "TOPUP"
+                      ? "Top-Up"
+                      : tx.type === "PAYMENT"
+                      ? "Payment"
+                      : tx.type === "EARNING"
+                      ? "Earning"
+                      : tx.type === "WITHDRAWAL"
+                      ? "Withdrawal"
+                      : tx.type === "REFUND"
+                      ? "Refund"
+                      : tx.type;
+
+                  const badgeColor =
+                    tx.type === "TOPUP"
+                      ? { bg: "#ECFDF5", text: "#059669" }
+                      : tx.type === "EARNING"
+                      ? { bg: "#ECFDF5", text: "#059669" }
+                      : tx.type === "REFUND"
+                      ? { bg: "#EFF6FF", text: "#2563EB" }
+                      : tx.type === "PAYMENT"
+                      ? { bg: "#FEF2F2", text: "#DC2626" }
+                      : { bg: "#FFFBEB", text: "#D97706" };
+
+                  // Status badge for withdrawals & transactions
+                  const status = (tx.status || "COMPLETED").toUpperCase();
+                  const statusConfig: Record<string, { label: string; bg: string; text: string }> = {
+                    PENDING: { label: "Pending", bg: "#FFFBEB", text: "#D97706" },
+                    PROCESSING: { label: "Processing", bg: "#EFF6FF", text: "#2563EB" },
+                    PAID: { label: "Completed", bg: "#ECFDF5", text: "#059669" },
+                    COMPLETED: { label: "Completed", bg: "#ECFDF5", text: "#059669" },
+                    REJECTED: { label: "Rejected", bg: "#FEF2F2", text: "#DC2626" },
+                  };
+                  const sc = statusConfig[status] || statusConfig["COMPLETED"];
+
+                  return (
+                    <tr key={tx.id} className="border-b border-border hover:bg-[#F8FAFC]">
+                      <td className="py-4 px-4 text-muted font-medium whitespace-nowrap text-xs" suppressHydrationWarning>
+                        {new Date(tx.createdAt).toLocaleDateString(undefined, {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      </td>
+                      <td className="py-4 px-4 whitespace-nowrap">
+                        <span
+                          className="px-2.5 py-1 rounded-full text-xs font-semibold"
+                          style={{ background: badgeColor.bg, color: badgeColor.text }}
+                        >
+                          {typeLabel}
+                        </span>
+                      </td>
+                      <td className="py-4 px-4 whitespace-nowrap">
+                        <span
+                          className="px-2.5 py-0.5 rounded-md text-xs font-semibold"
+                          style={{ background: sc.bg, color: sc.text }}
+                        >
+                          {sc.label}
+                        </span>
+                      </td>
+                      <td className="py-4 px-4 font-medium text-dark max-w-xl">
+                        <div className="flex flex-col gap-0.5">
+                          <span className="font-semibold text-sm text-dark">
+                            {tx.note || (tx.type === "TOPUP" ? "Funds Added via PhonePe" : "Order Payment")}
+                          </span>
+                          {tx.task && (
+                            <span className="text-xs text-muted">
+                              Order ID:{" "}
+                              <Link
+                                href={`/${basePath}/tasks/${tx.task.id}`}
+                                className="text-primary hover:underline font-mono"
+                              >
+                                {tx.task.id}
+                              </Link>
+                              {tx.task.platform?.url && ` · ${tx.task.platform.url}`}
+                              {tx.task.channel?.handle && ` · @${tx.task.channel.handle}`}
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td
+                        className={`py-4 px-4 text-right font-bold whitespace-nowrap text-sm ${
+                          isPositive ? "text-success" : "text-danger"
+                        }`}
+                      >
+                        {isPositive ? "+" : "-"}${Math.abs(tx.amount).toFixed(2)}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -484,27 +630,27 @@ export function BalanceClient({
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",
                 gap: "10px",
-                marginBottom: "24px",
+                marginBottom: "20px",
               }}
             >
               <button
                 type="button"
-                onClick={() => setWithdrawMethod("paypal")}
+                onClick={() => setWithdrawMethod("upi")}
                 className={`btn btn-sm flex flex-col items-center gap-1 p-3 cursor-pointer ${
-                  withdrawMethod === "paypal"
+                  withdrawMethod === "upi"
                     ? "btn-primary"
                     : "btn-outline text-muted"
                 }`}
                 style={{ height: "auto", borderRadius: "8px" }}
               >
-                <span className="font-bold text-sm">P</span>
-                <span className="text-xs">PayPal</span>
+                <span className="font-bold text-sm">UPI</span>
+                <span className="text-xs">Instant VPA</span>
               </button>
               <button
                 type="button"
-                onClick={() => setWithdrawMethod("wire")}
+                onClick={() => setWithdrawMethod("bank")}
                 className={`btn btn-sm flex flex-col items-center gap-1 p-3 cursor-pointer ${
-                  withdrawMethod === "wire"
+                  withdrawMethod === "bank"
                     ? "btn-primary"
                     : "btn-outline text-muted"
                 }`}
@@ -517,11 +663,11 @@ export function BalanceClient({
 
             <form
               onSubmit={handleRequestWithdrawal}
-              style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+              style={{ display: "flex", flexDirection: "column", gap: "14px" }}
             >
               <div>
-                <label className="text-sm font-medium text-dark block mb-2 font-inter">
-                  Withdrawal Amount ($)
+                <label className="text-xs font-semibold text-dark block mb-1 font-inter">
+                  Withdrawal Amount ($ USD)
                 </label>
                 <input
                   type="number"
@@ -531,45 +677,86 @@ export function BalanceClient({
                   min="5"
                   step="0.01"
                   max={initialBalance}
-                  className="input"
+                  className="input font-bold"
                   placeholder="Minimum $5.00"
                 />
               </div>
 
-              {withdrawMethod === "paypal" ? (
-                <div>
-                  <label className="text-sm font-medium text-dark block mb-2 font-inter">
-                    PayPal Email Address
-                  </label>
-                  <input
-                    type="email"
-                    value={paypalEmail}
-                    onChange={(e) => setPaypalEmail(e.target.value)}
-                    required
-                    className="input"
-                    placeholder="name@example.com"
-                  />
-                </div>
-              ) : (
-                <div
-                  style={{ display: "flex", flexDirection: "column", gap: "12px" }}
-                >
+              {withdrawMethod === "upi" ? (
+                <div className="flex flex-col gap-3">
                   <div>
-                    <label className="text-sm font-medium text-dark block mb-2 font-inter">
-                      Bank Name
+                    <label className="text-xs font-semibold text-dark block mb-1 font-inter">
+                      UPI ID (VPA) <span className="text-danger">*</span>
                     </label>
                     <input
                       type="text"
-                      value={bankName}
-                      onChange={(e) => setBankName(e.target.value)}
+                      value={upiId}
+                      onChange={(e) => setUpiId(e.target.value)}
                       required
                       className="input"
-                      placeholder="Chase Bank"
+                      placeholder="e.g. mobile@ybl, username@oksbi"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-dark block mb-2 font-inter">
-                      IBAN / Account Number
+                    <label className="text-xs font-semibold text-dark block mb-1 font-inter">
+                      Account Holder Name (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={upiHolderName}
+                      onChange={(e) => setUpiHolderName(e.target.value)}
+                      className="input"
+                      placeholder="Full Name"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <label className="text-xs font-semibold text-dark block mb-1 font-inter">
+                      Account Holder Name <span className="text-danger">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={accountHolderName}
+                      onChange={(e) => setAccountHolderName(e.target.value)}
+                      required
+                      className="input"
+                      placeholder="Name as per bank records"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-semibold text-dark block mb-1 font-inter">
+                        Bank Name <span className="text-danger">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={bankName}
+                        onChange={(e) => setBankName(e.target.value)}
+                        required
+                        className="input"
+                        placeholder="e.g. HDFC Bank"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-dark block mb-1 font-inter">
+                        IFSC Code <span className="text-danger">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={ifscCode}
+                        onChange={(e) => setIfscCode(e.target.value.toUpperCase())}
+                        required
+                        className="input font-mono"
+                        placeholder="HDFC0001234"
+                        style={{ textTransform: "uppercase" }}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-dark block mb-1 font-inter">
+                      Account Number <span className="text-danger">*</span>
                     </label>
                     <input
                       type="text"
@@ -577,7 +764,7 @@ export function BalanceClient({
                       onChange={(e) => setAccountNumber(e.target.value)}
                       required
                       className="input"
-                      placeholder="US1234567890"
+                      placeholder="Bank Account Number"
                     />
                   </div>
                 </div>
@@ -585,10 +772,11 @@ export function BalanceClient({
 
               <button
                 type="submit"
-                className="btn btn-primary w-full font-space font-semibold mt-4"
+                className="btn btn-primary w-full font-space font-semibold mt-2"
                 disabled={isPending}
+                style={{ padding: "12px", borderRadius: "8px", justifyContent: "center" }}
               >
-                {isPending ? "Processing..." : "Submit Withdrawal Request"}
+                {isPending ? "Submitting..." : `Request ${withdrawMethod === "upi" ? "UPI" : "Bank"} Payout`}
               </button>
             </form>
           </div>

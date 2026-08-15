@@ -94,6 +94,15 @@ export default async function InfluencerTaskDetailPage({
     await db.$transaction([
       db.user.update({ where: { id: t.advertiserId }, data: { reserved: { decrement: t.price }, balance: { increment: t.price } } }),
       db.task.update({ where: { id }, data: { status: "REJECTED" } }),
+      db.transaction.create({
+        data: {
+          userId: t.advertiserId,
+          taskId: id,
+          type: "REFUND",
+          amount: t.price,
+          note: "Brand deal declined by influencer — funds refunded",
+        },
+      }),
     ]);
 
     const { createNotification } = await import("@/lib/notifications");

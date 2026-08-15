@@ -26,30 +26,16 @@ export default async function AdvertiserBalancePage({
   const currentTab = resolvedParams.type || "ALL";
   const urlQuery = resolvedParams.query || "";
 
-  // Fetch advertiser balance details
-  const advertiser = await db.user.findUnique({
-    where: { id: session.user.id },
-    select: { balance: true, reserved: true, bonus: true }
-  });
+  // Fetch advertiser role-isolated wallet details
+  const { getUserRoleWallet, getUserRoleTransactions } = await import("@/lib/wallet");
+  const wallet = await getUserRoleWallet(session.user.id, "ADVERTISER");
 
-  const balance = advertiser?.balance ?? 0;
-  const reserved = advertiser?.reserved ?? 0;
-  const bonus = advertiser?.bonus ?? 0;
+  const balance = wallet.balance;
+  const reserved = wallet.reserved;
+  const bonus = wallet.bonus;
 
-  // Fetch transaction history
-  const transactions = await db.transaction.findMany({
-    where: {
-      userId: session.user.id,
-      ...(currentTab !== "ALL" ? { type: currentTab as any } : {}),
-      ...(urlQuery ? {
-        note: {
-          contains: urlQuery,
-          mode: "insensitive" as const
-        }
-      } : {})
-    },
-    orderBy: { createdAt: "desc" },
-  });
+  // Fetch role-isolated transaction history
+  const transactions = await getUserRoleTransactions(session.user.id, "ADVERTISER", currentTab, urlQuery);
 
   // Server Action to add funds to balance
   async function handleAddFundsAction(amountValue: number, methodLabel: string) {

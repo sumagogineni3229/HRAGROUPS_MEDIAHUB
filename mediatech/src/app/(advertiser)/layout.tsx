@@ -32,6 +32,7 @@ const advertiserNavItems = [
   { label: "My Projects",            href: "/advertiser/projects",         icon: <FolderOpenIcon className="w-4 h-4" /> },
   { label: "Tasks",                  href: "/advertiser/tasks",            icon: <ClipboardDocumentListIcon className="w-4 h-4" /> },
   { label: "Content Purchase",       href: "/advertiser/content-purchase", icon: <ShoppingBagIcon className="w-4 h-4" /> },
+  { label: "Wallet & Balance",       href: "/advertiser/balance",          icon: <WalletIcon className="w-4 h-4" /> },
 ];
 
 export default async function AdvertiserLayout({ children }: { children: React.ReactNode }) {
@@ -51,10 +52,13 @@ export default async function AdvertiserLayout({ children }: { children: React.R
     redirect("/login");
   }
 
-  // Fetch wallet balance from DB
+  // Fetch role-isolated wallet balance
+  const { getUserRoleWallet } = await import("@/lib/wallet");
+  const wallet = await getUserRoleWallet(session.user.id!, "ADVERTISER");
+
   const user = await db.user.findUnique({
-    where: { id: session.user.id },
-    select: { balance: true, reserved: true, bonus: true, name: true, avatar: true },
+    where: { id: session.user.id! },
+    select: { name: true, avatar: true },
   });
 
   const notificationCount = await db.notification.count({
@@ -73,9 +77,9 @@ export default async function AdvertiserLayout({ children }: { children: React.R
       <div className="main-content">
         <TopHeader
           breadcrumbs={[{ label: "Home", href: "/advertiser/sites" }]}
-          balance={user?.balance ?? 0}
-          reserved={user?.reserved ?? 0}
-          bonus={user?.bonus ?? 0}
+          balance={wallet.balance}
+          reserved={wallet.reserved}
+          bonus={wallet.bonus}
           userName={user?.name ?? session.user.name ?? ""}
           userRole="Advertiser"
           userAvatar={user?.avatar ?? session.user.image ?? undefined}

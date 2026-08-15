@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ChevronDownIcon, Bars3Icon, XMarkIcon, SparklesIcon } from "@heroicons/react/24/solid";
 
 interface PublicHeaderProps {
@@ -11,6 +11,32 @@ interface PublicHeaderProps {
 export function PublicHeader({ activePage = "other" }: PublicHeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  function handleMouseEnter(name: string) {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setActiveDropdown(name);
+  }
+
+  function handleMouseLeave() {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(() => {
+      setActiveDropdown(null);
+    }, 250); // 250ms grace period so moving mouse down never abruptly closes the menu
+  }
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-slate-200/80 shadow-xs transition-all">
@@ -58,31 +84,52 @@ export function PublicHeader({ activePage = "other" }: PublicHeaderProps) {
             FAQ
           </Link>
 
-          {/* Podcasts Dropdown */}
+          {/* Podcasts / PR Suite Dropdown */}
           <div
-            className="relative group cursor-pointer flex items-center gap-1.5 py-1 hover:text-[#F59E0B] transition"
-            onMouseEnter={() => setActiveDropdown("podcasts")}
-            onMouseLeave={() => setActiveDropdown(null)}
+            className="relative group cursor-pointer py-3"
+            onMouseEnter={() => handleMouseEnter("podcasts")}
+            onMouseLeave={handleMouseLeave}
           >
-            <span className={activePage === "podcasts" ? "text-[#F59E0B] font-bold" : ""}>PR Suite</span>
-            <ChevronDownIcon className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#F59E0B] transition-transform duration-200" />
+            <button
+              type="button"
+              onClick={() => setActiveDropdown(activeDropdown === "podcasts" ? null : "podcasts")}
+              className="flex items-center gap-1.5 hover:text-[#F59E0B] transition focus:outline-none"
+            >
+              <span className={activePage === "podcasts" ? "text-[#F59E0B] font-bold" : ""}>PR Suite</span>
+              <ChevronDownIcon
+                className={`w-3.5 h-3.5 text-slate-400 group-hover:text-[#F59E0B] transition-transform duration-200 ${
+                  activeDropdown === "podcasts" ? "rotate-180 text-[#F59E0B]" : ""
+                }`}
+              />
+            </button>
 
+            {/* Dropdown Container with padding bridge */}
             {activeDropdown === "podcasts" && (
-              <div className="absolute top-full left-0 mt-2 w-60 bg-white/95 backdrop-blur-xl shadow-2xl rounded-2xl border border-slate-200 p-2 z-50 animate-in fade-in slide-in-from-top-2">
-                <Link
-                  href="/media-kit"
-                  className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-amber-50 font-medium text-sm text-slate-800 hover:text-[#F59E0B] transition"
-                >
-                  <span>Media Kit</span>
-                  <SparklesIcon className="w-4 h-4 text-[#F59E0B]" />
-                </Link>
-                <Link
-                  href="/podcasts/library"
-                  className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-amber-50 font-medium text-sm text-slate-800 hover:text-[#F59E0B] transition"
-                >
-                  <span>Podcast Sponsorships</span>
-                  <span className="text-[10px] text-amber-700 font-bold bg-amber-100 px-2 py-0.5 rounded-full border border-amber-200">AUDIO</span>
-                </Link>
+              <div
+                className="absolute top-full left-0 pt-2 w-64 z-50 animate-in fade-in slide-in-from-top-1 duration-150"
+                onMouseEnter={() => handleMouseEnter("podcasts")}
+                onMouseLeave={handleMouseLeave}
+              >
+                <div className="bg-white shadow-2xl rounded-2xl border border-slate-200/90 p-2.5 backdrop-blur-xl ring-1 ring-black/5">
+                  <Link
+                    href="/media-kit"
+                    onClick={() => setActiveDropdown(null)}
+                    className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-amber-50 font-medium text-sm text-slate-800 hover:text-[#F59E0B] transition"
+                  >
+                    <span>Media Kit</span>
+                    <SparklesIcon className="w-4 h-4 text-[#F59E0B]" />
+                  </Link>
+                  <Link
+                    href="/podcasts/library"
+                    onClick={() => setActiveDropdown(null)}
+                    className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-amber-50 font-medium text-sm text-slate-800 hover:text-[#F59E0B] transition mt-1"
+                  >
+                    <span>Podcast Sponsorships</span>
+                    <span className="text-[10px] text-amber-700 font-bold bg-amber-100 px-2 py-0.5 rounded-full border border-amber-200">
+                      AUDIO
+                    </span>
+                  </Link>
+                </div>
               </div>
             )}
           </div>
@@ -166,5 +213,3 @@ export function PublicHeader({ activePage = "other" }: PublicHeaderProps) {
     </header>
   );
 }
-
-

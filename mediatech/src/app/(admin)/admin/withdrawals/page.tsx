@@ -95,10 +95,27 @@ export default async function AdminWithdrawalsPage({ searchParams }: { searchPar
     if (!wd) return;
     await db.$transaction([
       db.withdrawal.update({ where: { id: withdrawalId }, data: { status: "REJECTED", adminNote: note } }),
-      // Refund balance back to user
-      db.user.update({ where: { id: wd.userId }, data: { balance: { increment: wd.amount } } }),
+      db.transaction.create({
+        data: {
+          userId: wd.userId,
+          type: "REFUND",
+          amount: wd.amount,
+          note: `Payout request rejected (${note || "Refunded to wallet"})`,
+          reference: withdrawalId,
+        },
+      }),
     ]);
-    await db.notification.create({ data: { userId: wd.userId, type: "SYSTEM", title: "Withdrawal request rejected", body: note ? `Your withdrawal was rejected: ${note}. $${wd.amount.toFixed(2)} has been returned to your balance.` : `Your withdrawal of $${wd.amount.toFixed(2)} was rejected. Funds returned to your balance.`, link: "/publisher/balance" } });
+    await db.notification.create({
+      data: {
+        userId: wd.userId,
+        type: "SYSTEM",
+        title: "Withdrawal request rejected",
+        body: note
+          ? `Your withdrawal was rejected: ${note}. $${wd.amount.toFixed(2)} has been restored to your balance.`
+          : `Your withdrawal of $${wd.amount.toFixed(2)} was rejected. Funds restored to your balance.`,
+        link: "/publisher/balance",
+      },
+    });
     
     try {
       const { notifyWithdrawalProcessed } = await import("@/lib/notifications");
@@ -166,18 +183,18 @@ export default async function AdminWithdrawalsPage({ searchParams }: { searchPar
                   </div>
                   <p className="text-sm font-inter text-dark font-semibold">{wd.user.name ?? "—"}</p>
                   <p className="text-xs text-muted font-inter">{wd.user.email} · {wd.user.role}</p>
-                  <p className="text-xs text-muted font-inter mt-1">Submitted {new Date(wd.createdAt).toLocaleDateString()}</p>
+                  <p className="text-xs text-muted font-inter mt-1">Submitted: {new Date(wd.createdAt).toLocaleString()}</p>
                 </div>
                 <div className="text-right text-xs font-inter text-muted">
-                  <p>Bal: <strong className="text-dark">${wd.user.balance.toFixed(2)}</strong></p>
-                  <p>Earnings: <strong className="text-dark">${wd.user.earnings.toFixed(2)}</strong></p>
-                  <p>Withdrawn: <strong className="text-dark">${wd.user.withdrawn.toFixed(2)}</strong></p>
+                  <span className="px-2.5 py-1 rounded-md bg-[#F1F5F9] font-mono text-xs text-muted">
+                    ID: {wd.id.slice(-8)}
+                  </span>
                 </div>
               </div>
 
-              <div className="bg-app rounded-lg p-3 mb-4">
-                <p className="text-xs font-inter text-muted mb-0.5 uppercase tracking-wide font-semibold">Payout details</p>
-                <p className="text-sm font-inter text-dark font-semibold">{wd.method} — {wd.details}</p>
+              <div className="bg-app rounded-lg p-3.5 mb-4 border border-border">
+                <p className="text-xs font-inter text-muted mb-1 uppercase tracking-wide font-semibold">Payout Destination</p>
+                <p className="text-sm font-inter text-dark font-semibold font-mono">{wd.method} — {wd.details}</p>
               </div>
 
               {wd.adminNote && (
