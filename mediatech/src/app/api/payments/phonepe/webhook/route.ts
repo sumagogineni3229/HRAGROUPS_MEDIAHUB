@@ -1,19 +1,25 @@
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { db } from "@/lib/db";
-import { generateChecksum, getPhonePeConfig } from "@/lib/phonepe";
+import {
+  checkPhonePePaymentStatus,
+  getPhonePeConfig,
+  verifyPhonePeWebhookSignature,
+} from "@/lib/phonepe";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  return NextResponse.json({ status: "ok", message: "PhonePe Webhook endpoint is active." });
+  return NextResponse.json({ status: "ok", message: "PhonePe V2 Webhook endpoint is active." });
 }
 
 export async function POST(req: Request) {
   const config = getPhonePeConfig();
   const rawBody = await req.text();
   const headersList = await headers();
-  const xVerify = headersList.get("x-verify");
+  const signatureHeader =
+    headersList.get("x-phonepe-checksum-signature") ||
+    headersList.get("x-verify");
 
   try {
     let payload: any = {};
@@ -23,49 +29,87 @@ export async function POST(req: Request) {
       payload = { response: rawBody };
     }
 
-    const base64Response = payload.response;
-    if (!base64Response) {
-      return NextResponse.json({ error: "Missing response payload" }, { status: 400 });
+    // If Base64 encoded payload is provided (compatibility with various PhonePe webhook formats)
+    let eventData = payload;
+    if (payload.response && typeof payload.response === "string") {
+      try {
+        const decoded = Buffer.from(payload.response, "base64").toString("utf-8");
+        eventData = JSON.parse(decoded);
+      } catch {
+        eventData = payload;
+      }
     }
 
-    // Verify SHA256 checksum if X-VERIFY header is present
-    if (xVerify) {
-      const expectedChecksum = generateChecksum(base64Response, "", config.saltKey, config.saltIndex);
-      if (xVerify !== expectedChecksum && config.env === "PRODUCTION") {
-        console.error("Invalid PhonePe webhook signature:", { received: xVerify, expected: expectedChecksum });
+    // Optional HMAC signature check if header is supplied and clientSecret is configured
+    if (signatureHeader && config.clientSecret) {
+      const isValid = verifyPhonePeWebhookSignature(rawBody, signatureHeader);
+      if (!isValid && config.env === "PRODUCTION") {
+        console.warn("Invalid PhonePe webhook signature received.");
         return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
       }
     }
 
-    const decodedString = Buffer.from(base64Response, "base64").toString("utf-8");
-    const data = JSON.parse(decodedString);
+    // Extract Order details from V2 payload or event envelope
+    const dataObj = eventData.payload || eventData.data || eventData;
+    const merchantOrderId =
+      dataObj.merchantOrderId ||
+      dataObj.merchantTransactionId ||
+      dataObj.orderId;
 
-    if (data.success && data.code === "PAYMENT_SUCCESS") {
-      const paymentData = data.data;
-      const merchantTransactionId = paymentData.merchantTransactionId;
-      const amountPaise = paymentData.amount || 0;
-      const amountUsd = Number((amountPaise / 100 / config.usdToInrRate).toFixed(2));
-      const merchantUserId = paymentData.merchantUserId; // e.g. "USER_..."
-      const rawUserId = merchantUserId ? merchantUserId.replace(/^USER_/, "") : "";
+    if (!merchantOrderId) {
+      return NextResponse.json({ error: "Missing merchantOrderId in webhook" }, { status: 400 });
+    }
 
-      // Check if transaction was already processed
+    // Verify transaction status directly with PhonePe V2 server for absolute security
+    const statusResult = await checkPhonePePaymentStatus(merchantOrderId);
+
+    if (statusResult.success) {
+      const amountPaise =
+        statusResult.amount ||
+        dataObj.amount ||
+        (dataObj.paymentDetails && dataObj.paymentDetails[0]?.amount) ||
+        0;
+
+      let amountUsd = 0;
+      if (statusResult.data?.metaInfo?.amountUsd) {
+        amountUsd = parseFloat(statusResult.data.metaInfo.amountUsd);
+      } else if (amountPaise > 0) {
+        amountUsd = Number((amountPaise / 100 / config.usdToInrRate).toFixed(2));
+      }
+
+      let rawUserId =
+        statusResult.data?.metaInfo?.userId ||
+        (statusResult.data?.merchantUserId ? statusResult.data.merchantUserId.replace(/^USER_/, "") : "") ||
+        (dataObj.merchantUserId ? dataObj.merchantUserId.replace(/^USER_/, "") : "");
+
+      // Check if transaction was already processed (Idempotency)
       const existingTx = await db.transaction.findFirst({
         where: {
           note: {
-            contains: merchantTransactionId,
+            contains: merchantOrderId,
           },
         },
       });
 
       if (!existingTx && amountUsd > 0) {
-        // Find user by matching ID
-        const user = await db.user.findFirst({
-          where: {
-            id: {
-              contains: rawUserId,
+        let user = null;
+        if (rawUserId) {
+          user = await db.user.findFirst({
+            where: {
+              OR: [
+                { id: rawUserId },
+                { id: { contains: rawUserId } },
+              ],
             },
-          },
-        });
+          });
+        }
+
+        if (!user) {
+          user = await db.user.findFirst({
+            where: { role: { in: ["ADVERTISER", "ADMIN"] } },
+            orderBy: { updatedAt: "desc" },
+          });
+        }
 
         if (user) {
           await db.$transaction([
@@ -78,7 +122,7 @@ export async function POST(req: Request) {
                 userId: user.id,
                 type: "TOPUP",
                 amount: amountUsd,
-                note: `Funds added via PhonePe Webhook (Tx: ${merchantTransactionId})`,
+                note: `Funds added via PhonePe V2 Webhook (Tx: ${merchantOrderId})`,
               },
             }),
             db.notification.create({
@@ -97,7 +141,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ received: true });
   } catch (err: any) {
-    console.error("PhonePe Webhook processing error:", err);
+    console.error("PhonePe V2 Webhook processing error:", err);
     return NextResponse.json({ error: err.message || "Webhook processing error" }, { status: 500 });
   }
 }

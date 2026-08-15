@@ -34,7 +34,7 @@ import {
   ChevronUpIcon,
 } from "@heroicons/react/24/outline";
 
-export type PageKey =
+type PageKey =
   | "home_page_data"
   | "solutions_page_data"
   | "faq_page_data"
@@ -45,7 +45,7 @@ export type PageKey =
   | "terms_page_data"
   | "blog_page_data";
 
-export interface PageSectionConfig {
+interface PageSectionConfig {
   key: PageKey;
   category: "Landing & Home" | "Solutions / Marketplace" | "Public Pages" | "PR Suite & Podcasts" | "Legal & Compliance" | "Blog Hub";
   title: string;
@@ -53,7 +53,7 @@ export interface PageSectionConfig {
   description: string;
 }
 
-export const EDITABLE_PAGES: PageSectionConfig[] = [
+const EDITABLE_PAGES: PageSectionConfig[] = [
   {
     key: "home_page_data",
     category: "Landing & Home",

@@ -102,14 +102,43 @@ export function BalanceClient({
 
     startTransition(async () => {
       try {
-        const res = await onAddFundsAction(depositValue, "PhonePe");
-        if (res?.url) {
-          window.location.href = res.url;
+        let checkoutUrl = "";
+
+        if (onAddFundsAction) {
+          try {
+            const res = await onAddFundsAction(depositValue, "PhonePe");
+            if (res?.url) {
+              checkoutUrl = res.url;
+            } else if (res?.error) {
+              alert(res.error);
+              return;
+            }
+          } catch (serverActionErr: any) {
+            console.warn("Server action failed, falling back to API route:", serverActionErr);
+          }
+        }
+
+        if (!checkoutUrl) {
+          const resp = await fetch("/api/payments/phonepe/initiate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ amount: depositValue }),
+          });
+          const data = await resp.json();
+          if (data?.checkoutUrl) {
+            checkoutUrl = data.checkoutUrl;
+          } else if (data?.error) {
+            alert(data.error);
+            return;
+          }
+        }
+
+        if (checkoutUrl) {
+          window.location.href = checkoutUrl;
           return;
         }
-        setIsTopUpOpen(false);
-        setAmount("");
-        window.location.reload();
+
+        alert("Failed to initialize PhonePe checkout session.");
       } catch (err: any) {
         alert(err.message || "Top-up failed");
       }

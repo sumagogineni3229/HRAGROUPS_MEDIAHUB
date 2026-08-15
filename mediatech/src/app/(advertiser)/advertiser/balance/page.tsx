@@ -77,10 +77,10 @@ export default async function AdvertiserBalancePage({
       if (result.checkoutUrl) {
         return { url: result.checkoutUrl };
       }
-      throw new Error("Failed to generate PhonePe checkout URL");
+      return { error: "Failed to generate PhonePe checkout URL" };
     } catch (err: any) {
       console.error("PhonePe initiation error:", err);
-      throw new Error(err.message || "Failed to initialize PhonePe payment gateway");
+      return { error: err.message || "Failed to initialize PhonePe payment gateway" };
     }
   }
 

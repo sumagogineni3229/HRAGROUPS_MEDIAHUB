@@ -4,79 +4,93 @@ import { checkPhonePePaymentStatus, getPhonePeConfig } from "@/lib/phonepe";
 
 export const dynamic = "force-dynamic";
 
-async function processPaymentResult(merchantTransactionId: string, searchParams: URLSearchParams, rawBody?: any) {
+async function processPaymentResult(merchantOrderId: string, searchParams: URLSearchParams, rawBody?: any) {
   const config = getPhonePeConfig();
 
-  if (!merchantTransactionId) {
-    return renderRedirectHtml("/advertiser/balance?payment=failed&error=missing_transaction_id", "Redirecting...", false);
+  if (!merchantOrderId) {
+    return renderRedirectHtml("/advertiser/balance?payment=failed&error=missing_transaction_id", "Payment Failed - Missing Transaction ID", false);
   }
 
-  // Check status with PhonePe API
+  // Strict server-side status verification using PhonePe V2 Status API
   let isSuccess = false;
   let amountUsd = 0;
-  let rawUserId = "";
+  let targetUserId = "";
 
   try {
-    const statusResult = await checkPhonePePaymentStatus(merchantTransactionId);
+    const statusResult = await checkPhonePePaymentStatus(merchantOrderId);
 
-    if (statusResult.success && statusResult.data) {
+    if (statusResult.success) {
       isSuccess = true;
-      const amountPaise = statusResult.data.amount || 0;
-      amountUsd = Number((amountPaise / 100 / config.usdToInrRate).toFixed(2));
-      if (statusResult.data.merchantUserId) {
-        rawUserId = statusResult.data.merchantUserId.replace(/^USER_/, "");
+      const amountPaise = statusResult.amount || statusResult.data?.amount || 0;
+      
+      // Calculate USD amount from paise or metaInfo
+      if (statusResult.data?.metaInfo?.amountUsd) {
+        amountUsd = parseFloat(statusResult.data.metaInfo.amountUsd);
+      } else if (amountPaise > 0) {
+        amountUsd = Number((amountPaise / 100 / config.usdToInrRate).toFixed(2));
       }
+
+      if (statusResult.data?.metaInfo?.userId) {
+        targetUserId = statusResult.data.metaInfo.userId;
+      } else if (statusResult.data?.merchantUserId) {
+        targetUserId = statusResult.data.merchantUserId.replace(/^USER_/, "");
+      }
+    } else {
+      console.warn("PhonePe V2 Status Verification did not succeed:", {
+        merchantOrderId,
+        state: statusResult.state,
+        message: statusResult.message,
+      });
     }
   } catch (err) {
-    console.error("Error during PhonePe status check:", err);
+    console.error("Error during PhonePe V2 status verification:", err);
   }
 
-  // Sandbox fallback: Check search params if API simulation or query param code
-  const codeParam = searchParams.get("code") || rawBody?.code;
-  if (!isSuccess && (codeParam === "PAYMENT_SUCCESS" || codeParam === "SUCCESS")) {
-    isSuccess = true;
+  // Fallback to URL searchParams for target user if not in status metaInfo
+  if (!targetUserId) {
+    targetUserId = searchParams.get("userId") || rawBody?.userId || "";
   }
 
-  if (amountUsd <= 0) {
-    const fallbackAmount = parseFloat(searchParams.get("amount") || rawBody?.amount || "0");
-    if (fallbackAmount > 0) {
-      amountUsd = fallbackAmount;
+  // If amount was not extracted from status response, fallback to param amount only if verified success
+  if (isSuccess && amountUsd <= 0) {
+    const paramAmount = parseFloat(searchParams.get("amount") || rawBody?.amount || "0");
+    if (paramAmount > 0) {
+      amountUsd = paramAmount;
     }
-  }
-
-  if (!rawUserId) {
-    rawUserId = searchParams.get("userId") || rawBody?.userId || "";
   }
 
   if (!isSuccess) {
-    return renderRedirectHtml(`/advertiser/balance?payment=failed&txId=${encodeURIComponent(merchantTransactionId)}`, "Payment Failed or Cancelled", false);
+    return renderRedirectHtml(
+      `/advertiser/balance?payment=failed&txId=${encodeURIComponent(merchantOrderId)}`,
+      "Payment Failed or Incomplete. If debited, please contact support with your Transaction ID.",
+      false
+    );
   }
 
-  // Look for an existing transaction to prevent double credit
+  // Look for an existing transaction to ensure idempotency and prevent duplicate credits
   const existingTx = await db.transaction.findFirst({
     where: {
       note: {
-        contains: merchantTransactionId,
+        contains: merchantOrderId,
       },
     },
   });
 
   if (!existingTx && amountUsd > 0) {
     try {
-      // Find target user by ID
       let user = null;
-      if (rawUserId) {
+      if (targetUserId) {
         user = await db.user.findFirst({
           where: {
             OR: [
-              { id: rawUserId },
-              { id: { contains: rawUserId } },
+              { id: targetUserId },
+              { id: { contains: targetUserId } },
             ],
           },
         });
       }
 
-      // If user not found by ID, fallback to most recently active advertiser
+      // If user not found by explicit ID, fallback to active advertiser
       if (!user) {
         user = await db.user.findFirst({
           where: { role: { in: ["ADVERTISER", "ADMIN"] } },
@@ -95,15 +109,15 @@ async function processPaymentResult(merchantTransactionId: string, searchParams:
               userId: user.id,
               type: "TOPUP",
               amount: amountUsd,
-              note: `Funds added via MediaHub Payments (Tx: ${merchantTransactionId})`,
+              note: `Funds added via PhonePe V2 (Tx: ${merchantOrderId})`,
             },
           }),
           db.notification.create({
             data: {
               userId: user.id,
               type: "PAYMENT",
-              title: "Balance Topped Up",
-              body: `$${amountUsd.toFixed(2)} USD (₹${(amountUsd * config.usdToInrRate).toFixed(2)} INR) was added to your wallet.`,
+              title: "Balance Topped Up (PhonePe)",
+              body: `$${amountUsd.toFixed(2)} USD (₹${(amountUsd * config.usdToInrRate).toFixed(2)} INR) was credited to your wallet.`,
               link: "/advertiser/balance",
             },
           }),
@@ -114,7 +128,11 @@ async function processPaymentResult(merchantTransactionId: string, searchParams:
     }
   }
 
-  return renderRedirectHtml(`/advertiser/balance?payment=success&txId=${encodeURIComponent(merchantTransactionId)}`, "Payment Successful! Updating Balance...", true);
+  return renderRedirectHtml(
+    `/advertiser/balance?payment=success&txId=${encodeURIComponent(merchantOrderId)}`,
+    "Payment Successful! Your balance has been updated.",
+    true
+  );
 }
 
 function renderRedirectHtml(targetUrl: string, message: string, isSuccess: boolean) {
@@ -123,12 +141,12 @@ function renderRedirectHtml(targetUrl: string, message: string, isSuccess: boole
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>${message}</title>
-    <meta http-equiv="refresh" content="1;url=${targetUrl}">
+    <title>${isSuccess ? "Payment Completed" : "Payment Status"}</title>
+    <meta http-equiv="refresh" content="2;url=${targetUrl}">
   </head>
-  <body style="margin:0;padding:0;background:#F4F7F9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;">
-    <div style="background:white;padding:36px 40px;border-radius:24px;box-shadow:0 20px 40px rgba(0,0,0,0.06);border:1px solid #EAF1F6;text-align:center;max-width:400px;width:90%;">
-      <div style="width:48px;height:48px;border-radius:50%;background:${isSuccess ? "#ECFDF5" : "#FEF2F2"};color:${isSuccess ? "#10B981" : "#EF4444"};display:inline-flex;align-items:center;justify-content:center;font-size:24px;font-weight:bold;margin-bottom:16px;">
+  <body style="margin:0;padding:0;background:#F4F7F9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;">
+    <div style="background:white;padding:36px 40px;border-radius:24px;box-shadow:0 20px 40px rgba(0,0,0,0.06);border:1px solid #EAF1F6;text-align:center;max-width:420px;width:90%;">
+      <div style="width:52px;height:52px;border-radius:50%;background:${isSuccess ? "#ECFDF5" : "#FEF2F2"};color:${isSuccess ? "#10B981" : "#EF4444"};display:inline-flex;align-items:center;justify-content:center;font-size:26px;font-weight:bold;margin-bottom:16px;">
         ${isSuccess ? "✓" : "!"}
       </div>
       <h3 style="margin:0 0 8px;color:#112C3E;font-size:20px;font-weight:700;">
@@ -137,14 +155,14 @@ function renderRedirectHtml(targetUrl: string, message: string, isSuccess: boole
       <p style="margin:0 0 20px;color:#677F9B;font-size:14px;line-height:1.5;">
         ${message}
       </p>
-      <a href="${targetUrl}" style="display:inline-block;background:#F59E0B;color:white;text-decoration:none;padding:12px 24px;border-radius:12px;font-size:14px;font-weight:700;">
+      <a href="${targetUrl}" style="display:inline-block;background:${isSuccess ? "#10B981" : "#F59E0B"};color:white;text-decoration:none;padding:12px 24px;border-radius:12px;font-size:14px;font-weight:700;">
         Return to Dashboard ↗
       </a>
     </div>
     <script>
       setTimeout(function() {
         window.location.replace("${targetUrl}");
-      }, 300);
+      }, 500);
     </script>
   </body>
 </html>`;
@@ -158,33 +176,47 @@ function renderRedirectHtml(targetUrl: string, message: string, isSuccess: boole
 
 export async function POST(req: Request) {
   const url = new URL(req.url);
-  let merchantTransactionId = url.searchParams.get("merchantTransactionId") || "";
+  let merchantOrderId =
+    url.searchParams.get("merchantOrderId") ||
+    url.searchParams.get("merchantTransactionId") ||
+    url.searchParams.get("transactionId") ||
+    url.searchParams.get("orderId") ||
+    url.searchParams.get("id") ||
+    "";
   let bodyData: any = {};
 
   try {
     const contentType = req.headers.get("content-type") || "";
     if (contentType.includes("application/json")) {
       bodyData = await req.json();
-    } else if (contentType.includes("application/x-www-form-urlencoded")) {
+    } else if (contentType.includes("application/x-www-form-urlencoded") || contentType.includes("multipart/form-data")) {
       const formData = await req.formData();
       bodyData = Object.fromEntries(formData.entries());
     }
-    if (bodyData.merchantTransactionId) {
-      merchantTransactionId = bodyData.merchantTransactionId;
-    }
-    if (bodyData.transactionId && !merchantTransactionId) {
-      merchantTransactionId = bodyData.transactionId;
+    if (bodyData.merchantOrderId) {
+      merchantOrderId = bodyData.merchantOrderId;
+    } else if (bodyData.merchantTransactionId) {
+      merchantOrderId = bodyData.merchantTransactionId;
+    } else if (bodyData.transactionId) {
+      merchantOrderId = bodyData.transactionId;
+    } else if (bodyData.orderId) {
+      merchantOrderId = bodyData.orderId;
     }
   } catch (err) {}
 
-  return processPaymentResult(merchantTransactionId, url.searchParams, bodyData);
+  console.log("PhonePe Callback POST received:", { merchantOrderId, searchParams: Object.fromEntries(url.searchParams.entries()), bodyData });
+  return processPaymentResult(merchantOrderId, url.searchParams, bodyData);
 }
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  const merchantTransactionId =
+  const merchantOrderId =
+    url.searchParams.get("merchantOrderId") ||
     url.searchParams.get("merchantTransactionId") ||
     url.searchParams.get("transactionId") ||
+    url.searchParams.get("orderId") ||
+    url.searchParams.get("id") ||
     "";
-  return processPaymentResult(merchantTransactionId, url.searchParams);
+  console.log("PhonePe Callback GET received:", { merchantOrderId, searchParams: Object.fromEntries(url.searchParams.entries()) });
+  return processPaymentResult(merchantOrderId, url.searchParams);
 }

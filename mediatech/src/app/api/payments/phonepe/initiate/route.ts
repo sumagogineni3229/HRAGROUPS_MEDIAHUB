@@ -34,6 +34,6 @@ export async function POST(req: Request) {
     return NextResponse.json(result);
   } catch (err: any) {
     console.error("PhonePe initiation API error:", err);
-    return NextResponse.json({ error: err.message || "Failed to initiate PhonePe payment" }, { status: 500 });
+    return NextResponse.json({ error: err.message || "Failed to initiate PhonePe payment" }, { status: 400 });
   }
 }
