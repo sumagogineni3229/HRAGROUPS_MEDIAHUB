@@ -231,10 +231,18 @@ export default async function AdvertiserInfluencersPage({
                   <div className="flex flex-col gap-2">
                     {channel.packages && channel.packages.length > 0 ? (
                       channel.packages.map((pkg: any) => (
-                        <div key={pkg.id} className="flex justify-between items-center text-sm py-1.5 px-3 bg-white rounded-md border border-slate-200">
-                          <span className="text-slate-600 font-medium capitalize">{pkg.type.toLowerCase()} placement</span>
-                          <span className="font-semibold text-dark font-space">${pkg.price.toFixed(2)}</span>
-                        </div>
+                        <Link 
+                          key={pkg.id} 
+                          href={`/advertiser/tasks/new?channelId=${channel.id}&packageId=${pkg.id}`}
+                          className="flex justify-between items-center text-sm py-1.5 px-3 bg-white hover:bg-primary/5 rounded-md border border-slate-200 hover:border-primary/50 transition-colors group"
+                        >
+                          <span className="text-slate-600 group-hover:text-primary font-medium capitalize">
+                            {pkg.type.toLowerCase()} placement
+                          </span>
+                          <span className="font-semibold text-dark group-hover:text-primary font-space">
+                            ${pkg.price.toFixed(2)}
+                          </span>
+                        </Link>
                       ))
                     ) : (
                       <span className="text-slate-400 text-sm italic">No packages listed</span>
