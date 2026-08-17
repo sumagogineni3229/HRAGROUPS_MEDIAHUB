@@ -2,6 +2,9 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
 
+import { INFLUENCER_CATEGORIES } from "@/lib/categories";
+import { SearchableSelect } from "@/components/ui/searchable-select";
+
 export const metadata = {
   title: "Manage Channel - MediaHub",
 };
@@ -176,14 +179,12 @@ export default async function NewChannelPage({
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             <div>
               <label className="text-sm font-medium text-dark block mb-2 font-inter">Niche / Category</label>
-              <select name="niche" required defaultValue={existingChannel?.niche || "Fashion"} className="input select">
-                <option value="Fashion">Fashion</option>
-                <option value="Fitness">Fitness</option>
-                <option value="Gaming">Gaming</option>
-                <option value="Technology">Technology</option>
-                <option value="Business">Business</option>
-                <option value="Lifestyle">Lifestyle</option>
-              </select>
+              <SearchableSelect
+                name="niche"
+                options={INFLUENCER_CATEGORIES}
+                defaultValue={existingChannel?.niche || INFLUENCER_CATEGORIES[0]}
+                required
+              />
             </div>
             <div>
               <label className="text-sm font-medium text-dark block mb-2 font-inter">Country</label>

@@ -10,6 +10,8 @@ import {
   ShoppingBagIcon,
   GlobeAltIcon
 } from "@heroicons/react/24/outline";
+import { INFLUENCER_CATEGORIES } from "@/lib/categories";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 
 export const metadata = {
   title: "Search for Influencers - MediaHub",
@@ -135,13 +137,12 @@ export default async function AdvertiserInfluencersPage({
               />
             </div>
             <div>
-              <select name="niche" className="input select text-muted" defaultValue={niche}>
-                <option value="">Niche: All</option>
-                <option value="Fashion">Fashion</option>
-                <option value="Fitness">Fitness</option>
-                <option value="Gaming">Gaming</option>
-                <option value="Technology">Technology</option>
-              </select>
+              <SearchableSelect
+                name="niche"
+                options={["", ...INFLUENCER_CATEGORIES]}
+                defaultValue={niche}
+                placeholder="Niche: All"
+              />
             </div>
             <div>
               <input 
