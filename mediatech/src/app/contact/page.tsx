@@ -14,6 +14,7 @@ import {
   CheckCircleIcon,
   ChevronRightIcon,
 } from "@heroicons/react/24/solid";
+import { ALL_COUNTRIES } from "@/lib/countries";
 
 export default function ContactPage() {
   const [contactContent, setContactContent] = useState<ContactPageContent>(DEFAULT_CONTACT_PAGE_CONTENT);
@@ -239,11 +240,13 @@ export default function ContactPage() {
                         value={formData.countryCode}
                         onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
                         className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:border-[#F59E0B] shrink-0"
+                        style={{ maxWidth: "160px" }}
                       >
-                        <option value="+91">+91 (IN)</option>
-                        <option value="+1">+1 (US)</option>
-                        <option value="+44">+44 (UK)</option>
-                        <option value="+61">+61 (AU)</option>
+                        {ALL_COUNTRIES.map((c) => (
+                          <option key={c.code + c.dialCode} value={c.dialCode}>
+                            {c.flag} {c.dialCode} ({c.code})
+                          </option>
+                        ))}
                       </select>
                       <input
                         type="tel"

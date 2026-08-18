@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { CheckCircleIcon, XCircleIcon, GlobeAltIcon, DevicePhoneMobileIcon } from "@heroicons/react/24/outline";
+import { getSocialPlatformLabel } from "@/lib/social-platforms";
 
 export const metadata = { title: "Listings Approval - MediaHub Admin" };
 
@@ -179,7 +180,7 @@ export default async function AdminListingsPage({ searchParams }: { searchParams
             <div key={c.id} className="card bg-card border-base rounded-xl p-5">
               <div className="flex items-start justify-between gap-4 mb-4">
                 <div>
-                  <p className="font-space font-bold text-dark text-base">@{c.handle} <span className="text-sm text-muted font-inter">({c.platform})</span></p>
+                  <p className="font-space font-bold text-dark text-base">@{c.handle} <span className="text-sm text-muted font-inter">({getSocialPlatformLabel(c.platform)})</span></p>
                   <p className="text-xs text-muted font-inter mt-0.5">by {c.influencer.name ?? c.influencer.email} · submitted {new Date(c.createdAt).toLocaleDateString()}</p>
                 </div>
                 <span className="text-xs font-semibold px-2 py-1 rounded-full bg-[#FFF8E8] text-warning font-inter flex-shrink-0">PENDING</span>

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
 import { PlusIcon } from "@heroicons/react/24/outline";
+import { CountrySelect } from "@/components/ui/country-select";
 
 export const metadata = {
   title: "Add Website Platform - MediaHub",
@@ -193,7 +194,12 @@ export default async function NewPlatformPage({
             </div>
             <div>
               <label className="text-sm font-medium text-dark block mb-2 font-inter">Country</label>
-              <input name="country" type="text" required defaultValue={existingPlatform?.country || "United States"} placeholder="United States, Pakistan, India..." className="input" />
+              <CountrySelect
+                name="country"
+                defaultValue={existingPlatform?.country || "United States"}
+                placeholder="Select Country..."
+                required
+              />
             </div>
           </div>
 

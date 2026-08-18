@@ -7,6 +7,8 @@ import {
   DevicePhoneMobileIcon
 } from "@heroicons/react/24/outline";
 import { ChannelActionsDropdown } from "@/components/influencer/channel-actions-dropdown";
+import { getSocialPlatformLabel, getSocialProfileUrl } from "@/lib/social-platforms";
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
 
 export const metadata = {
   title: "My Channels - MediaHub",
@@ -65,9 +67,18 @@ export default async function InfluencerChannelsPage() {
                 <div className="flex justify-between items-start mb-6">
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="font-space font-bold text-dark text-lg">{channel.handle}</span>
+                      <a
+                        href={getSocialProfileUrl(channel.platform, channel.handle, channel.profileUrl)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-space font-bold text-dark text-lg hover:text-primary hover:underline inline-flex items-center gap-1 group"
+                        title={`Open ${channel.handle} on ${getSocialPlatformLabel(channel.platform)}`}
+                      >
+                        <span>{channel.handle}</span>
+                        <ArrowTopRightOnSquareIcon className="w-4 h-4 opacity-60 group-hover:opacity-100 transition-opacity" />
+                      </a>
                       <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-600 dark:bg-indigo-950 dark:text-indigo-300 uppercase tracking-wide">
-                        {channel.platform}
+                        {getSocialPlatformLabel(channel.platform)}
                       </span>
                     </div>
                     <span className="text-xs text-muted font-inter">

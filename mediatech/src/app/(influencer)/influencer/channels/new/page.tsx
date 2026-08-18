@@ -4,6 +4,8 @@ import Link from "next/link";
 
 import { INFLUENCER_CATEGORIES } from "@/lib/categories";
 import { SearchableSelect } from "@/components/ui/searchable-select";
+import { CountrySelect } from "@/components/ui/country-select";
+import { SOCIAL_PLATFORMS } from "@/lib/social-platforms";
 
 export const metadata = {
   title: "Manage Channel - MediaHub",
@@ -150,13 +152,12 @@ export default async function NewChannelPage({
 
           <div>
             <label className="text-sm font-medium text-dark block mb-2 font-inter">Social Platform</label>
-            <select name="platform" required defaultValue={existingChannel?.platform || "INSTAGRAM"} className="input select">
-              <option value="INSTAGRAM">Instagram</option>
-              <option value="YOUTUBE">YouTube</option>
-              <option value="TIKTOK">TikTok</option>
-              <option value="X">X (formerly Twitter)</option>
-              <option value="FACEBOOK">Facebook</option>
-              <option value="LINKEDIN">LinkedIn</option>
+            <select name="platform" required defaultValue={existingChannel?.platform || "FACEBOOK"} className="input select">
+              {SOCIAL_PLATFORMS.map((sp) => (
+                <option key={sp.value} value={sp.value}>
+                  {sp.label}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -188,7 +189,12 @@ export default async function NewChannelPage({
             </div>
             <div>
               <label className="text-sm font-medium text-dark block mb-2 font-inter">Country</label>
-              <input name="country" type="text" required placeholder="United States" defaultValue={existingChannel?.country || ""} className="input" />
+              <CountrySelect
+                name="country"
+                defaultValue={existingChannel?.country || "United States"}
+                placeholder="Select Country..."
+                required
+              />
             </div>
           </div>
 

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRightIcon, ShoppingBagIcon, GlobeAltIcon, DevicePhoneMobileIcon } from "@heroicons/react/24/outline";
+import { CountrySelect } from "@/components/ui/country-select";
 
 type Role = "ADVERTISER" | "PUBLISHER" | "INFLUENCER";
 
@@ -194,7 +195,12 @@ export function RegisterForm() {
           <input className="input" type="text" placeholder="Company Name" value={company} onChange={e => setCompany(e.target.value)} autoComplete="organization" />
           <input className="input" type="tel" placeholder="Phone Number" value={phone} onChange={e => setPhone(e.target.value)} autoComplete="tel" />
           <input className="input" type="url" placeholder="Website (e.g. https://example.com)" value={website} onChange={e => setWebsite(e.target.value)} autoComplete="url" />
-          <input className="input" type="text" placeholder="Country" value={country} onChange={e => setCountry(e.target.value)} autoComplete="country-name" />
+          <CountrySelect
+            name="country"
+            defaultValue={country}
+            placeholder="Select Country"
+            onChange={(val) => setCountry(val)}
+          />
 
           <button type="submit" disabled={loading} className="login-submit-btn">
             <span>{loading ? "Creating account…" : "Create Account"}</span>

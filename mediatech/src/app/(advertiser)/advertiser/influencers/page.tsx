@@ -8,10 +8,13 @@ import {
   ArrowDownTrayIcon,
   CheckCircleIcon,
   ShoppingBagIcon,
-  GlobeAltIcon
+  GlobeAltIcon,
+  ArrowTopRightOnSquareIcon
 } from "@heroicons/react/24/outline";
 import { INFLUENCER_CATEGORIES } from "@/lib/categories";
 import { SearchableSelect } from "@/components/ui/searchable-select";
+import { CountrySelect } from "@/components/ui/country-select";
+import { SOCIAL_PLATFORMS, getSocialPlatformLabel, getSocialProfileUrl } from "@/lib/social-platforms";
 
 export const metadata = {
   title: "Search for Influencers - MediaHub",
@@ -74,56 +77,25 @@ export default async function AdvertiserInfluencersPage({
       <div className="bg-card border-base rounded-lg p-6 mb-6">
         <form method="GET" action="/advertiser/influencers" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* Social Platform Selection tabs */}
-          <div className="flex flex-wrap gap-4 pb-2 border-b border-muted">
+          <div className="flex flex-wrap gap-2 pb-2 border-b border-muted">
             <Link 
               href="/advertiser/influencers"
-              className={`status-tab pb-2 ${!platform ? 'active font-bold text-primary' : 'text-muted'}`}
-              style={!platform ? { borderBottom: '2px solid var(--color-primary)' } : {}}
+              className={`status-tab px-3 py-1.5 rounded-lg text-xs font-semibold font-inter transition-colors ${!platform ? 'bg-primary text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-muted hover:text-dark'}`}
             >
               All Platforms
             </Link>
-            <Link 
-              href="/advertiser/influencers?platform=INSTAGRAM"
-              className={`status-tab pb-2 ${platform === 'INSTAGRAM' ? 'active font-bold text-primary' : 'text-muted'}`}
-              style={platform === 'INSTAGRAM' ? { borderBottom: '2px solid var(--color-primary)' } : {}}
-            >
-              Instagram
-            </Link>
-            <Link 
-              href="/advertiser/influencers?platform=TIKTOK"
-              className={`status-tab pb-2 ${platform === 'TIKTOK' ? 'active font-bold text-primary' : 'text-muted'}`}
-              style={platform === 'TIKTOK' ? { borderBottom: '2px solid var(--color-primary)' } : {}}
-            >
-              TikTok
-            </Link>
-            <Link 
-              href="/advertiser/influencers?platform=YOUTUBE"
-              className={`status-tab pb-2 ${platform === 'YOUTUBE' ? 'active font-bold text-primary' : 'text-muted'}`}
-              style={platform === 'YOUTUBE' ? { borderBottom: '2px solid var(--color-primary)' } : {}}
-            >
-              YouTube
-            </Link>
-            <Link 
-              href="/advertiser/influencers?platform=X"
-              className={`status-tab pb-2 ${platform === 'X' ? 'active font-bold text-primary' : 'text-muted'}`}
-              style={platform === 'X' ? { borderBottom: '2px solid var(--color-primary)' } : {}}
-            >
-              X (Twitter)
-            </Link>
-            <Link 
-              href="/advertiser/influencers?platform=FACEBOOK"
-              className={`status-tab pb-2 ${platform === 'FACEBOOK' ? 'active font-bold text-primary' : 'text-muted'}`}
-              style={platform === 'FACEBOOK' ? { borderBottom: '2px solid var(--color-primary)' } : {}}
-            >
-              Facebook
-            </Link>
-            <Link 
-              href="/advertiser/influencers?platform=LINKEDIN"
-              className={`status-tab pb-2 ${platform === 'LINKEDIN' ? 'active font-bold text-primary' : 'text-muted'}`}
-              style={platform === 'LINKEDIN' ? { borderBottom: '2px solid var(--color-primary)' } : {}}
-            >
-              LinkedIn
-            </Link>
+            {SOCIAL_PLATFORMS.map((sp) => {
+              const isActive = platform === sp.value;
+              return (
+                <Link
+                  key={sp.value}
+                  href={`/advertiser/influencers?platform=${sp.value}`}
+                  className={`status-tab px-3 py-1.5 rounded-lg text-xs font-semibold font-inter transition-colors ${isActive ? 'bg-primary text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-muted hover:text-dark'}`}
+                >
+                  {sp.label}
+                </Link>
+              );
+            })}
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: '16px' }}>
@@ -145,12 +117,12 @@ export default async function AdvertiserInfluencersPage({
               />
             </div>
             <div>
-              <input 
-                name="country" 
-                className="input" 
-                type="text" 
-                placeholder="Country" 
+              <CountrySelect
+                name="country"
                 defaultValue={country}
+                placeholder="Country: All"
+                showAllOption={true}
+                allOptionLabel="All Countries"
               />
             </div>
             <button type="submit" className="btn btn-primary" style={{ justifyContent: 'center' }}>
@@ -182,16 +154,25 @@ export default async function AdvertiserInfluencersPage({
         </div>
       ) : (
         <div className="platforms-grid flex flex-col gap-6">
-          {channels.map((channel: any) => (
+          {channels.map((channel: any) => {
+            const profileUrl = getSocialProfileUrl(channel.platform, channel.handle, channel.profileUrl);
+            return (
             <div key={channel.id} className="card bg-card border-base rounded-lg p-6 relative">
               <div className="flex justify-between items-start mb-6">
                 <div>
                   <div className="flex items-center gap-3 mb-1">
-                    <span className="text-primary font-space font-semibold text-lg hover:underline cursor-pointer">
-                      {channel.handle}
-                    </span>
+                    <a 
+                      href={profileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary font-space font-bold text-lg hover:underline inline-flex items-center gap-1.5 group"
+                      title={`Open ${channel.handle} on ${getSocialPlatformLabel(channel.platform)}`}
+                    >
+                      <span>{channel.handle}</span>
+                      <ArrowTopRightOnSquareIcon className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" />
+                    </a>
                     <span className="badge badge-paused text-xs">
-                      {channel.platform}
+                      {getSocialPlatformLabel(channel.platform)}
                     </span>
                   </div>
                   <span className="text-xs text-muted font-inter">Niche: {channel.niche} | Location: {channel.country}</span>
@@ -252,7 +233,8 @@ export default async function AdvertiserInfluencersPage({
                 </div>
               </div>
             </div>
-          ))}
+          );
+        })}
         </div>
       )}
     </div>

@@ -9,6 +9,7 @@ import {
   ArrowTopRightOnSquareIcon 
 } from "@heroicons/react/24/outline";
 import { deleteChannel } from "@/app/(influencer)/influencer/channels/actions";
+import { getSocialProfileUrl } from "@/lib/social-platforms";
 
 interface ChannelActionsDropdownProps {
   channelId: string;
@@ -37,34 +38,8 @@ export function ChannelActionsDropdown({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Determine external URL for social handle if profileUrl is not set
-  const cleanHandle = handle.replace(/^@/, "");
-  let targetUrl = profileUrl;
-  if (!targetUrl) {
-    switch (platform.toUpperCase()) {
-      case "INSTAGRAM":
-        targetUrl = `https://instagram.com/${cleanHandle}`;
-        break;
-      case "YOUTUBE":
-        targetUrl = `https://youtube.com/@${cleanHandle}`;
-        break;
-      case "TIKTOK":
-        targetUrl = `https://tiktok.com/@${cleanHandle}`;
-        break;
-      case "X":
-      case "TWITTER":
-        targetUrl = `https://x.com/${cleanHandle}`;
-        break;
-      case "FACEBOOK":
-        targetUrl = `https://facebook.com/${cleanHandle}`;
-        break;
-      case "LINKEDIN":
-        targetUrl = `https://linkedin.com/in/${cleanHandle}`;
-        break;
-      default:
-        targetUrl = "#";
-    }
-  }
+  // Determine external URL for social handle
+  const targetUrl = getSocialProfileUrl(platform, handle, profileUrl);
 
   const handleDelete = async () => {
     if (!confirm(`Are you sure you want to remove the channel "${handle}"?`)) {

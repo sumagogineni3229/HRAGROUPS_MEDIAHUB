@@ -2,6 +2,8 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { ALL_COUNTRIES, getCountryFlagAndName } from "@/lib/countries";
+import { CountrySelect } from "@/components/ui/country-select";
 import {
   MagnifyingGlassIcon,
   FunnelIcon,
@@ -48,27 +50,8 @@ function cleanUrl(url: string) {
 }
 
 function getCountryFlags(countryStr: string) {
-  if (!countryStr) return { flag: "🇺🇸", name: "United States", topFlag: "🇺🇸" };
-  const str = countryStr.toLowerCase().trim();
-  if (str.includes("us") || str.includes("united states") || str.includes("usa")) {
-    return { flag: "🇺🇸", name: "United States", topFlag: "🇺🇸" };
-  }
-  if (str.includes("uk") || str.includes("united kingdom") || str.includes("gb")) {
-    return { flag: "🇬🇧", name: "United Kingdom", topFlag: "🇬🇧" };
-  }
-  if (str.includes("pk") || str.includes("pakistan")) {
-    return { flag: "🇵🇰", name: "Pakistan", topFlag: "🇺🇸" };
-  }
-  if (str.includes("in") || str.includes("india")) {
-    return { flag: "🇮🇳", name: "India", topFlag: "🇺🇸" };
-  }
-  if (str.includes("ca") || str.includes("canada")) {
-    return { flag: "🇨🇦", name: "Canada", topFlag: "🇨🇦" };
-  }
-  if (str.includes("de") || str.includes("germany")) {
-    return { flag: "🇩🇪", name: "Germany", topFlag: "🇩🇪" };
-  }
-  return { flag: "🌐", name: countryStr, topFlag: "🇺🇸" };
+  const result = getCountryFlagAndName(countryStr);
+  return { flag: result.flag, name: result.name, topFlag: result.flag };
 }
 
 export default async function AdvertiserSitesPage({
@@ -399,19 +382,13 @@ export default async function AdvertiserSitesPage({
               <label className="text-xs font-medium text-slate-600 block mb-1.5">
                 Country ⓘ
               </label>
-              <select
+              <CountrySelect
                 name="country"
                 defaultValue={country}
-                className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500"
-              >
-                <option value="">Nothing selected</option>
-                <option value="United States">United States 🇺🇸</option>
-                <option value="United Kingdom">United Kingdom 🇬🇧</option>
-                <option value="Pakistan">Pakistan 🇵🇰</option>
-                <option value="India">India 🇮🇳</option>
-                <option value="Canada">Canada 🇨🇦</option>
-                <option value="Germany">Germany 🇩🇪</option>
-              </select>
+                placeholder="Nothing selected"
+                showAllOption={true}
+                allOptionLabel="All Countries"
+              />
             </div>
 
             {/* Language */}
