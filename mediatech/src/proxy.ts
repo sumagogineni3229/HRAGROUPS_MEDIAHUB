@@ -10,22 +10,22 @@ const { auth } = NextAuth(authConfig);
 // Role → their home dashboard
 const ROLE_HOME: Record<string, string> = {
   ADVERTISER: "/advertiser/sites",
-  PUBLISHER:  "/publisher/platforms",
+  PUBLISHER: "/publisher/platforms",
   INFLUENCER: "/influencer/channels",
-  ADMIN:      "/admin/dashboard",
-  EDITOR:     "/editor/pages",
+  ADMIN: "/admin/dashboard",
+  EDITOR: "/editor/pages",
 };
 
 // Route prefixes each role is allowed
 const ROLE_ROUTES: Record<string, string[]> = {
   ADVERTISER: ["/advertiser", "/wallet", "/profile", "/notifications"],
-  PUBLISHER:  ["/publisher",  "/wallet", "/profile", "/notifications"],
+  PUBLISHER: ["/publisher", "/wallet", "/profile", "/notifications"],
   INFLUENCER: ["/influencer", "/wallet", "/profile", "/notifications"],
-  ADMIN:      ["/admin", "/advertiser", "/publisher", "/influencer", "/wallet", "/profile", "/notifications"],
-  EDITOR:     ["/editor", "/wallet", "/profile", "/notifications"],
+  ADMIN: ["/admin", "/advertiser", "/publisher", "/influencer", "/wallet", "/profile", "/notifications"],
+  EDITOR: ["/editor", "/wallet", "/profile", "/notifications"],
 };
 
-const AUTH_ROUTES   = ["/login", "/register", "/forgot-password", "/reset-password"];
+const AUTH_ROUTES = ["/login", "/register", "/forgot-password", "/reset-password"];
 const PUBLIC_ROUTES = ["/", "/api/auth", "/blog", "/solutions", "/podcasts", "/media-kit", "/faq", "/contact", "/terms", "/privacy"];
 
 export default auth((req) => {
@@ -38,9 +38,9 @@ export default auth((req) => {
     return NextResponse.next();
   }
 
-  const isAuthRoute   = AUTH_ROUTES.some((r) => pathname.startsWith(r));
+  const isAuthRoute = AUTH_ROUTES.some((r) => pathname.startsWith(r));
   const isPublicRoute = pathname === "/" || PUBLIC_ROUTES.some((r) => r !== "/" && pathname.startsWith(r));
-  const isApiRoute    = pathname.startsWith("/api/");
+  const isApiRoute = pathname.startsWith("/api/");
 
   console.log(`[MIDDLEWARE] Path: ${pathname} | isAuth: ${isAuthRoute} | isPublic: ${isPublicRoute} | HasSession: ${!!session?.user}`);
 

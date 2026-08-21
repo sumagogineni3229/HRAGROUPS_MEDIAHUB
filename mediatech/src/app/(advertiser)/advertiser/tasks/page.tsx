@@ -2,9 +2,9 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { 
-  DocumentTextIcon, 
-  BriefcaseIcon, 
+import {
+  DocumentTextIcon,
+  BriefcaseIcon,
   ClipboardIcon,
   CheckIcon,
   XMarkIcon
@@ -19,14 +19,14 @@ interface AdvertiserTasksPageProps {
 }
 
 const STATUS_CONFIG: Record<string, { label: string; bg: string; color: string }> = {
-  ALL:             { label: "All Sent Tasks",       bg: "#f3f4f6", color: "#374151" },
-  TASK_REVIEW:     { label: "Reviewing",            bg: "#eef2ff", color: "#4f46e5" },
+  ALL: { label: "All Sent Tasks", bg: "#f3f4f6", color: "#374151" },
+  TASK_REVIEW: { label: "Reviewing", bg: "#eef2ff", color: "#4f46e5" },
   TASK_ACCEPTANCE: { label: "Awaiting Acceptance", bg: "#fffbe6", color: "#d97706" },
-  IN_PROGRESS:     { label: "In Progress",          bg: "#e0f2fe", color: "#0284c7" },
-  YOUR_APPROVAL:   { label: "Waiting Approval",     bg: "#fef3c7", color: "#b45309" },
-  IMPROVEMENT:     { label: "Revisions Requested",  bg: "#fff0f0", color: "#dc2626" },
-  COMPLETED:       { label: "Completed",            bg: "#e8fbee", color: "#16a34a" },
-  REJECTED:        { label: "Declined",             bg: "#fef2f2", color: "#991b1b" },
+  IN_PROGRESS: { label: "In Progress", bg: "#e0f2fe", color: "#0284c7" },
+  YOUR_APPROVAL: { label: "Waiting Approval", bg: "#fef3c7", color: "#b45309" },
+  IMPROVEMENT: { label: "Revisions Requested", bg: "#fff0f0", color: "#dc2626" },
+  COMPLETED: { label: "Completed", bg: "#e8fbee", color: "#16a34a" },
+  REJECTED: { label: "Declined", bg: "#fef2f2", color: "#991b1b" },
 };
 
 export default async function AdvertiserTasksPage({ searchParams }: AdvertiserTasksPageProps) {
@@ -70,15 +70,15 @@ export default async function AdvertiserTasksPage({ searchParams }: AdvertiserTa
       }),
       db.user.update({
         where: { id: task.sellerId },
-        data: { 
+        data: {
           balance: { increment: publisherEarnings },
           earnings: { increment: publisherEarnings }
         }
       }),
       db.task.update({
         where: { id: taskId },
-        data: { 
-          status: "COMPLETED", 
+        data: {
+          status: "COMPLETED",
           completedAt: new Date()
         }
       }),
@@ -108,7 +108,7 @@ export default async function AdvertiserTasksPage({ searchParams }: AdvertiserTa
 
     await db.task.update({
       where: { id: taskId },
-      data: { 
+      data: {
         status: "TASK_ACCEPTANCE", // Moves task back to revisions
         contentNotes: note
       }
@@ -142,11 +142,10 @@ export default async function AdvertiserTasksPage({ searchParams }: AdvertiserTa
               <a
                 key={tab.key}
                 href={`/advertiser/tasks?status=${tab.key}`}
-                className={`text-sm font-inter font-medium pb-2 transition-all whitespace-nowrap ${
-                  isActive
+                className={`text-sm font-inter font-medium pb-2 transition-all whitespace-nowrap ${isActive
                     ? "text-primary border-b-2 border-primary font-semibold"
                     : "text-muted hover:text-dark"
-                }`}
+                  }`}
               >
                 {tab.label}
               </a>
@@ -269,12 +268,12 @@ export default async function AdvertiserTasksPage({ searchParams }: AdvertiserTa
 
                       <form action={handleImprovement} className="flex gap-2 pt-2 border-t border-dashed border-border">
                         <input type="hidden" name="taskId" value={task.id} />
-                        <input 
-                          name="note" 
-                          type="text" 
-                          required 
-                          placeholder="State what needs revision (e.g., Change anchor location)..." 
-                          className="input flex-1" 
+                        <input
+                          name="note"
+                          type="text"
+                          required
+                          placeholder="State what needs revision (e.g., Change anchor location)..."
+                          className="input flex-1"
                         />
                         <button type="submit" className="btn btn-outline flex items-center gap-1 btn-sm text-danger" style={{ borderColor: 'var(--color-danger)' }}>
                           Request Revisions

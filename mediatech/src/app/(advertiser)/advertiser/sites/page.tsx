@@ -145,21 +145,19 @@ export default async function AdvertiserSitesPage({
         <div className="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200">
           <Link
             href={`/advertiser/sites?${new URLSearchParams({ ...resolvedParams, verified: 'true' }).toString()}`}
-            className={`px-3.5 py-1.5 text-xs font-semibold rounded-md transition-all ${
-              verifiedOnly
-                ? 'bg-white text-amber-600 shadow-sm border border-slate-200 font-bold'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
+            className={`px-3.5 py-1.5 text-xs font-semibold rounded-md transition-all ${verifiedOnly
+              ? 'bg-white text-amber-600 shadow-sm border border-slate-200 font-bold'
+              : 'text-slate-600 hover:text-slate-900'
+              }`}
           >
             Verified sites
           </Link>
           <Link
             href={`/advertiser/sites?${new URLSearchParams({ ...resolvedParams, verified: 'false' }).toString()}`}
-            className={`px-3.5 py-1.5 text-xs font-semibold rounded-md transition-all ${
-              !verifiedOnly
-                ? 'bg-white text-amber-600 shadow-sm border border-slate-200 font-bold'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
+            className={`px-3.5 py-1.5 text-xs font-semibold rounded-md transition-all ${!verifiedOnly
+              ? 'bg-white text-amber-600 shadow-sm border border-slate-200 font-bold'
+              : 'text-slate-600 hover:text-slate-900'
+              }`}
           >
             All sites
           </Link>
@@ -226,41 +224,37 @@ export default async function AdvertiserSitesPage({
       <div className="bg-white p-1.5 rounded-xl flex items-center gap-2 mb-6 border border-slate-200 shadow-sm">
         <Link
           href={`/advertiser/sites?${new URLSearchParams({ ...resolvedParams, type: '' }).toString()}`}
-          className={`flex-1 py-2.5 px-4 text-center rounded-lg text-sm font-semibold transition-all ${
-            !serviceType
-              ? 'bg-amber-50 text-amber-600 shadow-sm border border-amber-200 font-bold'
-              : 'bg-white text-slate-600 hover:text-slate-900'
-          }`}
+          className={`flex-1 py-2.5 px-4 text-center rounded-lg text-sm font-semibold transition-all ${!serviceType
+            ? 'bg-amber-50 text-amber-600 shadow-sm border border-amber-200 font-bold'
+            : 'bg-white text-slate-600 hover:text-slate-900'
+            }`}
         >
           All Services
         </Link>
         <Link
           href={`/advertiser/sites?${new URLSearchParams({ ...resolvedParams, type: 'ARTICLE_POSTING' }).toString()}`}
-          className={`flex-1 py-2.5 px-4 text-center rounded-lg text-sm font-semibold transition-all ${
-            serviceType === 'ARTICLE_POSTING'
-              ? 'bg-amber-50 text-amber-600 shadow-sm border border-amber-200 font-bold'
-              : 'bg-white text-slate-600 hover:text-slate-900'
-          }`}
+          className={`flex-1 py-2.5 px-4 text-center rounded-lg text-sm font-semibold transition-all ${serviceType === 'ARTICLE_POSTING'
+            ? 'bg-amber-50 text-amber-600 shadow-sm border border-amber-200 font-bold'
+            : 'bg-white text-slate-600 hover:text-slate-900'
+            }`}
         >
           Article Posting
         </Link>
         <Link
           href={`/advertiser/sites?${new URLSearchParams({ ...resolvedParams, type: 'LINK_INSERTION' }).toString()}`}
-          className={`flex-1 py-2.5 px-4 text-center rounded-lg text-sm font-semibold transition-all ${
-            serviceType === 'LINK_INSERTION'
-              ? 'bg-amber-50 text-amber-600 shadow-sm border border-amber-200 font-bold'
-              : 'bg-white text-slate-600 hover:text-slate-900'
-          }`}
+          className={`flex-1 py-2.5 px-4 text-center rounded-lg text-sm font-semibold transition-all ${serviceType === 'LINK_INSERTION'
+            ? 'bg-amber-50 text-amber-600 shadow-sm border border-amber-200 font-bold'
+            : 'bg-white text-slate-600 hover:text-slate-900'
+            }`}
         >
           Link Insertion
         </Link>
         <Link
           href={`/advertiser/sites?${new URLSearchParams({ ...resolvedParams, type: 'PRESS_RELEASE' }).toString()}`}
-          className={`flex-1 py-2.5 px-4 text-center rounded-lg text-sm font-semibold transition-all ${
-            serviceType === 'PRESS_RELEASE'
-              ? 'bg-amber-50 text-amber-600 shadow-sm border border-amber-200 font-bold'
-              : 'bg-white text-slate-600 hover:text-slate-900'
-          }`}
+          className={`flex-1 py-2.5 px-4 text-center rounded-lg text-sm font-semibold transition-all ${serviceType === 'PRESS_RELEASE'
+            ? 'bg-amber-50 text-amber-600 shadow-sm border border-amber-200 font-bold'
+            : 'bg-white text-slate-600 hover:text-slate-900'
+            }`}
         >
           Press Release
         </Link>
@@ -275,7 +269,7 @@ export default async function AdvertiserSitesPage({
 
           {/* Filter Grid - Row 1 */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            
+
             {/* Price Range */}
             <div>
               <label className="text-xs font-medium text-slate-600 block mb-1.5">
@@ -526,7 +520,7 @@ export default async function AdvertiserSitesPage({
           {platforms.map((platform: any) => {
             const domainName = cleanUrl(platform.url);
             const countryInfo = getCountryFlags(platform.country);
-            
+
             const articlePkg = platform.packages?.find((p: any) => p.type === 'ARTICLE_POSTING');
             const linkPkg = platform.packages?.find((p: any) => p.type === 'LINK_INSERTION');
             const pressPkg = platform.packages?.find((p: any) => p.type === 'PRESS_RELEASE');
@@ -534,14 +528,14 @@ export default async function AdvertiserSitesPage({
             const ahrefsTraffic = platform.traffic || 15591;
             const semrushTraffic = platform.semrushTraffic || Math.round(ahrefsTraffic * 20.14);
             const referralDomains = platform.referralDomains || Math.round((platform.da || 50) * 530);
-            
+
             const mozDA = platform.da || 74;
             const ahrefsDR = platform.dr || Math.min(99, mozDA + 7);
             const semrushAS = platform.semrushAS || Math.max(10, mozDA - 31);
 
             return (
               <div key={platform.id} className="bg-white border border-slate-200 rounded-xl shadow-sm p-6 space-y-6">
-                
+
                 {/* Header Row */}
                 <div className="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-slate-100">
                   <div className="flex flex-wrap items-center gap-3">
@@ -579,7 +573,7 @@ export default async function AdvertiserSitesPage({
 
                 {/* 6 Column Metric Card Grid Body with Vertical Dividers */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 divide-y lg:divide-y-0 lg:divide-x divide-slate-200/80 text-xs">
-                  
+
                   {/* Col 1 */}
                   <div className="space-y-1 pr-3 pb-3 lg:pb-0">
                     <span className="text-slate-600 font-medium block">I&apos;ve worked with the site</span>

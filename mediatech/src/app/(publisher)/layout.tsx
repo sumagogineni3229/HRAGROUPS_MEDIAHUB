@@ -16,7 +16,7 @@ const publisherNavItems = [
   { label: "Demand",           href: "/publisher/demand",    icon: <ChartBarIcon className="w-4 h-4" /> },
   { label: "Tasks",            href: "/publisher/tasks",     icon: <ClipboardDocumentListIcon className="w-4 h-4" /> },
   { label: "Wallet & Balance", href: "/publisher/balance",   icon: <WalletIcon className="w-4 h-4" /> },
-  { label: "Referral Program", href: "/publisher/referral",  icon: <ShareIcon className="w-4 h-4" /> },
+  // { label: "Referral Program", href: "/publisher/referral",  icon: <ShareIcon className="w-4 h-4" /> },
 ];
 
 export default async function PublisherLayout({ children }: { children: React.ReactNode }) {

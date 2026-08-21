@@ -126,10 +126,6 @@ export default async function AdvertiserPartnersPage({ searchParams }: { searchP
                   <div className="bg-app rounded-lg p-3 mt-2 text-xs font-inter">
                     <p className="font-semibold text-dark mb-1">@{channel.handle} ({channel.platform})</p>
                     <div className="flex gap-3 text-muted">
-                      <span>{(channel.followers / 1000).toFixed(0)}K followers</span>
-                      <span>·</span>
-                      <span>{channel.engagement}% eng.</span>
-                      <span>·</span>
                       <span>{channel.niche}</span>
                     </div>
                   </div>

@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { 
+import {
   UsersIcon,
   FunnelIcon,
   ArrowDownTrayIcon,
@@ -78,7 +78,7 @@ export default async function AdvertiserInfluencersPage({
         <form method="GET" action="/advertiser/influencers" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* Social Platform Selection tabs */}
           <div className="flex flex-wrap gap-2 pb-2 border-b border-muted">
-            <Link 
+            <Link
               href="/advertiser/influencers"
               className={`status-tab px-3 py-1.5 rounded-lg text-xs font-semibold font-inter transition-colors ${!platform ? 'bg-primary text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-muted hover:text-dark'}`}
             >
@@ -100,11 +100,11 @@ export default async function AdvertiserInfluencersPage({
 
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: '16px' }}>
             <div>
-              <input 
+              <input
                 name="query"
-                className="input" 
-                type="text" 
-                placeholder="Search creator handle..." 
+                className="input"
+                type="text"
+                placeholder="Search creator handle..."
                 defaultValue={query}
               />
             </div>
@@ -157,84 +157,67 @@ export default async function AdvertiserInfluencersPage({
           {channels.map((channel: any) => {
             const profileUrl = getSocialProfileUrl(channel.platform, channel.handle, channel.profileUrl);
             return (
-            <div key={channel.id} className="card bg-card border-base rounded-lg p-6 relative">
-              <div className="flex justify-between items-start mb-6">
-                <div>
-                  <div className="flex items-center gap-3 mb-1">
-                    <a 
-                      href={profileUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary font-space font-bold text-lg hover:underline inline-flex items-center gap-1.5 group"
-                      title={`Open ${channel.handle} on ${getSocialPlatformLabel(channel.platform)}`}
+              <div key={channel.id} className="card bg-card border-base rounded-lg p-6 relative">
+                <div className="flex justify-between items-start mb-6">
+                  <div>
+                    <div className="flex items-center gap-3 mb-1">
+                      <a
+                        href={profileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary font-space font-bold text-lg hover:underline inline-flex items-center gap-1.5 group"
+                        title={`Open ${channel.handle} on ${getSocialPlatformLabel(channel.platform)}`}
+                      >
+                        <span>{channel.handle}</span>
+                        <ArrowTopRightOnSquareIcon className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" />
+                      </a>
+                      <span className="badge badge-paused text-xs">
+                        {getSocialPlatformLabel(channel.platform)}
+                      </span>
+                    </div>
+                    <span className="text-xs text-muted font-inter">Niche: {channel.niche} | Location: {channel.country}</span>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <Link
+                      href={`/advertiser/tasks/new?channelId=${channel.id}`}
+                      className="btn btn-primary btn-sm flex items-center gap-2"
+                      style={{ padding: '6px 14px', borderRadius: '6px' }}
                     >
-                      <span>{channel.handle}</span>
-                      <ArrowTopRightOnSquareIcon className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" />
-                    </a>
-                    <span className="badge badge-paused text-xs">
-                      {getSocialPlatformLabel(channel.platform)}
-                    </span>
-                  </div>
-                  <span className="text-xs text-muted font-inter">Niche: {channel.niche} | Location: {channel.country}</span>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <Link 
-                    href={`/advertiser/tasks/new?channelId=${channel.id}`}
-                    className="btn btn-primary btn-sm flex items-center gap-2"
-                    style={{ padding: '6px 14px', borderRadius: '6px' }}
-                  >
-                    <ShoppingBagIcon className="w-4 h-4" /> Book shoutout
-                  </Link>
-                </div>
-              </div>
-
-              {/* Stats & Service Pricing Info */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-5 border-t border-slate-100 dark:border-slate-800 items-start">
-                {/* Col 1 */}
-                <div className="flex flex-col gap-4">
-                  <div>
-                    <span className="text-xs font-medium text-muted block mb-1">Followers</span>
-                    <span className="text-dark font-semibold text-base font-space">{channel.followers.toLocaleString()}</span>
+                      <ShoppingBagIcon className="w-4 h-4" /> Book shoutout
+                    </Link>
                   </div>
                 </div>
 
-                {/* Col 2 */}
-                <div className="flex flex-col gap-4">
-                  <div>
-                    <span className="text-xs font-medium text-muted block mb-1">Engagement Rate</span>
-                    <span className="text-dark font-semibold text-base font-space">{channel.engagement}%</span>
-                  </div>
-                </div>
-
-                {/* Col 3: Pricing Packages */}
-                <div className="flex flex-col gap-2">
-                  <span className="text-xs font-medium text-muted block mb-1">Available Placements</span>
+                {/* Service Pricing Info */}
+                <div className="pt-5 border-t border-slate-100 dark:border-slate-800">
                   <div className="flex flex-col gap-2">
-                    {channel.packages && channel.packages.length > 0 ? (
-                      channel.packages.map((pkg: any) => (
-                        <Link 
-                          key={pkg.id} 
-                          href={`/advertiser/tasks/new?channelId=${channel.id}&packageId=${pkg.id}`}
-                          className="flex justify-between items-center text-sm py-1.5 px-3 bg-white hover:bg-primary/5 rounded-md border border-slate-200 hover:border-primary/50 transition-colors group"
-                        >
-                          <span className="text-slate-600 group-hover:text-primary font-medium capitalize">
-                            {pkg.type.toLowerCase()} placement
-                          </span>
-                          <span className="font-semibold text-dark group-hover:text-primary font-space">
-                            ${pkg.price.toFixed(2)}
-                          </span>
-                        </Link>
-                      ))
-                    ) : (
-                      <span className="text-slate-400 text-sm italic">No packages listed</span>
-                    )}
+                    <span className="text-xs font-medium text-muted block mb-1">Available Placements</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                      {channel.packages && channel.packages.length > 0 ? (
+                        channel.packages.map((pkg: any) => (
+                          <Link
+                            key={pkg.id}
+                            href={`/advertiser/tasks/new?channelId=${channel.id}&packageId=${pkg.id}`}
+                            className="flex justify-between items-center text-sm py-2 px-3 bg-white hover:bg-primary/5 rounded-md border border-slate-200 hover:border-primary/50 transition-colors group"
+                          >
+                            <span className="text-slate-600 group-hover:text-primary font-medium capitalize">
+                              {pkg.type.toLowerCase()} placement
+                            </span>
+                            <span className="font-semibold text-dark group-hover:text-primary font-space">
+                              ${pkg.price.toFixed(2)}
+                            </span>
+                          </Link>
+                        ))
+                      ) : (
+                        <span className="text-slate-400 text-sm italic">No packages listed</span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
         </div>
       )}
     </div>

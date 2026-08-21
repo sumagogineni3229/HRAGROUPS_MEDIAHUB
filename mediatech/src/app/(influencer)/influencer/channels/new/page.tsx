@@ -168,17 +168,6 @@ export default async function NewChannelPage({
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
             <div>
-              <label className="text-sm font-medium text-dark block mb-2 font-inter">Followers Count</label>
-              <input name="followers" type="number" min="0" required placeholder="5000" defaultValue={existingChannel?.followers || ""} className="input" />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-dark block mb-2 font-inter">Engagement Rate (%)</label>
-              <input name="engagement" type="number" step="0.01" min="0" max="100" required placeholder="3.5" defaultValue={existingChannel?.engagement || ""} className="input" />
-            </div>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-            <div>
               <label className="text-sm font-medium text-dark block mb-2 font-inter">Niche / Category</label>
               <SearchableSelect
                 name="niche"

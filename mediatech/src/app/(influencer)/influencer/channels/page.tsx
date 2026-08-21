@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { 
+import {
   PlusIcon,
   DevicePhoneMobileIcon
 } from "@heroicons/react/24/outline";
@@ -87,14 +87,12 @@ export default async function InfluencerChannelsPage() {
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <span className={`flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full ${
-                      isApproved ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300" :
-                      isRejected ? "bg-rose-50 text-rose-700 dark:bg-rose-950 dark:text-rose-300" :
-                      "bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300"
-                    }`}>
-                      <span className={`w-2 h-2 rounded-full ${
-                        isApproved ? "bg-emerald-500" : isRejected ? "bg-rose-500" : "bg-amber-500"
-                      }`}></span>
+                    <span className={`flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full ${isApproved ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300" :
+                        isRejected ? "bg-rose-50 text-rose-700 dark:bg-rose-950 dark:text-rose-300" :
+                          "bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300"
+                      }`}>
+                      <span className={`w-2 h-2 rounded-full ${isApproved ? "bg-emerald-500" : isRejected ? "bg-rose-500" : "bg-amber-500"
+                        }`}></span>
                       {isApproved ? "Active" : isRejected ? "Rejected" : "Pending moderation"}
                     </span>
 
@@ -107,21 +105,9 @@ export default async function InfluencerChannelsPage() {
                   </div>
                 </div>
 
-                {/* Data Grid: Perfectly Aligned 3 Columns */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-5 border-t border-slate-100 dark:border-slate-800 items-start">
+                {/* Data Grid: Aligned Columns */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-5 border-t border-slate-100 dark:border-slate-800 items-start">
                   {/* Col 1 */}
-                  <div className="flex flex-col gap-4">
-                    <div>
-                      <span className="text-xs font-medium text-muted block mb-1">Followers</span>
-                      <span className="text-dark font-semibold text-base font-space">{channel.followers.toLocaleString()}</span>
-                    </div>
-                    <div>
-                      <span className="text-xs font-medium text-muted block mb-1">Engagement Rate</span>
-                      <span className="text-dark font-semibold text-base font-space">{channel.engagement}%</span>
-                    </div>
-                  </div>
-
-                  {/* Col 2 */}
                   <div className="flex flex-col gap-4">
                     <div>
                       <span className="text-xs font-medium text-muted block mb-1">Completion rate</span>
@@ -129,15 +115,14 @@ export default async function InfluencerChannelsPage() {
                     </div>
                     <div>
                       <span className="text-xs font-medium text-muted block mb-1">Status</span>
-                      <span className={`font-semibold text-sm ${
-                        isApproved ? "text-emerald-600" : isRejected ? "text-rose-600" : "text-amber-600"
-                      }`}>
+                      <span className={`font-semibold text-sm ${isApproved ? "text-emerald-600" : isRejected ? "text-rose-600" : "text-amber-600"
+                        }`}>
                         {isApproved ? "Approved" : isRejected ? "Rejected" : "Pending moderation"}
                       </span>
                     </div>
                   </div>
 
-                  {/* Col 3: Packages */}
+                  {/* Col 2: Packages */}
                   <div className="flex flex-col gap-2">
                     <span className="text-xs font-medium text-muted block mb-1">Social Packages</span>
                     <div className="flex flex-col gap-2">

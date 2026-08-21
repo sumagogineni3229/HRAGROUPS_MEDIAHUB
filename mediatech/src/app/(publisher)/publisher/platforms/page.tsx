@@ -2,8 +2,8 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { 
-  FunnelIcon, 
+import {
+  FunnelIcon,
   ArrowDownTrayIcon,
   PlusIcon,
   CheckCircleIcon,
@@ -125,7 +125,7 @@ export default async function PublisherPlatformsPage({
         {/* Filter Inputs Grid Form */}
         <form method="GET" action="/publisher/platforms" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <input type="hidden" name="status" value={currentStatusTab} />
-          
+
           <div className="filter-grid mb-6" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: '16px', alignItems: 'center' }}>
             <div>
               <input name="query" className="input" type="text" placeholder="Site's URL" defaultValue={urlQuery} />
@@ -271,21 +271,21 @@ export default async function PublisherPlatformsPage({
                     <div className="flex justify-between items-center text-sm">
                       <span className="font-medium" style={{ color: '#475569' }}>Content placement</span>
                       <span className="font-bold font-space flex items-center gap-1.5" style={{ color: '#0f172a' }}>
-                        ${platform.packages.find((p: any) => p.type === "ARTICLE_POSTING")?.price?.toFixed(2) || "10.00"} 
+                        ${platform.packages.find((p: any) => p.type === "ARTICLE_POSTING")?.price?.toFixed(2) || "10.00"}
                         <PencilIcon className="w-3.5 h-3.5 text-gray-400 hover:text-primary cursor-pointer transition-colors" />
                       </span>
                     </div>
                     <div className="flex justify-between items-center text-sm">
                       <span className="font-medium" style={{ color: '#475569' }}>Writing & placement</span>
                       <span className="font-bold font-space flex items-center gap-1.5" style={{ color: '#0f172a' }}>
-                        ${((platform.packages.find((p: any) => p.type === "ARTICLE_POSTING")?.price || 10.00) + 15).toFixed(2)} 
+                        ${((platform.packages.find((p: any) => p.type === "ARTICLE_POSTING")?.price || 10.00) + 15).toFixed(2)}
                         <PencilIcon className="w-3.5 h-3.5 text-gray-400 hover:text-primary cursor-pointer transition-colors" />
                       </span>
                     </div>
                     <div className="flex justify-between items-center text-sm">
                       <span className="font-medium" style={{ color: '#475569' }}>Special topic</span>
                       <span className="font-bold font-space flex items-center gap-1.5" style={{ color: '#0f172a' }}>
-                        N/A 
+                        N/A
                         <PencilIcon className="w-3.5 h-3.5 text-gray-400 hover:text-primary cursor-pointer transition-colors" />
                       </span>
                     </div>
