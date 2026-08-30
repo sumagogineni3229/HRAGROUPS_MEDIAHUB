@@ -14,6 +14,7 @@ import {
 import { SOCIAL_PLATFORMS, getSocialPlatformLabel, getSocialProfileUrl } from "@/lib/social-platforms";
 import { INFLUENCER_CATEGORIES } from "@/lib/categories";
 import { CountrySelect } from "@/components/ui/country-select";
+import { formatDate } from "@/lib/utils";
 import {
   approvePlatformAction,
   rejectPlatformAction,
@@ -178,7 +179,7 @@ export function AdminListingsClient({
                       </a>
                     </div>
                     <p className="text-xs text-muted font-inter mt-0.5">
-                      by {p.publisher?.name ?? p.publisher?.email} · submitted {new Date(p.createdAt).toLocaleDateString()}
+                      by {p.publisher?.name ?? p.publisher?.email} · submitted {formatDate(p.createdAt)}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
@@ -214,23 +215,29 @@ export function AdminListingsClient({
                 </div>
 
                 {/* Packages */}
-                {p.packages && p.packages.length > 0 && (
-                  <div className="mb-4">
-                    <p className="text-xs font-semibold text-muted font-inter mb-2 uppercase tracking-wide">
-                      Packages & Rates
-                    </p>
+                <div className="mb-4">
+                  <p className="text-xs font-semibold text-muted font-inter mb-2 uppercase tracking-wide">
+                    Packages & Rates
+                  </p>
+                  {p.packages && p.packages.length > 0 && p.packages.some((pkg: any) => pkg.price > 0) ? (
                     <div className="flex flex-wrap gap-2">
-                      {p.packages.map((pkg: any) => (
-                        <span
-                          key={pkg.id}
-                          className="text-xs font-inter px-3 py-1.5 bg-[#EEF0FD] text-primary rounded-lg font-semibold border border-primary/10"
-                        >
-                          {pkg.type.replace(/_/g, " ")} — ${pkg.price}
-                        </span>
-                      ))}
+                      {p.packages
+                        .filter((pkg: any) => pkg.price > 0)
+                        .map((pkg: any) => (
+                          <span
+                            key={pkg.id}
+                            className="text-xs font-inter px-3 py-1.5 bg-[#EEF0FD] text-primary rounded-lg font-semibold border border-primary/10"
+                          >
+                            {pkg.type.replace(/_/g, " ")} — ${pkg.price}
+                          </span>
+                        ))}
                     </div>
-                  </div>
-                )}
+                  ) : (
+                    <span className="inline-flex items-center gap-1.5 text-xs font-inter px-3 py-1.5 bg-amber-50 text-amber-800 rounded-lg font-semibold border border-amber-200">
+                      Request Pricing Only (No public price)
+                    </span>
+                  )}
+                </div>
 
                 {/* Actions: Edit & Approve, Quick Approve, Reject */}
                 <div className="flex flex-col sm:flex-row gap-3 pt-3 border-t border-border mt-2 items-stretch sm:items-center justify-between">
@@ -310,7 +317,7 @@ export function AdminListingsClient({
                         </a>
                       </div>
                       <p className="text-xs text-muted font-inter mt-0.5">
-                        by {c.influencer?.name ?? c.influencer?.email} · submitted {new Date(c.createdAt).toLocaleDateString()}
+                        by {c.influencer?.name ?? c.influencer?.email} · submitted {formatDate(c.createdAt)}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import { ToastProvider } from "@/components/ui/toast";
 import { NextAuthProvider } from "@/components/auth-provider";
+import { HubSpotTracker } from "@/components/analytics/hubspot-tracker";
 import "./globals.css";
 
 // next/font: self-hosted, zero layout shift, no external requests
@@ -43,6 +44,7 @@ export default function RootLayout({
         <NextAuthProvider>
           <ToastProvider>
             {children}
+            <HubSpotTracker />
           </ToastProvider>
         </NextAuthProvider>
       </body>

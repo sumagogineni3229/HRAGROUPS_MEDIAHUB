@@ -36,6 +36,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user, trigger, session: sessionUpdate }) {
       if (user) {
         token.id = user.id;
+        token.email = user.email;
         if ((user as any).role === "ADMIN" || (user as any).role === "EDITOR") {
           token.role = (user as any).role;
           token.activeRole = (user as any).role;
@@ -45,12 +46,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (trigger === "update" && sessionUpdate?.activeRole && token.role !== "ADMIN" && token.role !== "EDITOR") {
         token.activeRole = sessionUpdate.activeRole;
       }
-      if (token.id) {
-        const dbUser = await db.user.findUnique({
-          where: { id: token.id as string },
-          select: { role: true, isSuspended: true, enabledRoles: true },
+      if (token.id || token.email) {
+        const dbUser = await db.user.findFirst({
+          where: {
+            OR: [
+              ...(token.id ? [{ id: token.id as string }] : []),
+              ...(token.email ? [{ email: token.email as string }] : []),
+            ],
+          },
+          select: { id: true, email: true, role: true, isSuspended: true, enabledRoles: true },
         });
         if (dbUser) {
+          token.id = dbUser.id;
+          token.email = dbUser.email;
           if (dbUser.isSuspended) {
             token.role = undefined;
             token.isSuspended = true;

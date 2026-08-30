@@ -9,11 +9,13 @@ import {
   CheckBadgeIcon,
   CurrencyDollarIcon,
   ArrowDownTrayIcon,
+  ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/outline";
 import { db } from "@/lib/db";
 
 const adminNavItems = [
   { label: "Dashboard",         href: "/admin/dashboard",     icon: <Squares2X2Icon className="w-4 h-4" /> },
+  { label: "Price Management",  href: "/admin/enquiries",     icon: <ChatBubbleLeftRightIcon className="w-4 h-4" /> },
   { label: "Blog Posts",        href: "/admin/blogs",         icon: <ClipboardDocumentListIcon className="w-4 h-4" /> },
   { label: "Users",             href: "/admin/users",         icon: <UsersIcon className="w-4 h-4" /> },
   { label: "Listings",          href: "/admin/listings",      icon: <CheckBadgeIcon className="w-4 h-4" /> },

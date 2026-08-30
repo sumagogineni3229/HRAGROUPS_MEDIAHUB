@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ALL_COUNTRIES, getCountryFlagAndName } from "@/lib/countries";
 import { CountrySelect } from "@/components/ui/country-select";
+import { PlatformCatalogList } from "@/components/advertiser/platform-catalog-list";
+import { WEBSITE_CATEGORIES } from "@/lib/categories";
 import {
   MagnifyingGlassIcon,
   FunnelIcon,
@@ -414,13 +416,11 @@ export default async function AdvertiserSitesPage({
                 className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500"
               >
                 <option value="">Nothing selected</option>
-                <option value="Technology">Technology</option>
-                <option value="Business">Business</option>
-                <option value="Finance">Finance</option>
-                <option value="Health">Health</option>
-                <option value="Internet">Internet</option>
-                <option value="Lifestyle">Lifestyle</option>
-                <option value="Travel">Travel</option>
+                {WEBSITE_CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -513,183 +513,10 @@ export default async function AdvertiserSitesPage({
         <div className="card bg-card border-base rounded-lg p-12 text-center">
           <GlobeAltIcon className="w-12 h-12 text-muted mx-auto mb-4" />
           <p className="font-space font-semibold text-dark text-lg mb-1">No sites found matching your criteria</p>
-          <p className="text-muted text-sm max-w-sm mx-auto">Try clearing search terms or browse all platforms.</p>
+          <p className="text-muted text-sm max-w-sm mx-auto">Try clearing search terms or submit a custom requirement.</p>
         </div>
       ) : (
-        <div className="platforms-grid flex flex-col gap-6">
-          {platforms.map((platform: any) => {
-            const domainName = cleanUrl(platform.url);
-            const countryInfo = getCountryFlags(platform.country);
-
-            const articlePkg = platform.packages?.find((p: any) => p.type === 'ARTICLE_POSTING');
-            const linkPkg = platform.packages?.find((p: any) => p.type === 'LINK_INSERTION');
-            const pressPkg = platform.packages?.find((p: any) => p.type === 'PRESS_RELEASE');
-
-            const ahrefsTraffic = platform.traffic || 15591;
-            const semrushTraffic = platform.semrushTraffic || Math.round(ahrefsTraffic * 20.14);
-            const referralDomains = platform.referralDomains || Math.round((platform.da || 50) * 530);
-
-            const mozDA = platform.da || 74;
-            const ahrefsDR = platform.dr || Math.min(99, mozDA + 7);
-            const semrushAS = platform.semrushAS || Math.max(10, mozDA - 31);
-
-            return (
-              <div key={platform.id} className="bg-white border border-slate-200 rounded-xl shadow-sm p-6 space-y-6">
-
-                {/* Header Row */}
-                <div className="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-slate-100">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <a
-                      href={platform.url.startsWith("http") ? platform.url : `https://${platform.url}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-amber-600 font-bold text-lg hover:underline flex items-center gap-1.5 font-space"
-                    >
-                      {domainName}
-                      <ArrowTopRightOnSquareIcon className="w-4 h-4 text-amber-500" />
-                    </a>
-
-                    {/* Contributor / Verified Badge */}
-                    <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 text-xs px-2.5 py-1 rounded-full font-semibold border border-emerald-200">
-                      <CheckCircleIcon className="w-3.5 h-3.5 text-emerald-600" /> Contributor
-                    </span>
-
-                    {/* Single Niche Badge */}
-                    <span className="bg-slate-900 text-white text-xs px-3 py-1 rounded-full font-medium">
-                      {platform.niche || "General"}
-                    </span>
-                  </div>
-
-                  {/* Single Buy Post Action Button */}
-                  <div>
-                    <Link
-                      href={`/advertiser/tasks/new?platformId=${platform.id}`}
-                      className="bg-amber-500 hover:bg-amber-600 text-white font-semibold text-sm px-5 py-2 rounded-lg inline-flex items-center gap-2 shadow-sm transition-colors"
-                    >
-                      <ShoppingBagIcon className="w-4 h-4" /> Buy Post
-                    </Link>
-                  </div>
-                </div>
-
-                {/* 6 Column Metric Card Grid Body with Vertical Dividers */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 divide-y lg:divide-y-0 lg:divide-x divide-slate-200/80 text-xs">
-
-                  {/* Col 1 */}
-                  <div className="space-y-1 pr-3 pb-3 lg:pb-0">
-                    <span className="text-slate-600 font-medium block">I&apos;ve worked with the site</span>
-                    <span className="text-slate-900 font-bold text-sm block mt-1">N/A</span>
-                  </div>
-
-                  {/* Col 2 */}
-                  <div className="space-y-3 px-0 lg:px-4 py-3 lg:py-0">
-                    <div>
-                      <span className="text-slate-600 font-medium block">Ahrefs Organic Traffic</span>
-                      <div className="flex items-center gap-1.5 font-bold text-slate-900 text-sm mt-0.5">
-                        <span className="w-4 h-4 rounded bg-amber-500 text-white flex items-center justify-center font-bold text-[10px]">a</span>
-                        {ahrefsTraffic.toLocaleString()}
-                      </div>
-                    </div>
-                    <div>
-                      <span className="text-slate-600 font-medium block">SemRush Total Traffic</span>
-                      <div className="flex items-center gap-1.5 font-bold text-slate-900 text-sm mt-0.5">
-                        <span className="w-4 h-4 rounded bg-orange-500 text-white flex items-center justify-center font-bold text-[10px]">S</span>
-                        {semrushTraffic.toLocaleString()}
-                      </div>
-                    </div>
-                    <div>
-                      <span className="text-slate-600 font-medium block">Referral Domains</span>
-                      <span className="font-bold text-slate-900 text-sm block mt-0.5">
-                        {referralDomains.toLocaleString()}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Col 3 */}
-                  <div className="space-y-3 px-0 lg:px-4 py-3 lg:py-0">
-                    <div>
-                      <span className="text-slate-600 font-medium block">Ahrefs DR Range</span>
-                      <span className="font-bold text-slate-900 text-sm block mt-0.5">
-                        {ahrefsDR}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-slate-600 font-medium block">Moz DA</span>
-                      <span className="font-bold text-slate-900 text-sm block mt-0.5">
-                        {mozDA}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-slate-600 font-medium block">Semrush AS (Authority Score)</span>
-                      <span className="font-bold text-slate-900 text-sm block mt-0.5">
-                        {semrushAS}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Col 4 */}
-                  <div className="space-y-3 px-0 lg:px-4 py-3 lg:py-0">
-                    <div>
-                      <span className="text-slate-600 font-medium block">Language</span>
-                      <span className="font-bold text-slate-900 text-sm block mt-0.5">
-                        {platform.language || "English"}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-slate-600 font-medium block">Country</span>
-                      <div className="flex items-center gap-1.5 text-sm mt-0.5 font-bold text-slate-900">
-                        <span className="text-base">{countryInfo.flag}</span>
-                        <span>{countryInfo.flag === "🌐" ? countryInfo.name : countryInfo.name}</span>
-                      </div>
-                    </div>
-                    <div>
-                      <span className="text-slate-600 font-medium block">Semrush Top Country</span>
-                      <div className="flex items-center gap-1 text-sm mt-0.5">
-                        <span className="text-base">🇺🇸</span>
-                      </div>
-                    </div>
-                    <div>
-                      <span className="text-slate-600 font-medium block">Top Country Traffic</span>
-                      <span className="font-bold text-slate-900 text-sm block mt-0.5">N/A</span>
-                    </div>
-                  </div>
-
-                  {/* Col 5 */}
-                  <div className="space-y-3 px-0 lg:px-4 py-3 lg:py-0">
-                    <div>
-                      <span className="text-slate-600 font-medium block mb-1">Link attribution type</span>
-                      <span className="inline-block bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded text-xs border border-emerald-200">
-                        {platform.linkType || "Dofollow"}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Col 6 */}
-                  <div className="space-y-3 pl-0 lg:pl-4 pt-3 lg:pt-0">
-                    <div>
-                      <span className="text-slate-600 font-medium block">Content placement</span>
-                      <span className="font-bold text-slate-900 text-base block mt-0.5 font-space">
-                        ${articlePkg?.price ? articlePkg.price.toFixed(2) : "28.45"}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-slate-600 font-medium block">Writing &amp; Placement</span>
-                      <span className="font-bold text-slate-900 text-base block mt-0.5 font-space">
-                        ${linkPkg?.price ? linkPkg.price.toFixed(2) : (articlePkg?.price ? (articlePkg.price * 1.22).toFixed(2) : "34.50")}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-slate-600 font-medium block">Special topic</span>
-                      <span className="font-bold text-slate-900 text-base block mt-0.5 font-space">
-                        +${pressPkg?.price ? pressPkg.price.toFixed(2) : "15.00"}
-                      </span>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        <PlatformCatalogList platforms={platforms} />
       )}
     </div>
   );

@@ -23,28 +23,35 @@ export async function POST(request: Request) {
   }
 
   const userId = session.user.id;
+  const userEmail = session.user.email?.toLowerCase().trim();
 
-  // Fetch current user to merge enabledRoles
-  const user = await db.user.findUnique({
-    where: { id: userId },
-    select: { role: true, enabledRoles: true },
+  // Fetch current user by id or email (case-insensitive)
+  const user = await db.user.findFirst({
+    where: {
+      OR: [
+        ...(userId ? [{ id: userId }] : []),
+        ...(userEmail ? [{ email: { equals: userEmail, mode: "insensitive" as const } }] : []),
+      ],
+    },
+    select: { id: true, email: true, role: true, enabledRoles: true },
   });
 
   if (!user) {
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
+    console.error("[SWITCH_ROLE] User not found for session:", { userId, userEmail });
+    return NextResponse.json({ error: "User not found", sessionUserId: userId, sessionUserEmail: userEmail }, { status: 404 });
   }
 
-  if (user.role === "ADMIN") {
-    return NextResponse.json({ error: "Admin accounts cannot switch roles." }, { status: 403 });
+  if (user.role === "ADMIN" || (user.role as string) === "EDITOR") {
+    return NextResponse.json({ error: "Administrative accounts cannot switch roles." }, { status: 403 });
   }
 
   // Build the new enabledRoles array (union of existing + new role)
-  const existingRoles: string[] = user.enabledRoles.length > 0 ? user.enabledRoles : [user.role];
+  const existingRoles: string[] = user.enabledRoles && user.enabledRoles.length > 0 ? user.enabledRoles : [user.role];
   const updatedRoles = Array.from(new Set([...existingRoles, newRole]));
 
   // Update user's role and enabledRoles in the DB
   await db.user.update({
-    where: { id: userId },
+    where: { id: user.id },
     data: {
       role: newRole as any,
       enabledRoles: updatedRoles,

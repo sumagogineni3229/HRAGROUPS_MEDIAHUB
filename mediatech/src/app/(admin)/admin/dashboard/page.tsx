@@ -29,6 +29,8 @@ export default async function AdminDashboardPage() {
     pendingChannels,
     pendingWithdrawals,
     totalRevenue,
+    totalEnquiries,
+    newEnquiries,
     recentTasks,
     recentUsers,
   ] = await Promise.all([
@@ -43,6 +45,8 @@ export default async function AdminDashboardPage() {
     db.channel.count({ where: { status: "PENDING" } }),
     db.withdrawal.count({ where: { status: "PENDING" } }),
     db.transaction.aggregate({ where: { type: "TOPUP" }, _sum: { amount: true } }),
+    db.enquiry.count(),
+    db.enquiry.count({ where: { status: "NEW" } }),
     db.task.findMany({ orderBy: { createdAt: "desc" }, take: 5, include: { advertiser: { select: { name: true } }, seller: { select: { name: true } } } }),
     db.user.findMany({ orderBy: { createdAt: "desc" }, take: 5, select: { id: true, name: true, email: true, role: true, createdAt: true } }),
   ]);
@@ -50,6 +54,7 @@ export default async function AdminDashboardPage() {
   const pendingApprovals = pendingPlatforms + pendingChannels;
 
   const statCards = [
+    { label: "Enquiries & Requirements", value: totalEnquiries, sub: `${newEnquiries} new unreviewed`, icon: ClipboardDocumentListIcon, color: newEnquiries > 0 ? "#f59e0b" : "#3E4FEA", bg: newEnquiries > 0 ? "#FFF8E8" : "#EEF0FD", href: "/admin/enquiries" },
     { label: "Total Users", value: totalUsers, sub: `${totalAdvertisers} adv · ${totalPublishers} pub · ${totalInfluencers} inf`, icon: UsersIcon, color: "#3E4FEA", bg: "#EEF0FD", href: "/admin/users" },
     { label: "Total Revenue", value: `$${(totalRevenue._sum.amount ?? 0).toFixed(0)}`, sub: "All-time top-ups", icon: CurrencyDollarIcon, color: "#22c55e", bg: "#e8fbee", href: "/admin/transactions" },
     { label: "Active Tasks", value: activeTasks, sub: `${completedTasks} completed · ${totalTasks} total`, icon: ClipboardDocumentListIcon, color: "#f59e0b", bg: "#FFF8E8", href: "/admin/tasks" },

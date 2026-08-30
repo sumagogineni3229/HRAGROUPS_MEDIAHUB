@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { switchRoleAction } from "@/app/actions/switch-role";
 
 const ROLES = [
   {
@@ -50,25 +51,30 @@ export function RoleSwitcher({ activeRole, enabledRoles = [] }: Props) {
 
     setSwitching(roleKey);
     try {
-      // 1. Update DB role + enabledRoles
-      const res = await fetch("/api/auth/switch-role", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ role: roleKey }),
-      });
+      // 1. Call Server Action directly
+      const result = await switchRoleAction(roleKey);
 
-      if (!res.ok) {
-        console.error("Failed to switch role");
-        return;
+      if (!result.success) {
+        // Fallback to fetch endpoint if needed
+        const res = await fetch("/api/auth/switch-role", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ role: roleKey }),
+        });
+        if (!res.ok) {
+          console.error("Failed to switch role:", result.error);
+          return;
+        }
       }
 
       // 2. Refresh JWT so activeRole propagates through session
-      await update?.({ activeRole: roleKey });
+      try {
+        await update?.({ activeRole: roleKey });
+      } catch (_) {}
 
       // 3. Navigate to the new role's home
       const target = ROLES.find((r) => r.key === roleKey)?.home ?? "/";
-      router.push(target);
-      router.refresh();
+      window.location.href = target;
     } catch (err) {
       console.error("Role switch error:", err);
     } finally {

@@ -7,9 +7,8 @@ import {
   PencilSquareIcon, 
   TrashIcon, 
   ArrowTopRightOnSquareIcon,
-  CheckCircleIcon,
-  XCircleIcon
 } from "@heroicons/react/24/outline";
+import { deletePlatform } from "@/app/(publisher)/publisher/platforms/actions";
 
 interface PlatformActionsDropdownProps {
   platformId: string;
@@ -18,6 +17,7 @@ interface PlatformActionsDropdownProps {
 
 export function PlatformActionsDropdown({ platformId, url }: PlatformActionsDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -30,12 +30,26 @@ export function PlatformActionsDropdown({ platformId, url }: PlatformActionsDrop
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const handleDelete = async () => {
+    if (!confirm(`Are you sure you want to delete the website platform "${url}"?`)) {
+      return;
+    }
+    setIsDeleting(true);
+    setIsOpen(false);
+    const res = await deletePlatform(platformId);
+    setIsDeleting(false);
+    if (!res.success) {
+      alert(res.error || "Could not delete website platform");
+    }
+  };
+
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
       <button 
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="btn btn-outline btn-sm text-dark px-2.5 py-1.5 flex items-center justify-center hover:bg-slate-100 transition-colors"
+        disabled={isDeleting}
+        className="btn btn-outline btn-sm text-dark px-2.5 py-1.5 flex items-center justify-center hover:bg-slate-100 transition-colors disabled:opacity-50"
         title="More actions"
       >
         <EllipsisHorizontalIcon className="w-5 h-5 text-slate-700" />
@@ -52,7 +66,7 @@ export function PlatformActionsDropdown({ platformId, url }: PlatformActionsDrop
             Edit Platform
           </Link>
           <a
-            href={url}
+            href={url.startsWith("http") ? url : `https://${url}`}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setIsOpen(false)}
@@ -64,14 +78,12 @@ export function PlatformActionsDropdown({ platformId, url }: PlatformActionsDrop
           <div className="border-t border-slate-100 my-1"></div>
           <button
             type="button"
-            onClick={() => {
-              setIsOpen(false);
-              alert("Platform management options updating...");
-            }}
-            className="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+            disabled={isDeleting}
+            onClick={handleDelete}
+            className="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors disabled:opacity-50"
           >
             <TrashIcon className="w-4 h-4 text-red-500" />
-            Delete / Archive
+            {isDeleting ? "Deleting..." : "Delete Website"}
           </button>
         </div>
       )}

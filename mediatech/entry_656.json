@@ -1,0 +1,8 @@
+{
+  "step_index": 656,
+  "source": "USER_EXPLICIT",
+  "type": "USER_INPUT",
+  "status": "DONE",
+  "created_at": "2026-08-30T08:13:21Z",
+  "content": "<USER_REQUEST>\ncan you add all the websites in through company publisher because i add one by one it will take lots of time just make sure all data should acurate like website,category,country,language,link attribution type,DA,DR,,organic trafic,TAT, and price\n</USER_REQUEST>\n<ADDITIONAL_METADATA>\nThe current local time is: 2026-08-30T13:43:21+05:30.\n\nThe user's current state is as follows:\nActive Document: /Users/papannamasudra/Desktop/HRAGROUPS_MEDIAHUB/mediatech/.env (LANGUAGE_UNSPECIFIED)\nCursor is on line: 28\nOther open documents:\n- /Users/papannamasudra/Desktop/HRAGROUPS_MEDIAHUB/mediatech/.env (LANGUAGE_UNSPECIFIED)\nRunning terminal commands:\n- npm run dev (in /Users/papannamasudra/Desktop/HRAGROUPS_MEDIAHUB/mediatech, running for 17m59s)\n</ADDITIONAL_METADATA>"
+}

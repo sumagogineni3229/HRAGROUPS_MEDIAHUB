@@ -55,9 +55,27 @@ export default async function PublisherLayout({ children }: { children: React.Re
     take: 5,
   });
 
+  const isCompanyPublisher = session.user.email === "mediahub@publisher.com";
+
+  const dynamicPublisherNavItems = [
+    { label: "My Platforms",     href: "/publisher/platforms", icon: <Squares2X2Icon className="w-4 h-4" /> },
+    ...(isCompanyPublisher
+      ? [
+          {
+            label: "Price Management",
+            href: "/publisher/price-management",
+            icon: <ClipboardDocumentListIcon className="w-4 h-4" />,
+          },
+        ]
+      : []),
+    { label: "Demand",           href: "/publisher/demand",    icon: <ChartBarIcon className="w-4 h-4" /> },
+    { label: "Tasks",            href: "/publisher/tasks",     icon: <ClipboardDocumentListIcon className="w-4 h-4" /> },
+    { label: "Wallet & Balance", href: "/publisher/balance",   icon: <WalletIcon className="w-4 h-4" /> },
+  ];
+
   return (
     <div className="dashboard-shell">
-      <Sidebar navItems={publisherNavItems} role="PUBLISHER" />
+      <Sidebar navItems={dynamicPublisherNavItems} role="PUBLISHER" />
       <div className="main-content">
         <TopHeader
           breadcrumbs={[{ label: "Home", href: "/publisher/platforms" }]}

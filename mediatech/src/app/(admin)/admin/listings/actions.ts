@@ -16,10 +16,10 @@ export async function approvePlatformAction(formData: FormData) {
   const url = formData.get("url") as string;
   const niche = formData.get("niche") as string;
   const country = formData.get("country") as string;
-  const language = (formData.get("language") as string) || "English";
-  const da = parseInt((formData.get("da") as string) || "0", 10);
-  const dr = parseInt((formData.get("dr") as string) || "0", 10);
-  const traffic = parseInt((formData.get("traffic") as string) || "0", 10);
+  const language = formData.get("language") as string;
+  const daStr = formData.get("da") as string;
+  const drStr = formData.get("dr") as string;
+  const trafficStr = formData.get("traffic") as string;
 
   // Update platform details and approve
   const updateData: any = {
@@ -29,9 +29,18 @@ export async function approvePlatformAction(formData: FormData) {
   if (niche) updateData.niche = niche;
   if (country) updateData.country = country;
   if (language) updateData.language = language;
-  if (!isNaN(da)) updateData.da = da;
-  if (!isNaN(dr)) updateData.dr = dr;
-  if (!isNaN(traffic)) updateData.traffic = traffic;
+  if (daStr !== null && daStr !== undefined && daStr !== "") {
+    const da = parseInt(daStr, 10);
+    if (!isNaN(da)) updateData.da = da;
+  }
+  if (drStr !== null && drStr !== undefined && drStr !== "") {
+    const dr = parseInt(drStr, 10);
+    if (!isNaN(dr)) updateData.dr = dr;
+  }
+  if (trafficStr !== null && trafficStr !== undefined && trafficStr !== "") {
+    const traffic = parseInt(trafficStr, 10);
+    if (!isNaN(traffic)) updateData.traffic = traffic;
+  }
 
   const platform = await db.platform.update({
     where: { id: platformId },
@@ -39,18 +48,30 @@ export async function approvePlatformAction(formData: FormData) {
     include: { packages: true },
   });
 
-  // Update packages if provided
-  const packageTypes = ["ARTICLE_POSTING", "LINK_INSERTION", "PRESS_RELEASE"];
+  // Update packages if provided (creates or updates so admin can set prices even if publisher hid pricing)
+  const packageTypes = ["ARTICLE_POSTING", "LINK_INSERTION", "PRESS_RELEASE"] as const;
   for (const pType of packageTypes) {
     const priceStr = formData.get(`package_${pType}_price`) as string;
     if (priceStr !== null && priceStr !== undefined && priceStr !== "") {
       const price = parseFloat(priceStr);
-      const existingPkg = platform.packages.find((p) => p.type === pType);
-      if (existingPkg) {
-        await db.package.update({
-          where: { id: existingPkg.id },
-          data: { price },
-        });
+      if (!isNaN(price) && price > 0) {
+        const existingPkg = platform.packages.find((p) => p.type === pType);
+        if (existingPkg) {
+          await db.package.update({
+            where: { id: existingPkg.id },
+            data: { price, isActive: true },
+          });
+        } else {
+          await db.package.create({
+            data: {
+              platformId: platform.id,
+              type: pType,
+              price,
+              turnaround: pType === "PRESS_RELEASE" ? 5 : 3,
+              isActive: true,
+            },
+          });
+        }
       }
     }
   }

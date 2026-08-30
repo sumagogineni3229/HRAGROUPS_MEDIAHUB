@@ -145,6 +145,7 @@ model User {
   savedPartners    SavedPartner[]
   referrals        Referral[]       @relation("ReferrerUser")
   referredBy       Referral?        @relation("ReferredUser")
+  enquiries        Enquiry[]        @relation("UserEnquiries")
 }
 
 // ─────────────────────────────────────────────
@@ -225,6 +226,7 @@ model Platform {
 
   packages    Package[]
   tasks       Task[]         @relation("PlatformTasks")
+  enquiries   Enquiry[]
 
   @@index([publisherId])
   @@index([status])
@@ -480,3 +482,49 @@ model Referral {
   isPaid      Boolean  @default(false)
   createdAt   DateTime @default(now())
 }
+
+// ─────────────────────────────────────────────
+// ENQUIRIES & REQUIREMENT SUBMISSIONS
+// ─────────────────────────────────────────────
+
+enum EnquiryType {
+  GENERAL_REQUIREMENT
+  PRICING_REQUEST
+}
+
+enum EnquiryStatus {
+  NEW
+  IN_PROGRESS
+  CONTACTED
+  RESOLVED
+  ARCHIVED
+}
+
+model Enquiry {
+  id              String        @id @default(cuid())
+  name            String
+  companyName     String?
+  email           String
+  phone           String?
+  specificWebsite String?
+  query           String        @db.Text
+  type            EnquiryType   @default(GENERAL_REQUIREMENT)
+  status          EnquiryStatus @default(NEW)
+  adminNotes      String?       @db.Text
+  platformId      String?
+  platform        Platform?     @relation(fields: [platformId], references: [id], onDelete: SetNull)
+  userId          String?
+  user            User?         @relation("UserEnquiries", fields: [userId], references: [id], onDelete: SetNull)
+  
+  // HubSpot Integration Tracking
+  hubspotContactId String?
+  hubspotUtk       String?
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+}
+

@@ -25,8 +25,10 @@ export const authConfig: NextAuthConfig = {
     },
     session({ session, token }) {
       if (token) {
-        session.user.id = token.id as string;
-        const mainRole = token.role as string;
+        if (token.id) session.user.id = token.id as string;
+        if (token.email) session.user.email = token.email as string;
+        if (token.name) session.user.name = token.name as string;
+        const mainRole = (token.role as string) || "ADVERTISER";
         (session.user as any).role = mainRole;
         (session.user as any).activeRole = mainRole === "ADMIN" ? "ADMIN" : ((token.activeRole ?? mainRole) as string);
         (session.user as any).enabledRoles = (token.enabledRoles ?? [mainRole]) as string[];

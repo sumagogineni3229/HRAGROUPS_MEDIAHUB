@@ -60,3 +60,26 @@ export const INFLUENCER_CATEGORIES = [
   "AI & Emerging Technology",
   "Science & Innovation",
 ] as const;
+
+export const WEBSITE_CATEGORIES = [
+  "Technology",
+  "Software",
+  "SaaS",
+  "Trending",
+  "Premium",
+  "Premium PR",
+  "Business",
+  "Finance",
+  "Finance Business",
+  "Top Link",
+  "Top Link Build",
+  "Health",
+  "News & Magazine",
+  "Travel",
+  "Lifestyle",
+  "Internet",
+  "Education",
+  "Entertainment",
+  "Real Estate",
+  "Digital Marketing",
+] as const;
