@@ -63,6 +63,15 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // Sync to HubSpot Leads & CRM
+    const { submitToHubSpot } = await import("@/lib/hubspot");
+    submitToHubSpot({
+      email,
+      phone,
+      query: `Reason for Demo Call: ${reason}`,
+      type: "Demo Call Booking",
+    }).catch((hubErr) => console.warn("HubSpot demo call sync error:", hubErr));
+
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("[book-demo-call route error]", err);

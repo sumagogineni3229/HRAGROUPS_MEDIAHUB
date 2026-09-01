@@ -70,6 +70,17 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // Sync to HubSpot Leads & CRM
+    const { submitToHubSpot } = await import("@/lib/hubspot");
+    submitToHubSpot({
+      email,
+      name,
+      phone: fullPhone,
+      companyName: companySize ? `Company (${companySize})` : undefined,
+      query: `[Goal: ${goal || "General"}] ${message}`,
+      type: "Advertiser Inquiry",
+    }).catch((hubErr) => console.warn("HubSpot advertiser inquiry sync error:", hubErr));
+
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("[contact-advertiser route error]", err);

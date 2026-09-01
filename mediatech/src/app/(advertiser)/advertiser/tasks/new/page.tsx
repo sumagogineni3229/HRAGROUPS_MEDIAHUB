@@ -199,7 +199,18 @@ export default async function NewTaskPage({ searchParams }: PageProps) {
       });
     }
 
-    redirect("/advertiser/tasks");
+    // Create a HubSpot CRM Deal for the order
+    const { createHubSpotDeal } = await import("@/lib/hubspot");
+    createHubSpotDeal({
+      dealName: platform
+        ? `Order on ${platform.name || platform.url} ($${totalOrderPrice})`
+        : `Campaign with @${channel?.handle} ($${totalOrderPrice})`,
+      amount: totalOrderPrice,
+      associatedEmail: session.user.email || undefined,
+      description: `Target URL: ${targetUrl} | Anchor: ${anchorText} | Brief: ${brief || "N/A"}`,
+    }).catch((dealErr) => console.warn("HubSpot Deal creation error:", dealErr));
+
+    redirect(`/advertiser/tasks?tab=TASK_REVIEW`);
   }
 
   return (

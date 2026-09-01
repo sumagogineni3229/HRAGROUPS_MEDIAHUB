@@ -67,6 +67,16 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // Sync to HubSpot Leads & CRM
+    const { submitToHubSpot } = await import("@/lib/hubspot");
+    submitToHubSpot({
+      email,
+      name,
+      companyName: company || undefined,
+      query: `[Topic: ${topic}] LinkedIn/Website: ${linkedin || "None"}`,
+      type: "Podcast Guest Application",
+    }).catch((hubErr) => console.warn("HubSpot guest app sync error:", hubErr));
+
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("[guest-application route error]", err);

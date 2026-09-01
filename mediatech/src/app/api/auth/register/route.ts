@@ -83,6 +83,20 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Sync user registration to HubSpot CRM Contacts & Marketing
+    const { syncContactToHubSpot } = await import("@/lib/hubspot");
+    syncContactToHubSpot({
+      email,
+      name,
+      role: finalRole,
+      company: company || undefined,
+      phone: phone || undefined,
+      website: website || undefined,
+      country: country || undefined,
+      jobTitle: jobTitle || undefined,
+      lifecycleStage: "lead",
+    }).catch((hubErr) => console.warn("HubSpot user sync warning:", hubErr));
+
     return NextResponse.json({ user }, { status: 201 });
   } catch (err) {
     console.error("[REGISTER_ERROR]", err);

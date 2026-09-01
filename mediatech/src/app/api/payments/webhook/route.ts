@@ -39,6 +39,68 @@ export async function POST(req: Request) {
       }
     }
 
+    // Check if this is a PayPal webhook event
+    if (eventData.event_type && (eventData.event_type.startsWith("PAYMENT.") || eventData.event_type.startsWith("CHECKOUT."))) {
+      const { getPayPalOrderDetails } = await import("@/lib/paypal");
+      const resource = eventData.resource || {};
+      const orderId =
+        resource.supplementary_data?.related_ids?.order_id ||
+        resource.id;
+
+      if (orderId) {
+        const details = await getPayPalOrderDetails(orderId).catch(() => null);
+        const amountUsd = details?.amountUsd || parseFloat(resource.amount?.value || "0");
+        const userId = details?.userId || resource.custom_id;
+
+        if (amountUsd > 0) {
+          const existingTx = await db.transaction.findFirst({
+            where: { note: { contains: orderId } },
+          });
+
+          if (!existingTx) {
+            let user = null;
+            if (userId) {
+              user = await db.user.findFirst({
+                where: { OR: [{ id: userId }, { id: { contains: userId } }] },
+              });
+            }
+            if (!user) {
+              user = await db.user.findFirst({
+                where: { role: { in: ["ADVERTISER", "ADMIN"] } },
+                orderBy: { updatedAt: "desc" },
+              });
+            }
+            if (user) {
+              await db.$transaction([
+                db.user.update({
+                  where: { id: user.id },
+                  data: { balance: { increment: amountUsd } },
+                }),
+                db.transaction.create({
+                  data: {
+                    userId: user.id,
+                    type: "TOPUP",
+                    amount: amountUsd,
+                    note: `Funds added via PayPal Webhook (${orderId})`,
+                  },
+                }),
+                db.notification.create({
+                  data: {
+                    userId: user.id,
+                    type: "PAYMENT",
+                    title: "Balance Topped Up (PayPal Webhook)",
+                    body: `$${amountUsd.toFixed(2)} USD was added to your wallet.`,
+                    link: "/advertiser/balance",
+                  },
+                }),
+              ]);
+            }
+          }
+        }
+      }
+      return NextResponse.json({ received: true });
+    }
+
     if (signatureHeader && config.clientSecret) {
       const isValid = verifyPhonePeWebhookSignature(rawBody, signatureHeader);
       if (!isValid && config.env === "PRODUCTION") {

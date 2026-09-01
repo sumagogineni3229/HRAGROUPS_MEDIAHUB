@@ -43,6 +43,7 @@ export function BalanceClient({
 }: BalanceClientProps) {
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const [isTopUpOpen, setIsTopUpOpen] = useState(false);
+  const [depositGateway, setDepositGateway] = useState<"phonepe" | "paypal">("phonepe");
   const [withdrawMethod, setWithdrawMethod] = useState<"upi" | "bank">("upi");
   const [upiId, setUpiId] = useState("");
   const [upiHolderName, setUpiHolderName] = useState("");
@@ -88,12 +89,12 @@ export function BalanceClient({
       methodLabel = "UPI";
       details = `UPI ID: ${upiId.trim()}${upiHolderName.trim() ? ` (Name: ${upiHolderName.trim()})` : ""}`;
     } else {
-      if (!accountHolderName.trim() || !bankName.trim() || !accountNumber.trim() || !ifscCode.trim()) {
-        alert("Please fill in all bank account fields");
+      if (!accountHolderName.trim() || !accountNumber.trim() || !ifscCode.trim()) {
+        alert("Please fill all bank details");
         return;
       }
-      methodLabel = "Bank Transfer";
-      details = `A/C Name: ${accountHolderName.trim()} | Bank: ${bankName.trim()} | A/C No: ${accountNumber.trim()} | IFSC: ${ifscCode.trim().toUpperCase()}`;
+      methodLabel = "BANK_TRANSFER";
+      details = `Bank: ${bankName.trim()} | A/C: ${accountNumber.trim()} | IFSC: ${ifscCode.trim()} | Name: ${accountHolderName.trim()}`;
     }
 
     startTransition(async () => {
@@ -116,13 +117,15 @@ export function BalanceClient({
       return;
     }
 
+    const selectedMethodName = depositGateway === "paypal" ? "PayPal" : "PhonePe";
+
     startTransition(async () => {
       try {
         let checkoutUrl = "";
 
         if (onAddFundsAction) {
           try {
-            const res = await onAddFundsAction(depositValue, "PhonePe");
+            const res = await onAddFundsAction(depositValue, selectedMethodName);
             if (res?.url) {
               checkoutUrl = res.url;
             } else if (res?.error) {
@@ -135,7 +138,12 @@ export function BalanceClient({
         }
 
         if (!checkoutUrl) {
-          const resp = await fetch("/api/payments/phonepe/initiate", {
+          const apiEndpoint =
+            depositGateway === "paypal"
+              ? "/api/payments/paypal/initiate"
+              : "/api/payments/phonepe/initiate";
+
+          const resp = await fetch(apiEndpoint, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ amount: depositValue }),
@@ -154,7 +162,7 @@ export function BalanceClient({
           return;
         }
 
-        alert("Failed to initialize PhonePe checkout session.");
+        alert(`Failed to initialize ${selectedMethodName} checkout session.`);
       } catch (err: any) {
         alert(err.message || "Top-up failed");
       }
@@ -822,27 +830,86 @@ export function BalanceClient({
               </button>
             </div>
 
-            {/* MediaHub Payments Badge Header (Yellow/Amber Theme) */}
-            <div className="p-3 bg-[#FFFBEB] border border-[#FDE68A] rounded-xl flex items-center justify-between gap-3 mb-4">
-              <div className="flex items-center gap-2.5">
-                <span className="w-8 h-8 rounded-lg bg-[#F59E0B] text-white font-black flex items-center justify-center text-xs shadow-xs font-space">
-                  MH
-                </span>
-                <div>
-                  <h4 className="text-xs font-bold text-[#78350F] font-space">MediaHub Payments</h4>
-                  <p className="text-[10px] text-[#92400E]">UPI · QR · Cards · NetBanking</p>
-                </div>
-              </div>
-              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                Active
-              </span>
-            </div>
-
             <form
               onSubmit={handleAddFunds}
               style={{ display: "flex", flexDirection: "column", gap: "16px" }}
             >
+              {/* Payment Gateway Selection */}
+              <div>
+                <label className="text-sm font-semibold text-dark block mb-2 font-space">
+                  Select Payment Method
+                </label>
+                <div className="grid grid-cols-2 gap-2.5">
+                  {/* PhonePe Option */}
+                  <button
+                    type="button"
+                    onClick={() => setDepositGateway("phonepe")}
+                    className={`relative p-3 rounded-xl border text-left transition-all flex flex-col justify-between ${
+                      depositGateway === "phonepe"
+                        ? "border-[#5F259F] bg-[#FAF5FF] shadow-xs ring-2 ring-[#5F259F]/20"
+                        : "border-border bg-white hover:border-[#5F259F]/40 hover:bg-slate-50"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between w-full mb-1.5">
+                      <span className="w-7 h-7 rounded-lg bg-[#5F259F] text-white font-black flex items-center justify-center text-[10px] shadow-xs font-space">
+                        PE
+                      </span>
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100 text-[#5F259F] font-space">
+                        ₹ INR
+                      </span>
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-dark font-space flex items-center gap-1">
+                        PhonePe / UPI
+                      </h4>
+                      <p className="text-[10px] text-muted leading-tight mt-0.5 font-inter">
+                        UPI, Cards & NetBanking
+                      </p>
+                    </div>
+                    {depositGateway === "phonepe" && (
+                      <span className="absolute top-2 right-2 flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#5F259F] opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#5F259F]"></span>
+                      </span>
+                    )}
+                  </button>
+
+                  {/* PayPal Option */}
+                  <button
+                    type="button"
+                    onClick={() => setDepositGateway("paypal")}
+                    className={`relative p-3 rounded-xl border text-left transition-all flex flex-col justify-between ${
+                      depositGateway === "paypal"
+                        ? "border-[#0070BA] bg-[#F0F8FF] shadow-xs ring-2 ring-[#0070BA]/20"
+                        : "border-border bg-white hover:border-[#0070BA]/40 hover:bg-slate-50"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between w-full mb-1.5">
+                      <span className="w-7 h-7 rounded-lg bg-[#0070BA] text-white font-black flex items-center justify-center text-[11px] shadow-xs font-space">
+                        PP
+                      </span>
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-100 text-[#0070BA] font-space">
+                        $ USD
+                      </span>
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-dark font-space flex items-center gap-1">
+                        PayPal
+                      </h4>
+                      <p className="text-[10px] text-muted leading-tight mt-0.5 font-inter">
+                        PayPal & Int&apos;l Cards
+                      </p>
+                    </div>
+                    {depositGateway === "paypal" && (
+                      <span className="absolute top-2 right-2 flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0070BA] opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0070BA]"></span>
+                      </span>
+                    )}
+                  </button>
+                </div>
+              </div>
+
               <div>
                 <label className="text-sm font-medium text-dark block mb-2 font-inter">
                   Amount to Deposit ($ USD)
@@ -854,35 +921,63 @@ export function BalanceClient({
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="Min $5.00"
-                  className="input focus:ring-2 focus:ring-amber-400"
+                  className={`input focus:ring-2 ${
+                    depositGateway === "paypal"
+                      ? "focus:ring-[#0070BA]"
+                      : "focus:ring-[#5F259F]"
+                  }`}
                   required
                 />
               </div>
 
-              <div className="p-3.5 bg-[#FFFBEB] border border-[#FDE68A] rounded-xl space-y-1.5 text-xs text-[#78350F]">
-                <div className="flex justify-between font-semibold">
-                  <span>INR Equivalent Amount:</span>
-                  <span className="font-bold text-sm text-[#92400E]">
-                    ₹{parseFloat(amount || "0") > 0 ? (parseFloat(amount) * 95.61).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"} INR
-                  </span>
+              {depositGateway === "phonepe" ? (
+                <div className="p-3.5 bg-[#FAF5FF] border border-[#E9D5FF] rounded-xl space-y-1.5 text-xs text-[#581C87]">
+                  <div className="flex justify-between font-semibold">
+                    <span>INR Equivalent Amount:</span>
+                    <span className="font-bold text-sm text-[#5F259F]">
+                      ₹{parseFloat(amount || "0") > 0 ? (parseFloat(amount) * 95.61).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"} INR
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-[11px] text-[#7E22CE]">
+                    <span>Exchange rate reference:</span>
+                    <span className="font-semibold">1 USD = ₹95.61 INR</span>
+                  </div>
+                  <div className="pt-1.5 border-t border-[#E9D5FF] text-[10px] text-[#6B21A8] flex items-center gap-1">
+                    <span>⚡ Instant Credit · Supports GPay, PhonePe, Paytm, BHIM UPI, QR, Credit/Debit & NetBanking</span>
+                  </div>
                 </div>
-                <div className="flex justify-between text-[11px] text-[#B45309]">
-                  <span>Exchange rate reference:</span>
-                  <span className="font-semibold">1 USD = ₹95.61 INR</span>
+              ) : (
+                <div className="p-3.5 bg-[#F0F8FF] border border-[#BAE6FD] rounded-xl space-y-1.5 text-xs text-[#0369A1]">
+                  <div className="flex justify-between font-semibold">
+                    <span>Total Deposit (USD):</span>
+                    <span className="font-bold text-sm text-[#0070BA]">
+                      ${parseFloat(amount || "0") > 0 ? parseFloat(amount).toFixed(2) : "0.00"} USD
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-[11px] text-[#0284C7]">
+                    <span>Payment Processor:</span>
+                    <span className="font-semibold">PayPal Secure Checkout</span>
+                  </div>
+                  <div className="pt-1.5 border-t border-[#BAE6FD] text-[10px] text-[#0369A1] flex items-center gap-1">
+                    <span>🔒 Supports PayPal Balance, International Debit/Credit Cards & Pay Later</span>
+                  </div>
                 </div>
-                <div className="pt-1.5 border-t border-[#FDE68A] text-[10px] text-[#92400E] flex items-center gap-1">
-                  <span>⚡ Instant Credit · Supports GPay, PhonePe, Paytm, BHIM UPI, QR, Credit/Debit & NetBanking</span>
-                </div>
-              </div>
+              )}
 
               <button
                 type="submit"
-                className="btn w-full font-space font-bold mt-2 cursor-pointer bg-[#F59E0B] hover:bg-[#D97706] text-white shadow-md transition-all text-sm py-3 rounded-xl"
+                className={`btn w-full font-space font-bold mt-2 cursor-pointer text-white shadow-md transition-all text-sm py-3 rounded-xl ${
+                  depositGateway === "paypal"
+                    ? "bg-[#0070BA] hover:bg-[#005ea6]"
+                    : "bg-[#5F259F] hover:bg-[#4a1c7d]"
+                }`}
                 disabled={isPending}
               >
                 {isPending
                   ? "Processing Payment..."
-                  : `Pay ($${amount || "0.00"} USD)`}
+                  : depositGateway === "paypal"
+                  ? `Pay ($${amount ? parseFloat(amount).toFixed(2) : "0.00"} USD) with PayPal`
+                  : `Pay (₹${parseFloat(amount || "0") > 0 ? (parseFloat(amount) * 95.61).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"} INR) with PhonePe`}
               </button>
             </form>
           </div>

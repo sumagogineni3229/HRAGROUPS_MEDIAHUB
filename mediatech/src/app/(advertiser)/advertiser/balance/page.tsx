@@ -46,27 +46,51 @@ export default async function AdvertiserBalancePage({
     const depositValue = amountValue;
     if (depositValue < 5) throw new Error("Minimum deposit is $5.00");
 
-    // Initialize PhonePe / MediaHub Payments Gateway
-    const { initiatePhonePePayment } = await import("@/lib/phonepe");
     const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
-    const redirectUrl = `${baseUrl}/api/payments/phonepe/callback?userId=${encodeURIComponent(session.user.id)}&amount=${depositValue}`;
-    const callbackUrl = `${baseUrl}/api/payments/phonepe/webhook`;
 
-    try {
-      const result = await initiatePhonePePayment({
-        userId: session.user.id,
-        amountUsd: depositValue,
-        redirectUrl,
-        callbackUrl,
-      });
+    if (methodLabel === "PayPal") {
+      const { createPayPalOrder } = await import("@/lib/paypal");
+      const returnUrl = `${baseUrl}/api/payments/paypal/callback?userId=${encodeURIComponent(session.user.id)}&amount=${depositValue}&action=success`;
+      const cancelUrl = `${baseUrl}/api/payments/paypal/callback?userId=${encodeURIComponent(session.user.id)}&amount=${depositValue}&action=cancel`;
 
-      if (result.checkoutUrl) {
-        return { url: result.checkoutUrl };
+      try {
+        const result = await createPayPalOrder({
+          userId: session.user.id,
+          amountUsd: depositValue,
+          returnUrl,
+          cancelUrl,
+        });
+
+        if (result.checkoutUrl) {
+          return { url: result.checkoutUrl };
+        }
+        return { error: "Failed to generate PayPal checkout URL" };
+      } catch (err: any) {
+        console.error("PayPal initiation error:", err);
+        return { error: err.message || "Failed to initialize PayPal payment gateway" };
       }
-      return { error: "Failed to generate PhonePe checkout URL" };
-    } catch (err: any) {
-      console.error("PhonePe initiation error:", err);
-      return { error: err.message || "Failed to initialize PhonePe payment gateway" };
+    } else {
+      // Default / PhonePe Gateway
+      const { initiatePhonePePayment } = await import("@/lib/phonepe");
+      const redirectUrl = `${baseUrl}/api/payments/phonepe/callback?userId=${encodeURIComponent(session.user.id)}&amount=${depositValue}`;
+      const callbackUrl = `${baseUrl}/api/payments/phonepe/webhook`;
+
+      try {
+        const result = await initiatePhonePePayment({
+          userId: session.user.id,
+          amountUsd: depositValue,
+          redirectUrl,
+          callbackUrl,
+        });
+
+        if (result.checkoutUrl) {
+          return { url: result.checkoutUrl };
+        }
+        return { error: "Failed to generate PhonePe checkout URL" };
+      } catch (err: any) {
+        console.error("PhonePe initiation error:", err);
+        return { error: err.message || "Failed to initialize PhonePe payment gateway" };
+      }
     }
   }
 
