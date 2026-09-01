@@ -49,9 +49,11 @@ export async function POST(req: NextRequest) {
       try {
         const { Resend } = await import("resend");
         const resend = new Resend(process.env.RESEND_API_KEY);
+        const fromEmail = process.env.RESEND_FROM_EMAIL || "MediaHub Notifications <onboarding@resend.dev>";
         const data = await resend.emails.send({
-          from: process.env.RESEND_FROM_EMAIL ?? "MediaHub <onboarding@resend.dev>",
+          from: fromEmail,
           to: ownerEmail,
+          replyTo: email,
           subject: notificationSubject,
           html: emailHtml,
         });

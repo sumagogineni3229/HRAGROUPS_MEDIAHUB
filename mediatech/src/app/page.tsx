@@ -30,7 +30,7 @@ import {
 export default function Home() {
   const [content, setContent] = useState<HomePageContent>(DEFAULT_HOME_PAGE_CONTENT);
   const [demoCallModalOpen, setDemoCallModalOpen] = useState(false);
-  const [demoCallForm, setDemoCallForm] = useState({ phone: "", email: "", reason: "" });
+  const [demoCallForm, setDemoCallForm] = useState({ name: "", phone: "", email: "", reason: "" });
   const [demoCallSubmitting, setDemoCallSubmitting] = useState(false);
   const [demoCallSuccess, setDemoCallSuccess] = useState(false);
   const [demoCallError, setDemoCallError] = useState("");
@@ -518,6 +518,20 @@ export default function Home() {
                 </div>
 
                 <form onSubmit={handleDemoCallSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 text-slate-700">
+                      Your Full Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. John Doe"
+                      value={demoCallForm.name}
+                      onChange={(e) => setDemoCallForm({ ...demoCallForm, name: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-[#F59E0B] text-sm text-slate-900"
+                    />
+                  </div>
+
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider mb-1.5 text-slate-700">
                       Phone Number <span className="text-red-500">*</span>

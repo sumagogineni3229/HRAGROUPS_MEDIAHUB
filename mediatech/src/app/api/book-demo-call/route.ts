@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, phone, reason } = await req.json();
+    const { name, email, phone, reason } = await req.json();
 
     if (!email || !phone || !reason) {
       return NextResponse.json(
@@ -11,8 +11,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const callerName = name ? name.trim() : "Website Visitor";
     const ownerEmail = process.env.OWNER_EMAIL || "mediahubworks@gmail.com";
-    const notificationSubject = `📞 New Demo Call Booking Request`;
+    const notificationSubject = `📞 New Demo Call Booking Request from ${callerName}`;
 
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; background: #f8fafc; color: #112c3e; border-radius: 16px; border: 1px solid #e2e8f0;">
@@ -21,6 +22,7 @@ export async function POST(req: NextRequest) {
         </div>
         <div style="background: #ffffff; padding: 24px; border-radius: 0 0 12px 12px;">
           <h3 style="margin-top: 0; color: #3e4fea;">Contact Information</h3>
+          <p style="margin: 6px 0;"><strong>Full Name:</strong> ${callerName}</p>
           <p style="margin: 6px 0;"><strong>Gmail / Email:</strong> <a href="mailto:${email}" style="color: #3e4fea;">${email}</a></p>
           <p style="margin: 6px 0;"><strong>Phone Number:</strong> <a href="tel:${phone}" style="color: #3e4fea;">${phone}</a></p>
 
@@ -33,7 +35,7 @@ export async function POST(req: NextRequest) {
 
           <div style="margin-top: 24px; text-align: center;">
             <a href="mailto:${email}?subject=RE: MediaHub Demo Call Schedule" style="display: inline-block; background: #3e4fea; color: #ffffff; padding: 12px 24px; border-radius: 50px; font-weight: bold; text-decoration: none;">
-              Reply & Confirm Schedule
+              Reply & Confirm Schedule with ${callerName}
             </a>
           </div>
         </div>
@@ -45,9 +47,11 @@ export async function POST(req: NextRequest) {
       try {
         const { Resend } = await import("resend");
         const resend = new Resend(process.env.RESEND_API_KEY);
+        const fromEmail = process.env.RESEND_FROM_EMAIL || "MediaHub Notifications <onboarding@resend.dev>";
         const data = await resend.emails.send({
-          from: process.env.RESEND_FROM_EMAIL ?? "MediaHub <onboarding@resend.dev>",
+          from: fromEmail,
           to: ownerEmail,
+          replyTo: email,
           subject: notificationSubject,
           html: emailHtml,
         });
@@ -57,6 +61,7 @@ export async function POST(req: NextRequest) {
       }
     } else {
       console.log(`[DEV DEMO CALL EMAIL] Demo call request for ${ownerEmail}:`, {
+        name: callerName,
         email,
         phone,
         reason,
@@ -66,6 +71,7 @@ export async function POST(req: NextRequest) {
     // Sync to HubSpot Leads & CRM
     const { submitToHubSpot } = await import("@/lib/hubspot");
     submitToHubSpot({
+      name: callerName,
       email,
       phone,
       query: `Reason for Demo Call: ${reason}`,
