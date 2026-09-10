@@ -5,7 +5,7 @@ import { MetadataRoute } from "next";
  * Dynamic pages (tasks, platforms etc.) require auth and are excluded.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = process.env.NEXT_PUBLIC_APP_URL ?? "https://mediahub.app";
+  const base = process.env.APP_URL ?? process.env.NEXT_PUBLIC_APP_URL ?? "https://mediahub.app";
 
   return [
     { url: base,                         lastModified: new Date(), changeFrequency: "weekly",  priority: 1.0 },
