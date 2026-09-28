@@ -287,7 +287,15 @@ export default function TasksClient({
 
                   {task.brief && (
                     <div className="bg-app p-4 rounded-lg text-xs font-inter text-muted mb-4 leading-relaxed">
-                      <strong className="text-dark">Content Brief:</strong> {task.brief}
+                      <strong className="text-dark block mb-1">Content Brief &amp; Guidelines:</strong>
+                      {task.brief.includes("<") && task.brief.includes(">") ? (
+                        <div
+                          className="prose prose-xs max-w-none text-muted"
+                          dangerouslySetInnerHTML={{ __html: task.brief }}
+                        />
+                      ) : (
+                        <span className="whitespace-pre-wrap">{task.brief}</span>
+                      )}
                     </div>
                   )}
 

@@ -66,7 +66,7 @@ const EDITABLE_PAGES: PageSectionConfig[] = [
     category: "Solutions / Marketplace",
     title: "Solutions / Marketplace → 4 Tabs Complete Content",
     pageUrl: "/solutions",
-    description: "Edit all content across Marketing & Growth, For Advertisers, For Brands, and For Agencies (Hero, stats, 4 features, 3 workflow steps, comparison matrix, and CTAs).",
+    description: "Edit all content across Marketing & Growth, For Advertisers, For Publishers, and For Influencer (Hero, stats, 4 features, 3 workflow steps, comparison matrix, and CTAs).",
   },
   {
     key: "faq_page_data",
@@ -943,17 +943,25 @@ export default function EditorPagesPage() {
         <div className="space-y-6">
           {/* Sub-tab selection */}
           <div className="flex items-center gap-2 bg-slate-100 p-1.5 rounded-2xl border border-slate-200">
-            {(["marketing", "advertisers", "brands", "agencies"] as const).map((tab) => (
-              <button
-                key={tab}
-                type="button"
-                onClick={() => setActiveSolutionTab(tab)}
-                className={`px-5 py-2.5 rounded-xl text-xs font-bold transition capitalize ${activeSolutionTab === tab ? "bg-[#112C3E] text-white shadow-xs" : "text-slate-600 hover:text-slate-900"
-                  }`}
-              >
-                {tab === "marketing" ? "Marketing & Growth" : `For ${tab}`}
-              </button>
-            ))}
+            {(["marketing", "advertisers", "brands", "agencies"] as const).map((tab) => {
+              const labelMap: Record<string, string> = {
+                marketing: "Marketing & Growth",
+                advertisers: "For Advertisers",
+                brands: "For Publishers",
+                agencies: "For Influencer",
+              };
+              return (
+                <button
+                  key={tab}
+                  type="button"
+                  onClick={() => setActiveSolutionTab(tab)}
+                  className={`px-5 py-2.5 rounded-xl text-xs font-bold transition ${activeSolutionTab === tab ? "bg-[#112C3E] text-white shadow-xs" : "text-slate-600 hover:text-slate-900"
+                    }`}
+                >
+                  {labelMap[tab]}
+                </button>
+              );
+            })}
           </div>
 
           <div className="space-y-4">

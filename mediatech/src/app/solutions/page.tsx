@@ -59,8 +59,8 @@ export default function SolutionsPage() {
   const tabTitles: Record<TabType, string> = {
     marketing: "Marketing & Growth",
     advertisers: "For Advertisers",
-    brands: "For Brands",
-    agencies: "For Agencies",
+    brands: "For Publishers",
+    agencies: "For Influencer",
   };
 
   return (

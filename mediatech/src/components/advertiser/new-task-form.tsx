@@ -9,6 +9,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { CheckCircleIcon as CheckCircleSolidIcon } from "@heroicons/react/24/solid";
 
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
+
 interface PackageItem {
   id: string;
   type: string;
@@ -43,6 +45,7 @@ export function NewTaskForm({
   ]);
   const [showNewProject, setShowNewProject] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [briefHtml, setBriefHtml] = useState<string>("");
 
   // Toggle or select package
   const togglePackage = (pkgId: string) => {
@@ -151,11 +154,10 @@ export function NewTaskForm({
                   <div
                     key={pkg.id}
                     onClick={() => togglePackage(pkg.id)}
-                    className={`cursor-pointer border rounded-xl p-4 transition-all flex flex-col justify-between select-none ${
-                      isSelected
+                    className={`cursor-pointer border rounded-xl p-4 transition-all flex flex-col justify-between select-none ${isSelected
                         ? "border-primary bg-primary/5 shadow-sm ring-2 ring-primary/40"
                         : "border-slate-200 hover:border-slate-300 bg-white"
-                    }`}
+                      }`}
                   >
                     <div className="flex items-start justify-between gap-2 mb-3">
                       <span className="text-sm font-semibold text-dark">
@@ -259,20 +261,109 @@ export function NewTaskForm({
               </div>
             </div>
 
+            {/* Word-like Rich Content Brief Editor */}
             <div>
-              <label className="text-sm font-semibold text-dark block mb-2 font-inter">
-                Content Brief & Guidelines *
-              </label>
-              <textarea
-                name="brief"
-                required
-                rows={6}
-                placeholder={`Provide instructions for your selected placements (${selectedPackages
-                  .map((p) => formatPlacementName(p.type))
-                  .join(", ")}). Include product key features, mandatory talking points, hashtags, or specific requirements.`}
-                className="input"
-                style={{ resize: "vertical", fontFamily: "var(--font-inter)" }}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                <label className="text-sm font-semibold text-dark block font-inter">
+                  Content Brief & Guidelines (Word-style Editor with Inline Image Insertion) *
+                </label>
+
+                {/* Quick Templates Switcher */}
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="text-xs text-muted font-medium mr-1">Insert Template:</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setBriefHtml(`<h2>1. Article Title / Proposed Topic</h2>
+<p><strong>[Insert Catchy Blog Headline or Targeted Keyword Topic]</strong></p>
+<p><br></p>
+<h2>2. Target Audience &amp; Tone</h2>
+<ul>
+  <li><strong>Tone of Voice:</strong> Informative, authoritative, engaging, and professional.</li>
+  <li><strong>Target Reader:</strong> Industry professionals, founders, and targeted customers looking for actionable solutions.</li>
+</ul>
+<p><br></p>
+<h2>3. Key Talking Points &amp; Subheadings</h2>
+<ul>
+  <li><strong>Introduction:</strong> Current industry landscape, problem statement, and key trends.</li>
+  <li><strong>Core Solution &amp; Strategy:</strong> In-depth explanation of best practices, tools, or techniques.</li>
+  <li><strong>Real-World Impact:</strong> Case study highlights or measurable benefits.</li>
+  <li><strong>Summary &amp; Next Steps:</strong> Key takeaways and concluding guidance.</li>
+</ul>
+<p><br></p>
+<h2>4. Backlink &amp; Anchor Text Requirements</h2>
+<ul>
+  <li><strong>Anchor Text:</strong> Match the required keyword specified in campaign settings.</li>
+  <li><strong>Link Attribute:</strong> Do-Follow, contextual placement inside the body paragraphs.</li>
+  <li><strong>Placement Rule:</strong> Do not place backlink in author bio or footnote.</li>
+</ul>
+<p><br></p>
+<h2>5. Editorial &amp; Quality Guidelines</h2>
+<ul>
+  <li><strong>Word Count:</strong> 800 – 1,200+ words.</li>
+  <li><strong>Formatting:</strong> Use clear H2/H3 subheadings, short paragraphs, and bullet points.</li>
+  <li><strong>Media:</strong> Include relevant high-quality screenshots or infographics.</li>
+  <li><strong>Authenticity:</strong> 100% human-edited, plagiarism-free, and brand-safe content.</li>
+</ul>`);
+                    }}
+                    className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100 transition cursor-pointer"
+                  >
+                    📝 Blog / Article Template
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setBriefHtml(`<h2>1. Link Insertion Requirements</h2>
+<p><strong>Target URL:</strong> [Insert Target Live Article on Website]</p>
+<p><strong>Anchor Text:</strong> [Insert Desired Keyword]</p>
+<p><strong>Link Type:</strong> Contextual Do-Follow Link</p>
+<p><br></p>
+<h2>2. Placement Guidelines</h2>
+<ul>
+  <li>Insert the link organically into an existing high-traffic paragraph.</li>
+  <li>Ensure Surrounding text maintains grammatical accuracy and natural readability.</li>
+  <li>Permanent, indexable placement guarantee.</li>
+</ul>`);
+                    }}
+                    className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200 transition cursor-pointer"
+                  >
+                    🔗 Link Insertion Template
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setBriefHtml(`<h2>1. Campaign Objective</h2>
+<p>Brand awareness, product introduction, and direct community engagement.</p>
+<p><br></p>
+<h2>2. Mandatory Deliverables &amp; Talking Points</h2>
+<ul>
+  <li>Highlight core product features &amp; personal user experience.</li>
+  <li>Tag official brand handles in caption and video overlay.</li>
+  <li>Include Call to Action (CTA) link in bio or swipe-up story.</li>
+  <li>Include mandatory campaign tags: <strong>#Sponsored #BrandPartner</strong></li>
+</ul>`);
+                    }}
+                    className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200 transition cursor-pointer"
+                  >
+                    📱 Social / Creator Template
+                  </button>
+                </div>
+              </div>
+
+              {/* Hidden input to pass the formatted HTML brief to standard form action */}
+              <input type="hidden" name="brief" value={briefHtml} required />
+
+              <RichTextEditor
+                value={briefHtml}
+                onChange={(html) => setBriefHtml(html)}
+                placeholder="Type or format your content brief, requirements, talking points, guidelines, or insert images..."
+                minHeight="280px"
               />
+              <span className="text-[11px] text-muted mt-1.5 block">
+                💡 Tip: Use the rich toolbar above for bold, highlights, lists, fonts, headings, web links, or click <strong>Insert Image</strong> to attach screenshots directly inside your brief.
+              </span>
             </div>
           </div>
         </div>

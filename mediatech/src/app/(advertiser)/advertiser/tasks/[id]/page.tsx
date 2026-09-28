@@ -194,9 +194,16 @@ export default async function AdvertiserTaskDetailPage({
 
             <div>
               <span className="text-xs text-muted block mb-2">Content Brief &amp; Guidelines</span>
-              <div className="bg-app rounded-lg p-4 text-sm font-inter text-dark leading-relaxed whitespace-pre-wrap">
-                {task.brief}
-              </div>
+              {task.brief?.includes("<") && task.brief?.includes(">") ? (
+                <div
+                  className="bg-app rounded-lg p-4 text-sm font-inter text-dark leading-relaxed prose max-w-none"
+                  dangerouslySetInnerHTML={{ __html: task.brief }}
+                />
+              ) : (
+                <div className="bg-app rounded-lg p-4 text-sm font-inter text-dark leading-relaxed whitespace-pre-wrap">
+                  {task.brief}
+                </div>
+              )}
             </div>
 
             {task.contentNotes && (
