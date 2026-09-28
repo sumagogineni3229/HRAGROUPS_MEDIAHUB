@@ -365,11 +365,10 @@ export default function EditorPagesPage() {
                       if (firstPage) setSelectedKey(firstPage.key);
                     }
                   }}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition whitespace-nowrap cursor-pointer ${
-                    active
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition whitespace-nowrap cursor-pointer ${active
                       ? "bg-[#112C3E] text-white shadow-xs"
                       : "bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900"
-                  }`}
+                    }`}
                 >
                   {cat}
                 </button>
@@ -399,17 +398,15 @@ export default function EditorPagesPage() {
                 key={p.key}
                 type="button"
                 onClick={() => setSelectedKey(p.key)}
-                className={`p-3.5 rounded-xl border text-left transition flex flex-col justify-between gap-2 cursor-pointer ${
-                  isSelected
+                className={`p-3.5 rounded-xl border text-left transition flex flex-col justify-between gap-2 cursor-pointer ${isSelected
                     ? "border-[#F59E0B] bg-[#FEF3C7]/40 ring-2 ring-[#F59E0B]/30 shadow-xs"
                     : "border-slate-200 bg-slate-50 hover:bg-white hover:border-slate-300"
-                }`}
+                  }`}
               >
                 <div className="flex items-center justify-between gap-2">
                   <span
-                    className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
-                      isSelected ? "bg-[#112C3E] text-white" : "bg-slate-200 text-slate-700"
-                    }`}
+                    className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${isSelected ? "bg-[#112C3E] text-white" : "bg-slate-200 text-slate-700"
+                      }`}
                   >
                     {p.category}
                   </span>
@@ -951,9 +948,8 @@ export default function EditorPagesPage() {
                 key={tab}
                 type="button"
                 onClick={() => setActiveSolutionTab(tab)}
-                className={`px-5 py-2.5 rounded-xl text-xs font-bold transition capitalize ${
-                  activeSolutionTab === tab ? "bg-[#112C3E] text-white shadow-xs" : "text-slate-600 hover:text-slate-900"
-                }`}
+                className={`px-5 py-2.5 rounded-xl text-xs font-bold transition capitalize ${activeSolutionTab === tab ? "bg-[#112C3E] text-white shadow-xs" : "text-slate-600 hover:text-slate-900"
+                  }`}
               >
                 {tab === "marketing" ? "Marketing & Growth" : `For ${tab}`}
               </button>

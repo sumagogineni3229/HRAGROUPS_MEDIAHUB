@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ALL_COUNTRIES, getCountryFlagAndName } from "@/lib/countries";
 import { CountrySelect } from "@/components/ui/country-select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import { PlatformCatalogList } from "@/components/advertiser/platform-catalog-list";
 import { WEBSITE_CATEGORIES } from "@/lib/categories";
 import {
@@ -21,6 +22,9 @@ import {
   ShoppingCartIcon,
   ArrowTopRightOnSquareIcon
 } from "@heroicons/react/24/outline";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export const metadata = {
   title: "Search for Sites - MediaHub",
@@ -124,6 +128,13 @@ export default async function AdvertiserSitesPage({
     },
     orderBy: { da: "desc" },
   });
+
+  // Fetch advertiser wallet balance (minimum $20 balance required to unlock sites)
+  const userRecord = await db.user.findUnique({
+    where: { id: session.user.id },
+    select: { balance: true, bonus: true },
+  });
+  const advertiserBalance = (userRecord?.balance ?? 0) + (userRecord?.bonus ?? 0);
 
   // Fetch advertiser projects
   const userProjects = await db.project.findMany({
@@ -410,18 +421,12 @@ export default async function AdvertiserSitesPage({
               <label className="text-xs font-medium text-slate-600 block mb-1.5">
                 Categories ⓘ
               </label>
-              <select
+              <SearchableSelect
                 name="niche"
+                options={["", ...WEBSITE_CATEGORIES]}
                 defaultValue={niche}
-                className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500"
-              >
-                <option value="">Nothing selected</option>
-                {WEBSITE_CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
+                placeholder="All Categories"
+              />
             </div>
 
           </div>
@@ -516,7 +521,7 @@ export default async function AdvertiserSitesPage({
           <p className="text-muted text-sm max-w-sm mx-auto">Try clearing search terms or submit a custom requirement.</p>
         </div>
       ) : (
-        <PlatformCatalogList platforms={platforms} />
+        <PlatformCatalogList platforms={platforms} userBalance={advertiserBalance} />
       )}
     </div>
   );

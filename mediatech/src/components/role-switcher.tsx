@@ -70,7 +70,7 @@ export function RoleSwitcher({ activeRole, enabledRoles = [] }: Props) {
       // 2. Refresh JWT so activeRole propagates through session
       try {
         await update?.({ activeRole: roleKey });
-      } catch (_) {}
+      } catch (_) { }
 
       // 3. Navigate to the new role's home
       const target = ROLES.find((r) => r.key === roleKey)?.home ?? "/";

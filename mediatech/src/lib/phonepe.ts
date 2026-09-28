@@ -72,43 +72,43 @@ export async function getPhonePeAuthToken(): Promise<string> {
     return `${prefix} ${cachedToken.token}`;
   }
 
-  const params = new URLSearchParams();
-  params.append("client_id", config.clientId);
-  params.append("client_secret", config.clientSecret);
-  params.append("client_version", config.clientVersion);
-  params.append("grant_type", "client_credentials");
+    const params = new URLSearchParams();
+    params.append("client_id", config.clientId);
+    params.append("client_secret", config.clientSecret);
+    params.append("client_version", config.clientVersion);
+    params.append("grant_type", "client_credentials");
 
-  const response = await fetch(config.authUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: params.toString(),
-  });
+    const response = await fetch(config.authUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: params.toString(),
+    });
 
-  if (!response.ok) {
-    const errorText = await response.text();
+    if (!response.ok) {
+      const errorText = await response.text();
     console.error("PhonePe OAuth Token Error:", response.status, errorText);
-    throw new Error(`PhonePe authentication failed: HTTP ${response.status} - ${errorText}`);
-  }
+      throw new Error(`PhonePe authentication failed: HTTP ${response.status} - ${errorText}`);
+    }
 
-  const data = await response.json();
-  const accessToken = data.access_token;
-  const tokenType = data.token_type || "O-Bearer";
+    const data = await response.json();
+    const accessToken = data.access_token;
+    const tokenType = data.token_type || "O-Bearer";
   // PhonePe provides expires_at as epoch seconds; fallback to 1 hour if absent
-  const expiresAt = data.expires_at || nowSeconds + (data.expires_in || 3600);
+    const expiresAt = data.expires_at || nowSeconds + (data.expires_in || 3600);
 
-  if (!accessToken) {
-    throw new Error("PhonePe OAuth response did not contain access_token.");
-  }
+    if (!accessToken) {
+      throw new Error("PhonePe OAuth response did not contain access_token.");
+    }
 
-  cachedToken = {
-    token: accessToken,
-    tokenType,
-    expiresAt,
-  };
+    cachedToken = {
+      token: accessToken,
+      tokenType,
+      expiresAt,
+    };
 
-  return `${tokenType} ${accessToken}`;
+    return `${tokenType} ${accessToken}`;
 }
 
 /**
@@ -153,58 +153,58 @@ export async function initiatePhonePePayment(params: InitiatePaymentParams): Pro
     finalRedirectUrl += (finalRedirectUrl.includes("?") ? "&" : "?") + `merchantOrderId=${encodeURIComponent(merchantOrderId)}`;
   }
 
-  const payload = {
-    merchantOrderId,
-    amount: inrPaise,
-    paymentFlow: {
-      type: "PG_CHECKOUT",
-      merchantUrls: {
-        redirectUrl: finalRedirectUrl,
+    const payload = {
+      merchantOrderId,
+      amount: inrPaise,
+      paymentFlow: {
+        type: "PG_CHECKOUT",
+        merchantUrls: {
+          redirectUrl: finalRedirectUrl,
+        },
       },
-    },
-    metaInfo: {
-      userId: params.userId,
-      amountUsd: String(params.amountUsd),
-      note: params.note || "MediaHub Wallet Top-up",
-    },
-  };
+      metaInfo: {
+        userId: params.userId,
+        amountUsd: String(params.amountUsd),
+        note: params.note || "MediaHub Wallet Top-up",
+      },
+    };
 
-  const payUrl = `${config.baseUrl}/checkout/v2/pay`;
+    const payUrl = `${config.baseUrl}/checkout/v2/pay`;
 
-  const response = await fetch(payUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: authHeader,
-    },
-    body: JSON.stringify(payload),
-  });
+    const response = await fetch(payUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: authHeader,
+      },
+      body: JSON.stringify(payload),
+    });
 
-  const data = await response.json().catch(() => null);
+    const data = await response.json().catch(() => null);
 
-  if (!response.ok || !data) {
-    console.error("PhonePe Checkout API returned error:", response.status, data);
-    throw new Error(
-      (data && (data.message || data.error_description || data.error)) ||
-        `PhonePe initiation failed with status ${response.status}`
-    );
-  }
+    if (!response.ok || !data) {
+      console.error("PhonePe Checkout API returned error:", response.status, data);
+      throw new Error(
+        (data && (data.message || data.error_description || data.error)) ||
+          `PhonePe initiation failed with status ${response.status}`
+      );
+    }
 
-  const redirectUrl = data.redirectUrl || data.data?.redirectUrl || data.instrumentResponse?.redirectInfo?.url;
+    const redirectUrl = data.redirectUrl || data.data?.redirectUrl || data.instrumentResponse?.redirectInfo?.url;
 
-  if (!redirectUrl) {
+    if (!redirectUrl) {
     console.error("PhonePe V2 Checkout response missing redirectUrl:", data);
-    throw new Error(data.message || "PhonePe API response did not return a valid checkout redirect URL");
-  }
+      throw new Error(data.message || "PhonePe API response did not return a valid checkout redirect URL");
+    }
 
-  return {
-    success: true,
-    merchantTransactionId: merchantOrderId,
-    checkoutUrl: redirectUrl,
-    inrAmount,
-    inrPaise,
-    orderId: data.orderId || data.data?.orderId,
-  };
+    return {
+      success: true,
+      merchantTransactionId: merchantOrderId,
+      checkoutUrl: redirectUrl,
+      inrAmount,
+      inrPaise,
+      orderId: data.orderId || data.data?.orderId,
+    };
 }
 
 /**

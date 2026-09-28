@@ -70,7 +70,7 @@ export default function SolutionsPage() {
 
       {/* Main Full-Width Container */}
       <main className="w-full px-4 sm:px-8 lg:px-12 py-8 lg:py-12 max-w-[1600px] mx-auto flex-1 space-y-12 lg:space-y-16">
-        
+
         {/* ─────────────────────────────────────────────
            1. TOP NAVIGATION TABS (Clean Switcher)
            ───────────────────────────────────────────── */}
@@ -82,11 +82,10 @@ export default function SolutionsPage() {
                 <button
                   key={tabKey}
                   onClick={() => setActiveTab(tabKey)}
-                  className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all whitespace-nowrap ${
-                    isActive
+                  className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all whitespace-nowrap ${isActive
                       ? "bg-[#F59E0B] text-white shadow-md scale-105"
                       : "text-[#677F9B] hover:text-[#112C3E] hover:bg-white/60"
-                  }`}
+                    }`}
                 >
                   {tabTitles[tabKey]}
                 </button>

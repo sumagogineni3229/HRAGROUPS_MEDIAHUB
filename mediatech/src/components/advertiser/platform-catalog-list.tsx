@@ -8,12 +8,16 @@ import {
   ArrowTopRightOnSquareIcon,
   ChatBubbleLeftRightIcon,
   SparklesIcon,
+  LockClosedIcon,
+  CreditCardIcon,
 } from "@heroicons/react/24/outline";
 import { RequirementModal } from "@/components/modals/requirement-modal";
 import { RequestPricingModal } from "@/components/modals/request-pricing-modal";
+import { UpgradeProModal } from "@/components/modals/upgrade-pro-modal";
 
 interface PlatformCatalogProps {
   platforms: any[];
+  userBalance?: number;
 }
 
 function cleanUrl(url: string) {
@@ -26,13 +30,16 @@ function cleanUrl(url: string) {
   }
 }
 
-export function PlatformCatalogList({ platforms }: PlatformCatalogProps) {
+export function PlatformCatalogList({ platforms, userBalance = 0 }: PlatformCatalogProps) {
   const [generalModalOpen, setGeneralModalOpen] = useState(false);
   const [pricingModalOpen, setPricingModalOpen] = useState(false);
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const [selectedSite, setSelectedSite] = useState<string>("");
   const [selectedPlatformId, setSelectedPlatformId] = useState<string | undefined>();
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 50;
+
+  const isLocked = userBalance < 20;
 
   const totalPages = Math.ceil(platforms.length / pageSize) || 1;
   const paginatedPlatforms = platforms.slice((currentPage - 1) * pageSize, currentPage * pageSize);
@@ -44,6 +51,10 @@ export function PlatformCatalogList({ platforms }: PlatformCatalogProps) {
   };
 
   const handleRequestPricing = (siteUrl: string, platformId: string) => {
+    if (isLocked) {
+      setUpgradeModalOpen(true);
+      return;
+    }
     setSelectedSite(cleanUrl(siteUrl));
     setSelectedPlatformId(platformId);
     setPricingModalOpen(true);
@@ -51,6 +62,30 @@ export function PlatformCatalogList({ platforms }: PlatformCatalogProps) {
 
   return (
     <>
+      {/* 🔒 Locked State Notice Banner when Balance < $20 */}
+      {isLocked && (
+        <div className="mb-6 p-6 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 text-white shadow-xl border border-amber-400 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+          <div className="space-y-1.5 max-w-2xl">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold uppercase tracking-wider">
+              <LockClosedIcon className="w-4 h-4" /> Pro Account Required
+            </div>
+            <h2 className="text-xl md:text-2xl font-bold font-space text-white">
+              «🔒 Upgrade your account to access all websites.»
+            </h2>
+            <p className="text-xs md:text-sm text-amber-100 leading-relaxed">
+              Available account balance is <strong>${Number(userBalance).toFixed(2)} USD</strong> (minimum <strong>$20.00 USD</strong> required). Complete a quick deposit to instantly unlock complete website URLs, full SEO metrics, and direct campaign placement.
+            </p>
+          </div>
+          <button
+            onClick={() => setUpgradeModalOpen(true)}
+            className="shrink-0 bg-slate-950 hover:bg-slate-900 text-white font-bold text-sm px-6 py-3.5 rounded-xl shadow-lg transition-all flex items-center gap-2 hover:scale-[1.03] border border-white/20"
+          >
+            <SparklesIcon className="w-5 h-5 text-amber-400" />
+            Upgrade to Pro
+          </button>
+        </div>
+      )}
+
       {/* Banner: Complete Website Inventory Notice + Submit Requirement CTA */}
       <div className="mb-6 p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 border border-slate-700 text-white shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="space-y-1 max-w-2xl">
@@ -109,7 +144,13 @@ export function PlatformCatalogList({ platforms }: PlatformCatalogProps) {
       {/* Website Listings Grid */}
       <div className="platforms-grid flex flex-col gap-6">
         {paginatedPlatforms.map((platform: any) => {
-          const domainName = cleanUrl(platform.url);
+          const rawDomain = cleanUrl(platform.url);
+          // When locked, mask part of the domain name and apply visual blur effect
+          const domainName = isLocked
+            ? rawDomain.length > 5
+              ? `${rawDomain.slice(0, 3)}••••••.${rawDomain.split('.').pop() || 'com'}`
+              : '••••••••.com'
+            : rawDomain;
 
           const articlePkg = platform.packages?.find((p: any) => p.type === "ARTICLE_POSTING" && p.isActive);
           const linkPkg = platform.packages?.find((p: any) => p.type === "LINK_INSERTION" && p.isActive);
@@ -128,20 +169,39 @@ export function PlatformCatalogList({ platforms }: PlatformCatalogProps) {
           return (
             <div
               key={platform.id}
-              className="bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition-shadow p-6 space-y-6"
+              className={`bg-white border rounded-xl shadow-sm transition-all p-6 space-y-6 relative overflow-hidden ${
+                isLocked
+                  ? "border-amber-200/90 bg-slate-50/50 hover:border-amber-300"
+                  : "border-slate-200 hover:shadow-md"
+              }`}
             >
               {/* Header Row */}
               <div className="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-slate-100">
                 <div className="flex flex-wrap items-center gap-3">
-                  <a
-                    href={platform.url.startsWith("http") ? platform.url : `https://${platform.url}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-amber-600 font-bold text-lg hover:underline flex items-center gap-1.5 font-space"
-                  >
-                    {domainName}
-                    <ArrowTopRightOnSquareIcon className="w-4 h-4 text-amber-500" />
-                  </a>
+                  {isLocked ? (
+                    <button
+                      type="button"
+                      onClick={() => setUpgradeModalOpen(true)}
+                      className="text-slate-800 font-bold text-lg flex items-center gap-2 font-space group text-left"
+                    >
+                      <span className="blur-[4px] select-none text-amber-900 group-hover:blur-[2px] transition-all">
+                        {domainName}
+                      </span>
+                      <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 rounded-full">
+                        <LockClosedIcon className="w-3.5 h-3.5" /> Locked
+                      </span>
+                    </button>
+                  ) : (
+                    <a
+                      href={platform.url.startsWith("http") ? platform.url : `https://${platform.url}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-amber-600 font-bold text-lg hover:underline flex items-center gap-1.5 font-space"
+                    >
+                      {domainName}
+                      <ArrowTopRightOnSquareIcon className="w-4 h-4 text-amber-500" />
+                    </a>
+                  )}
 
                   {/* Verified Badge */}
                   <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 text-xs px-2.5 py-1 rounded-full font-semibold border border-emerald-200">
@@ -156,7 +216,15 @@ export function PlatformCatalogList({ platforms }: PlatformCatalogProps) {
 
                 {/* Pricing / Action Button */}
                 <div className="flex items-center gap-3">
-                  {hasPricing ? (
+                  {isLocked ? (
+                    <button
+                      type="button"
+                      onClick={() => setUpgradeModalOpen(true)}
+                      className="bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs px-4 py-2.5 rounded-lg inline-flex items-center gap-1.5 shadow-sm transition-all hover:scale-[1.02]"
+                    >
+                      <LockClosedIcon className="w-4 h-4" /> Upgrade to Pro
+                    </button>
+                  ) : hasPricing ? (
                     <Link
                       href={`/advertiser/tasks/new?platformId=${platform.id}`}
                       className="bg-amber-500 hover:bg-amber-600 text-white font-semibold text-sm px-5 py-2 rounded-lg inline-flex items-center gap-2 shadow-sm transition-colors"
@@ -174,8 +242,10 @@ export function PlatformCatalogList({ platforms }: PlatformCatalogProps) {
                 </div>
               </div>
 
-              {/* Metric Card Grid Body with Vertical Dividers - exact fields from Publisher Form */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80 text-xs">
+              {/* Metric Card Grid Body with Vertical Dividers */}
+              <div className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80 text-xs ${
+                isLocked ? "filter blur-[1.5px] select-none pointer-events-none opacity-80" : ""
+              }`}>
                 {/* Col 1: Publishing TAT */}
                 <div className="space-y-1 pr-3 pb-3 sm:pb-0">
                   <span className="text-slate-600 font-medium block">Publishing Speed (TAT)</span>
@@ -343,6 +413,13 @@ export function PlatformCatalogList({ platforms }: PlatformCatalogProps) {
         onClose={() => setPricingModalOpen(false)}
         targetWebsite={selectedSite}
         platformId={selectedPlatformId}
+      />
+
+      {/* 3. Upgrade to Pro Modal (Triggered by Lock Banner / Locked Platform Cards) */}
+      <UpgradeProModal
+        isOpen={upgradeModalOpen}
+        onClose={() => setUpgradeModalOpen(false)}
+        currentBalance={userBalance}
       />
     </>
   );

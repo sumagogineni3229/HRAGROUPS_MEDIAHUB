@@ -4,11 +4,14 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
   PlusIcon,
-  DevicePhoneMobileIcon
+  DevicePhoneMobileIcon,
 } from "@heroicons/react/24/outline";
 import { ChannelActionsDropdown } from "@/components/influencer/channel-actions-dropdown";
 import { getSocialPlatformLabel, getSocialProfileUrl } from "@/lib/social-platforms";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export const metadata = {
   title: "My Channels - MediaHub",
@@ -20,7 +23,7 @@ export default async function InfluencerChannelsPage() {
     redirect("/login");
   }
 
-  // Fetch influencer's connected social channels
+  // Fetch influencer's channels
   const channels = await db.channel.findMany({
     where: { influencerId: session.user.id },
     include: { packages: true },
@@ -28,41 +31,54 @@ export default async function InfluencerChannelsPage() {
   });
 
   return (
-    <div className="w-full">
+    <div className="w-full space-y-8">
       {/* Header Info */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-wrap justify-between items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold font-space text-dark">My Channels</h1>
-          <p className="text-sm text-muted font-inter mt-1">Manage your connected social accounts and packages.</p>
+          <h1 className="text-2xl md:text-3xl font-bold font-space text-slate-900">
+            Influencer Dashboard – My Channels
+          </h1>
+          <p className="text-sm text-slate-500 font-inter mt-1">
+            Manage your social media channels, audience stats, and brand collaboration packages.
+          </p>
         </div>
         <div className="flex items-center gap-3">
-          <Link href="/influencer/channels/new" className="btn btn-primary font-space">
+          <Link
+            href="/influencer/channels/new"
+            className="bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition-colors flex items-center gap-1.5"
+          >
             <PlusIcon className="w-4 h-4" /> Add Channel
           </Link>
         </div>
       </div>
 
-      {/* Channels List */}
-      {channels.length === 0 ? (
-        <div className="card bg-card border-base rounded-lg p-6">
-          <div className="empty-state py-12 flex flex-col items-center justify-center text-center">
-            <DevicePhoneMobileIcon className="w-12 h-12 text-muted mb-4" />
-            <p className="font-space font-medium text-dark text-lg mb-1">No channels connected yet</p>
-            <p className="text-muted text-sm max-w-sm">Connect your Instagram, TikTok, YouTube, or X channels to start receiving paid collaboration requests.</p>
-            <Link href="/influencer/channels/new" className="btn btn-outline mt-4">
-              Connect Channel
-            </Link>
-          </div>
+      {/* Channel Listings & Configured Packages */}
+      <div>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-bold font-space text-slate-900">
+            All Active Channels ({channels.length})
+          </h2>
         </div>
-      ) : (
-        <div className="channels-grid flex flex-col gap-6">
-          {channels.map((channel: any) => {
-            const isApproved = channel.status === "ACTIVE";
-            const isPending = channel.status === "PENDING";
-            const isRejected = channel.status === "REJECTED";
 
-            return (
-              <div key={channel.id} className="card bg-card border-base rounded-lg p-6 relative shadow-sm hover:shadow-md transition-shadow">
+        {channels.length === 0 ? (
+          <div className="bg-white border border-slate-200 rounded-2xl p-10 text-center shadow-sm">
+            <DevicePhoneMobileIcon className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+            <p className="font-space font-bold text-slate-900 text-base mb-1">
+              No Channels Added Yet
+            </p>
+            <p className="text-xs text-slate-500 max-w-md mx-auto">
+              Add your social media channels and packages to start receiving paid collaboration offers.
+            </p>
+          </div>
+        ) : (
+          <div className="channels-grid flex flex-col gap-5">
+            {channels.map((channel: any) => {
+              const isApproved = channel.status === "ACTIVE";
+              const isPending = channel.status === "PENDING";
+              const isRejected = channel.status === "REJECTED";
+
+              return (
+                <div key={channel.id} className="card bg-card border-base rounded-lg p-6 relative shadow-sm hover:shadow-md transition-shadow">
                 {/* Card Header */}
                 <div className="flex justify-between items-start mb-6">
                   <div>
@@ -144,6 +160,7 @@ export default async function InfluencerChannelsPage() {
           })}
         </div>
       )}
+      </div>
     </div>
   );
 }

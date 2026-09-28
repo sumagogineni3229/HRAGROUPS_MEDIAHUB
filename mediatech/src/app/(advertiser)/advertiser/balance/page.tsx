@@ -3,6 +3,9 @@ import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { BalanceClient } from "@/components/balance/balance-client";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata = {
   title: "Balance - MediaHub",
 };

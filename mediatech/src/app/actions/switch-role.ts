@@ -20,20 +20,42 @@ export async function switchRoleAction(newRole: string) {
 
     const userId = session.user.id;
     const userEmail = session.user.email?.toLowerCase().trim();
+    const userName = session.user.name ?? (userEmail ? userEmail.split("@")[0] : "User");
 
     // Query user by ID or Email
-    const user = await db.user.findFirst({
-      where: {
-        OR: [
-          ...(userId ? [{ id: userId }] : []),
-          ...(userEmail ? [{ email: { equals: userEmail, mode: "insensitive" as const } }] : []),
-        ],
-      },
-      select: { id: true, email: true, role: true, enabledRoles: true },
-    });
+    let user = null;
+    if (userId) {
+      user = await db.user.findUnique({
+        where: { id: userId },
+        select: { id: true, email: true, role: true, enabledRoles: true },
+      });
+    }
+
+    if (!user && userEmail) {
+      user = await db.user.findFirst({
+        where: {
+          email: { equals: userEmail, mode: "insensitive" as const },
+        },
+        select: { id: true, email: true, role: true, enabledRoles: true },
+      });
+    }
+
+    // If user has a valid authenticated session but was dropped from DB, auto-provision their account record
+    if (!user && userEmail) {
+      user = await db.user.create({
+        data: {
+          id: userId || undefined,
+          email: userEmail,
+          name: userName,
+          role: newRole as any,
+          enabledRoles: [newRole],
+        },
+        select: { id: true, email: true, role: true, enabledRoles: true },
+      });
+    }
 
     if (!user) {
-      return { success: false, error: "User account not found." };
+      return { success: false, error: "User account not found. Please log in again." };
     }
 
     if (user.role === "ADMIN" || (user.role as string) === "EDITOR") {

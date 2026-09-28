@@ -53,9 +53,8 @@ export function PublicHeader({ activePage = "other" }: PublicHeaderProps) {
         <nav className="hidden lg:flex items-center gap-8 text-[15px] font-medium text-slate-800">
           <Link
             href="/solutions"
-            className={`transition hover:text-[#F59E0B] relative py-1 ${
-              activePage === "solutions" ? "text-[#F59E0B] font-bold" : ""
-            }`}
+            className={`transition hover:text-[#F59E0B] relative py-1 ${activePage === "solutions" ? "text-[#F59E0B] font-bold" : ""
+              }`}
           >
             Marketplace
             {activePage === "solutions" && (
@@ -65,9 +64,8 @@ export function PublicHeader({ activePage = "other" }: PublicHeaderProps) {
 
           <Link
             href="/blog"
-            className={`flex items-center gap-2 group transition hover:text-[#F59E0B] relative py-1 ${
-              activePage === "blog" ? "text-[#F59E0B] font-bold" : ""
-            }`}
+            className={`flex items-center gap-2 group transition hover:text-[#F59E0B] relative py-1 ${activePage === "blog" ? "text-[#F59E0B] font-bold" : ""
+              }`}
           >
             <span>AI Engine</span>
             <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-gradient-to-r from-[#F59E0B] to-[#D97706] text-white shadow-sm uppercase tracking-wider group-hover:scale-105 transition-transform animate-pulse">
@@ -77,9 +75,8 @@ export function PublicHeader({ activePage = "other" }: PublicHeaderProps) {
 
           <Link
             href="/faq"
-            className={`transition hover:text-[#F59E0B] relative py-1 ${
-              activePage === "faq" ? "text-[#F59E0B] font-bold" : ""
-            }`}
+            className={`transition hover:text-[#F59E0B] relative py-1 ${activePage === "faq" ? "text-[#F59E0B] font-bold" : ""
+              }`}
           >
             FAQ
           </Link>
@@ -97,9 +94,8 @@ export function PublicHeader({ activePage = "other" }: PublicHeaderProps) {
             >
               <span className={activePage === "podcasts" ? "text-[#F59E0B] font-bold" : ""}>PR Suite</span>
               <ChevronDownIcon
-                className={`w-3.5 h-3.5 text-slate-400 group-hover:text-[#F59E0B] transition-transform duration-200 ${
-                  activeDropdown === "podcasts" ? "rotate-180 text-[#F59E0B]" : ""
-                }`}
+                className={`w-3.5 h-3.5 text-slate-400 group-hover:text-[#F59E0B] transition-transform duration-200 ${activeDropdown === "podcasts" ? "rotate-180 text-[#F59E0B]" : ""
+                  }`}
               />
             </button>
 
@@ -136,9 +132,8 @@ export function PublicHeader({ activePage = "other" }: PublicHeaderProps) {
 
           <Link
             href="/contact"
-            className={`transition hover:text-[#F59E0B] relative py-1 ${
-              activePage === "contact" ? "text-[#F59E0B] font-bold" : ""
-            }`}
+            className={`transition hover:text-[#F59E0B] relative py-1 ${activePage === "contact" ? "text-[#F59E0B] font-bold" : ""
+              }`}
           >
             Contact
           </Link>

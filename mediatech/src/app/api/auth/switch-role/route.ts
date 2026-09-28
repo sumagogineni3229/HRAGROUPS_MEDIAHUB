@@ -24,21 +24,43 @@ export async function POST(request: Request) {
 
   const userId = session.user.id;
   const userEmail = session.user.email?.toLowerCase().trim();
+  const userName = session.user.name ?? (userEmail ? userEmail.split("@")[0] : "User");
 
   // Fetch current user by id or email (case-insensitive)
-  const user = await db.user.findFirst({
-    where: {
-      OR: [
-        ...(userId ? [{ id: userId }] : []),
-        ...(userEmail ? [{ email: { equals: userEmail, mode: "insensitive" as const } }] : []),
-      ],
-    },
-    select: { id: true, email: true, role: true, enabledRoles: true },
-  });
+  let user = null;
+  if (userId) {
+    user = await db.user.findUnique({
+      where: { id: userId },
+      select: { id: true, email: true, role: true, enabledRoles: true },
+    });
+  }
+
+  if (!user && userEmail) {
+    user = await db.user.findFirst({
+      where: {
+        email: { equals: userEmail, mode: "insensitive" as const },
+      },
+      select: { id: true, email: true, role: true, enabledRoles: true },
+    });
+  }
+
+  // If user has a valid session but no database row (e.g. wiped local DB), recreate record
+  if (!user && userEmail) {
+    user = await db.user.create({
+      data: {
+        id: userId || undefined,
+        email: userEmail,
+        name: userName,
+        role: newRole as any,
+        enabledRoles: [newRole],
+      },
+      select: { id: true, email: true, role: true, enabledRoles: true },
+    });
+  }
 
   if (!user) {
     console.error("[SWITCH_ROLE] User not found for session:", { userId, userEmail });
-    return NextResponse.json({ error: "User not found", sessionUserId: userId, sessionUserEmail: userEmail }, { status: 404 });
+    return NextResponse.json({ error: "User account not found." }, { status: 404 });
   }
 
   if (user.role === "ADMIN" || (user.role as string) === "EDITOR") {

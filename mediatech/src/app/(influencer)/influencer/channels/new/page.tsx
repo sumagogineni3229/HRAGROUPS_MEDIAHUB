@@ -142,7 +142,7 @@ export default async function NewChannelPage({
           ← Back to Channels
         </Link>
         <h1 className="text-2xl font-bold font-space text-dark mt-2">
-          {existingChannel ? "Edit Social Channel" : "Connect Social Channel"}
+          {existingChannel ? "Edit Social Channel" : "Add Channel"}
         </h1>
       </div>
 
@@ -243,7 +243,7 @@ export default async function NewChannelPage({
           </div>
 
           <button type="submit" className="btn btn-primary font-space font-semibold mt-4" style={{ justifyContent: 'center' }}>
-            {existingChannel ? "Save Changes" : "Connect Channel"}
+            {existingChannel ? "Save Changes" : "Add Channel"}
           </button>
         </form>
       </div>

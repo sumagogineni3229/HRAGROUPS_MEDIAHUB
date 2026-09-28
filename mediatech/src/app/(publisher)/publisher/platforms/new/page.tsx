@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import Link from "next/link";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { CountrySelect } from "@/components/ui/country-select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import { WEBSITE_CATEGORIES } from "@/lib/categories";
 
 export const metadata = {
@@ -220,18 +221,13 @@ export default async function NewPlatformPage({
               <label className="text-sm font-medium text-dark block mb-2 font-inter">
                 Niche / Category
               </label>
-              <select
+              <SearchableSelect
                 name="niche"
-                required
+                options={WEBSITE_CATEGORIES}
                 defaultValue={existingPlatform?.niche || "Technology"}
-                className="input select"
-              >
-                {WEBSITE_CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
+                placeholder="Search or Select Niche..."
+                required
+              />
             </div>
             <div>
               <label className="text-sm font-medium text-dark block mb-2 font-inter">Country</label>
