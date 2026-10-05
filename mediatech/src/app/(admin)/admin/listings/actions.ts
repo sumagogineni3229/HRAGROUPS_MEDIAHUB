@@ -14,6 +14,7 @@ export async function approvePlatformAction(formData: FormData) {
   if (!platformId) return { success: false, error: "Platform ID is required" };
 
   const url = formData.get("url") as string;
+  const sampleUrl = formData.has("sampleUrl") ? (formData.get("sampleUrl") as string) || null : undefined;
   const niche = formData.get("niche") as string;
   const country = formData.get("country") as string;
   const language = formData.get("language") as string;
@@ -26,6 +27,7 @@ export async function approvePlatformAction(formData: FormData) {
     status: "ACTIVE",
   };
   if (url) updateData.url = url;
+  if (sampleUrl !== undefined) updateData.sampleUrl = sampleUrl;
   if (niche) updateData.niche = niche;
   if (country) updateData.country = country;
   if (language) updateData.language = language;

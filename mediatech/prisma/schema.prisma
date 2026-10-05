@@ -146,6 +146,7 @@ model User {
   referrals        Referral[]       @relation("ReferrerUser")
   referredBy       Referral?        @relation("ReferredUser")
   enquiries        Enquiry[]        @relation("UserEnquiries")
+  reviews          Review[]         @relation("UserReviews")
 }
 
 // ─────────────────────────────────────────────
@@ -218,6 +219,7 @@ model Platform {
   // Status
   status      PlatformStatus @default(PENDING)
   isIndexed   Boolean        @default(true)
+  sampleUrl   String?        // Sample / previous work link
   // Admin
   adminNote   String?
   // Timestamps
@@ -227,6 +229,7 @@ model Platform {
   packages    Package[]
   tasks       Task[]         @relation("PlatformTasks")
   enquiries   Enquiry[]
+  reviews     Review[]
 
   @@index([publisherId])
   @@index([status])
@@ -235,6 +238,22 @@ model Platform {
   @@index([da])
   @@index([traffic])
   @@index([status, niche, country])
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  platformId String
+  platform   Platform @relation(fields: [platformId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation("UserReviews", fields: [userId], references: [id], onDelete: Cascade)
+  rating     Int      // 1 to 5 stars
+  comment    String?  @db.Text
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([platformId, userId])
+  @@index([platformId])
+  @@index([userId])
 }
 
 model Package {

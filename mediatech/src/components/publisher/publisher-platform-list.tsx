@@ -7,7 +7,9 @@ import {
   PlusIcon,
   PencilSquareIcon,
   PencilIcon,
+  ArrowTopRightOnSquareIcon,
 } from "@heroicons/react/24/outline";
+import { StarIcon } from "@heroicons/react/24/solid";
 import { PlatformActionsDropdown } from "@/components/publisher/platform-actions-dropdown";
 
 interface PublisherPlatformListProps {
@@ -16,6 +18,7 @@ interface PublisherPlatformListProps {
 
 export function PublisherPlatformList({ platforms }: PublisherPlatformListProps) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [expandedReviewsId, setExpandedReviewsId] = useState<string | null>(null);
   const pageSize = 50;
 
   const totalPages = Math.ceil(platforms.length / pageSize) || 1;
@@ -80,7 +83,7 @@ export function PublisherPlatformList({ platforms }: PublisherPlatformListProps)
           <div key={platform.id} className="card bg-card border-base rounded-lg p-6 relative">
             {/* Top Row: URL, Status, Actions */}
             <div className="flex justify-between items-start mb-6">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 flex-wrap">
                 <a
                   href={platform.url}
                   target="_blank"
@@ -95,6 +98,45 @@ export function PublisherPlatformList({ platforms }: PublisherPlatformListProps)
                 <span className="badge bg-slate-100 text-slate-700 text-xs px-2 py-0.5 rounded border border-slate-200">
                   {platform.niche || "General"}
                 </span>
+
+                {/* Previous Work Link */}
+                {platform.sampleUrl && (
+                  <a
+                    href={platform.sampleUrl.startsWith("http") ? platform.sampleUrl : `https://${platform.sampleUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 text-xs px-2.5 py-0.5 rounded-full font-bold transition-all hover:scale-105"
+                    title="View submitted previous work"
+                  >
+                    <span>Work</span>
+                    <ArrowTopRightOnSquareIcon className="w-3 h-3 text-blue-600" />
+                  </a>
+                )}
+
+                {/* Reviews & Ratings badge */}
+                {(() => {
+                  const reviewsCount = platform.reviews?.length || 0;
+                  const avgRating =
+                    reviewsCount > 0
+                      ? (
+                          platform.reviews.reduce((acc: number, r: any) => acc + r.rating, 0) / reviewsCount
+                        ).toFixed(1)
+                      : null;
+
+                  return (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setExpandedReviewsId(expandedReviewsId === platform.id ? null : platform.id)
+                      }
+                      className="inline-flex items-center gap-1 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs px-2.5 py-0.5 rounded-full font-bold shadow-sm transition-all"
+                      title="Click to view advertiser reviews"
+                    >
+                      <StarIcon className="w-3 h-3 text-amber-500 fill-amber-500" />
+                      <span>{avgRating ? `${avgRating} (${reviewsCount} ${reviewsCount === 1 ? 'review' : 'reviews'})` : "No reviews yet"}</span>
+                    </button>
+                  );
+                })()}
               </div>
 
               <div className="flex items-center gap-3">
@@ -127,15 +169,15 @@ export function PublisherPlatformList({ platforms }: PublisherPlatformListProps)
                         platform.status === "ACTIVE"
                           ? "#059669"
                           : platform.status === "REJECTED"
-                          ? "#dc2626"
-                          : "#d97706",
+                            ? "#dc2626"
+                            : "#d97706",
                     }}
                   >
                     {platform.status === "ACTIVE"
                       ? "Approved"
                       : platform.status === "REJECTED"
-                      ? "Rejected"
-                      : "Pending specification"}
+                        ? "Rejected"
+                        : "Pending specification"}
                   </span>
                 </div>
                 <div>
@@ -233,6 +275,65 @@ export function PublisherPlatformList({ platforms }: PublisherPlatformListProps)
                 )}
               </div>
             </div>
+
+            {/* Expandable Advertiser Reviews Drawer */}
+            {expandedReviewsId === platform.id && (
+              <div className="mt-5 pt-4 border-t border-slate-200 animate-in fade-in duration-200">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider font-space flex items-center gap-1.5">
+                    <StarIcon className="w-4 h-4 text-amber-500 fill-amber-500" />
+                    Advertiser Reviews &amp; Feedback ({platform.reviews?.length || 0})
+                  </h4>
+                  <button
+                    type="button"
+                    onClick={() => setExpandedReviewsId(null)}
+                    className="text-xs text-muted hover:text-dark font-medium underline"
+                  >
+                    Close
+                  </button>
+                </div>
+
+                {platform.reviews && platform.reviews.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-60 overflow-y-auto pr-1">
+                    {platform.reviews.map((r: any) => (
+                      <div key={r.id} className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <div className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 font-bold text-[10px] flex items-center justify-center">
+                              {r.user?.name ? r.user.name.charAt(0).toUpperCase() : "A"}
+                            </div>
+                            <span className="text-xs font-bold text-slate-900">
+                              {r.user?.name || "Advertiser"}
+                            </span>
+                          </div>
+                          <div className="flex items-center text-amber-400">
+                            {Array.from({ length: r.rating }).map((_, i) => (
+                              <StarIcon key={i} className="w-3.5 h-3.5 fill-amber-400" />
+                            ))}
+                          </div>
+                        </div>
+                        {r.comment ? (
+                          <p className="text-xs text-slate-600 leading-relaxed font-inter">{r.comment}</p>
+                        ) : (
+                          <p className="text-xs text-slate-400 italic">No written comment provided.</p>
+                        )}
+                        <span className="text-[10px] text-slate-400 block">
+                          {new Date(r.createdAt).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-4 bg-slate-50 border border-dashed border-slate-200 rounded-xl text-center text-xs text-slate-500">
+                    No advertiser reviews submitted yet for this website platform.
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         ))}
       </div>

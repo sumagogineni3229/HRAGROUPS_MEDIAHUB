@@ -46,6 +46,7 @@ export default async function NewPlatformPage({
     const isCompany = session.user.email === "mediahub@publisher.com";
     const platformId = formData.get("platformId") as string;
     const url = formData.get("url") as string;
+    const sampleUrl = (formData.get("sampleUrl") as string) || null;
     const niche = formData.get("niche") as string;
     const country = formData.get("country") as string;
     const language = formData.get("language") as string;
@@ -76,6 +77,7 @@ export default async function NewPlatformPage({
         where: { id: platformId },
         data: {
           url,
+          sampleUrl,
           niche,
           country,
           language,
@@ -91,6 +93,7 @@ export default async function NewPlatformPage({
         data: {
           publisherId: session.user.id as string,
           url,
+          sampleUrl,
           niche,
           country,
           language,
@@ -204,16 +207,30 @@ export default async function NewPlatformPage({
         <form action={handleSubmit} className="flex flex-col gap-5">
           {existingPlatform && <input type="hidden" name="platformId" value={existingPlatform.id} />}
 
-          <div>
-            <label className="text-sm font-medium text-dark block mb-2 font-inter">Site URL</label>
-            <input
-              name="url"
-              type="url"
-              required
-              defaultValue={existingPlatform?.url || ""}
-              placeholder="https://techbullion.com"
-              className="input"
-            />
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <div>
+              <label className="text-sm font-medium text-dark block mb-2 font-inter">Site URL *</label>
+              <input
+                name="url"
+                type="url"
+                required
+                defaultValue={existingPlatform?.url || ""}
+                placeholder="https://techbullion.com"
+                className="input"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-dark block mb-2 font-inter">
+                Previous Work / Sample Link <span className="text-xs text-muted font-normal">(Optional)</span>
+              </label>
+              <input
+                name="sampleUrl"
+                type="url"
+                defaultValue={existingPlatform?.sampleUrl || ""}
+                placeholder="https://techbullion.com/sample-live-article"
+                className="input"
+              />
+            </div>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>

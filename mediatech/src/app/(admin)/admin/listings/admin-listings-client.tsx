@@ -212,6 +212,23 @@ export function AdminListingsClient({
                   <span>
                     <strong className="text-dark font-medium">Language:</strong> {p.language || "English"}
                   </span>
+                  {p.sampleUrl ? (
+                    <span className="flex items-center gap-1.5 bg-blue-50 text-blue-800 border border-blue-200 px-2.5 py-1 rounded-md">
+                      <strong className="font-semibold text-blue-900">Previous:</strong>
+                      <a
+                        href={p.sampleUrl.startsWith("http") ? p.sampleUrl : `https://${p.sampleUrl}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-primary underline font-bold inline-flex items-center gap-1 hover:text-primary-hover"
+                      >
+                        Work <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5" />
+                      </a>
+                    </span>
+                  ) : (
+                    <span className="text-slate-400 italic">
+                      No work link
+                    </span>
+                  )}
                 </div>
 
                 {/* Packages */}
@@ -447,15 +464,27 @@ export function AdminListingsClient({
             <form onSubmit={handleSaveAndApprovePlatform} className="p-6 space-y-4 font-inter text-sm">
               <input type="hidden" name="platformId" value={editingPlatform.id} />
 
-              <div>
-                <label className="block text-xs font-semibold text-dark mb-1">Website URL *</label>
-                <input
-                  type="text"
-                  name="url"
-                  required
-                  defaultValue={editingPlatform.url}
-                  className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:border-primary text-sm"
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-dark mb-1">Website URL *</label>
+                  <input
+                    type="text"
+                    name="url"
+                    required
+                    defaultValue={editingPlatform.url}
+                    className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:border-primary text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-dark mb-1">Previous Work / Sample Link</label>
+                  <input
+                    type="url"
+                    name="sampleUrl"
+                    defaultValue={editingPlatform.sampleUrl || ""}
+                    placeholder="https://..."
+                    className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:border-primary text-sm"
+                  />
+                </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">

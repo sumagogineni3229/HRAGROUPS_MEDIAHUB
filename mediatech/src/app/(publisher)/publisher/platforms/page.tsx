@@ -68,7 +68,23 @@ export default async function PublisherPlatformsPage({
         }
       } : {})
     },
-    include: { packages: true },
+    include: {
+      packages: true,
+      reviews: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+              avatar: true,
+            },
+          },
+        },
+        orderBy: { createdAt: "desc" },
+      },
+    },
     orderBy: { createdAt: "desc" },
   });
 

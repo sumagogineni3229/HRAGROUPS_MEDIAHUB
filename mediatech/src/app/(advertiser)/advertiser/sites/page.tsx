@@ -125,6 +125,20 @@ export default async function AdvertiserSitesPage({
     where: whereClause,
     include: {
       packages: true,
+      reviews: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+              avatar: true,
+            },
+          },
+        },
+        orderBy: { createdAt: "desc" },
+      },
     },
     orderBy: { da: "desc" },
   });
@@ -521,7 +535,11 @@ export default async function AdvertiserSitesPage({
           <p className="text-muted text-sm max-w-sm mx-auto">Try clearing search terms or submit a custom requirement.</p>
         </div>
       ) : (
-        <PlatformCatalogList platforms={platforms} userBalance={advertiserBalance} />
+        <PlatformCatalogList
+          platforms={platforms}
+          userBalance={advertiserBalance}
+          currentUserId={session.user.id}
+        />
       )}
     </div>
   );

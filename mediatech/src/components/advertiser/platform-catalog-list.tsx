@@ -14,10 +14,13 @@ import {
 import { RequirementModal } from "@/components/modals/requirement-modal";
 import { RequestPricingModal } from "@/components/modals/request-pricing-modal";
 import { UpgradeProModal } from "@/components/modals/upgrade-pro-modal";
+import { ReviewModal } from "@/components/modals/review-modal";
+import { StarIcon } from "@heroicons/react/24/solid";
 
 interface PlatformCatalogProps {
   platforms: any[];
   userBalance?: number;
+  currentUserId?: string;
 }
 
 function cleanUrl(url: string) {
@@ -30,10 +33,12 @@ function cleanUrl(url: string) {
   }
 }
 
-export function PlatformCatalogList({ platforms, userBalance = 0 }: PlatformCatalogProps) {
+export function PlatformCatalogList({ platforms, userBalance = 0, currentUserId }: PlatformCatalogProps) {
   const [generalModalOpen, setGeneralModalOpen] = useState(false);
   const [pricingModalOpen, setPricingModalOpen] = useState(false);
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [selectedReviewPlatform, setSelectedReviewPlatform] = useState<any>(null);
   const [selectedSite, setSelectedSite] = useState<string>("");
   const [selectedPlatformId, setSelectedPlatformId] = useState<string | undefined>();
   const [currentPage, setCurrentPage] = useState(1);
@@ -48,6 +53,11 @@ export function PlatformCatalogList({ platforms, userBalance = 0 }: PlatformCata
     setSelectedSite("");
     setSelectedPlatformId(undefined);
     setGeneralModalOpen(true);
+  };
+
+  const handleOpenReview = (platform: any) => {
+    setSelectedReviewPlatform(platform);
+    setReviewModalOpen(true);
   };
 
   const handleRequestPricing = (siteUrl: string, platformId: string) => {
@@ -169,11 +179,10 @@ export function PlatformCatalogList({ platforms, userBalance = 0 }: PlatformCata
           return (
             <div
               key={platform.id}
-              className={`bg-white border rounded-xl shadow-sm transition-all p-6 space-y-6 relative overflow-hidden ${
-                isLocked
+              className={`bg-white border rounded-xl shadow-sm transition-all p-6 space-y-6 relative overflow-hidden ${isLocked
                   ? "border-amber-200/90 bg-slate-50/50 hover:border-amber-300"
                   : "border-slate-200 hover:shadow-md"
-              }`}
+                }`}
             >
               {/* Header Row */}
               <div className="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-slate-100">
@@ -212,6 +221,60 @@ export function PlatformCatalogList({ platforms, userBalance = 0 }: PlatformCata
                   <span className="bg-slate-900 text-white text-xs px-3 py-1 rounded-full font-medium">
                     {platform.niche || "General"}
                   </span>
+
+                  {/* Work Option Badge in the exact same top header line */}
+                  {isLocked ? (
+                    <button
+                      type="button"
+                      onClick={() => setUpgradeModalOpen(true)}
+                      className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 text-xs px-3 py-1 rounded-full font-bold shadow-sm transition-all"
+                    >
+                      <span>Work</span>
+                      <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5 text-blue-600" />
+                    </button>
+                  ) : (
+                    <a
+                      href={
+                        platform.sampleUrl
+                          ? platform.sampleUrl.startsWith("http")
+                            ? platform.sampleUrl
+                            : `https://${platform.sampleUrl}`
+                          : platform.url.startsWith("http")
+                          ? platform.url
+                          : `https://${platform.url}`
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 text-xs px-3 py-1 rounded-full font-bold shadow-sm transition-all hover:scale-105"
+                      title={platform.sampleUrl ? "View previous published sample work" : "View published work on this domain"}
+                    >
+                      <span>Work</span>
+                      <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5 text-blue-600" />
+                    </a>
+                  )}
+
+                  {/* ⭐ Review & Rating Button in the top header line */}
+                  {(() => {
+                    const reviewsCount = platform.reviews?.length || 0;
+                    const avgRating =
+                      reviewsCount > 0
+                        ? (
+                            platform.reviews.reduce((acc: number, r: any) => acc + r.rating, 0) / reviewsCount
+                          ).toFixed(1)
+                        : null;
+
+                    return (
+                      <button
+                        type="button"
+                        onClick={() => handleOpenReview(platform)}
+                        className="inline-flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs px-3 py-1 rounded-full font-bold shadow-sm transition-all hover:scale-105"
+                        title="Rate this website and view reviews"
+                      >
+                        <StarIcon className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                        <span>{avgRating ? `${avgRating} (${reviewsCount})` : "Rate & Review"}</span>
+                      </button>
+                    );
+                  })()}
                 </div>
 
                 {/* Pricing / Action Button */}
@@ -243,9 +306,8 @@ export function PlatformCatalogList({ platforms, userBalance = 0 }: PlatformCata
               </div>
 
               {/* Metric Card Grid Body with Vertical Dividers */}
-              <div className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80 text-xs ${
-                isLocked ? "filter blur-[1.5px] select-none pointer-events-none opacity-80" : ""
-              }`}>
+              <div className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80 text-xs ${isLocked ? "filter blur-[1.5px] select-none pointer-events-none opacity-80" : ""
+                }`}>
                 {/* Col 1: Publishing TAT */}
                 <div className="space-y-1 pr-3 pb-3 sm:pb-0">
                   <span className="text-slate-600 font-medium block">Publishing Speed (TAT)</span>
@@ -420,6 +482,14 @@ export function PlatformCatalogList({ platforms, userBalance = 0 }: PlatformCata
         isOpen={upgradeModalOpen}
         onClose={() => setUpgradeModalOpen(false)}
         currentBalance={userBalance}
+      />
+
+      {/* 4. Review & Rating Modal */}
+      <ReviewModal
+        isOpen={reviewModalOpen}
+        onClose={() => setReviewModalOpen(false)}
+        platform={selectedReviewPlatform}
+        currentUserId={currentUserId}
       />
     </>
   );
